@@ -1,0 +1,249 @@
+/* ==========================================================================
+   Core Design System & Native CSS Architecture - AI Art Coach
+   ========================================================================== */
+
+:root {
+	/* ----------------------------------------------------------------------
+	   Typography
+	   ---------------------------------------------------------------------- */
+	--font-body: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+	--font-heading: 'Outfit', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+	/* ----------------------------------------------------------------------
+	   OKLCH Color Palettes - Light Mode Base
+	   ---------------------------------------------------------------------- */
+	--color-bg: oklch(0.985 0.006 250);
+	--color-surface: oklch(1 0 0);
+	--color-surface-elevated: oklch(0.99 0.004 250);
+	--color-surface-hover: oklch(0.95 0.01 250);
+	--color-border: oklch(0.88 0.015 250);
+	--color-border-subtle: oklch(0.92 0.01 250);
+	
+	--color-text-primary: oklch(0.20 0.025 250);
+	--color-text-secondary: oklch(0.48 0.02 250);
+	--color-text-muted: oklch(0.65 0.015 250);
+
+	/* ----------------------------------------------------------------------
+	   Semantic Feedback Colors (MCQ & Pedagogical States)
+	   ---------------------------------------------------------------------- */
+	--color-primary: oklch(0.55 0.18 260);
+	--color-primary-light: oklch(0.92 0.05 260);
+	--color-accent: oklch(0.68 0.19 35);
+	--color-success: oklch(0.62 0.18 145);
+	--color-success-bg: oklch(0.94 0.06 145);
+	--color-error: oklch(0.60 0.22 25);
+	--color-error-bg: oklch(0.95 0.06 25);
+
+	/* ----------------------------------------------------------------------
+	   Movement Themes (--movement-theme / oklch_token fallbacks)
+	   ---------------------------------------------------------------------- */
+	--movement-theme: oklch(0.60 0.15 250);
+	--movement-theme-bg: oklch(0.94 0.04 250);
+	--movement-theme-border: oklch(0.80 0.08 250);
+
+	/* Specific Movement Tokens */
+	--movement-renaissance: oklch(0.62 0.16 45);
+	--movement-baroque: oklch(0.52 0.18 30);
+	--movement-impressionism: oklch(0.68 0.14 210);
+	--movement-surrealism: oklch(0.60 0.19 300);
+	--movement-cubism: oklch(0.55 0.12 60);
+	--movement-modern: oklch(0.58 0.20 260);
+
+	/* ----------------------------------------------------------------------
+	   Layout Spacing & Ergonomics
+	   ---------------------------------------------------------------------- */
+	--bottom-nav-height: 4.5rem;
+	--safe-area-bottom: env(safe-area-inset-bottom, 0px);
+	--container-max-width: 768px;
+	--radius-sm: 0.5rem;
+	--radius-md: 0.875rem;
+	--radius-lg: 1.25rem;
+	--radius-xl: 1.75rem;
+	--shadow-sm: 0 2px 8px oklch(0 0 0 / 0.05);
+	--shadow-md: 0 8px 24px oklch(0 0 0 / 0.08);
+	--shadow-lg: 0 16px 48px oklch(0 0 0 / 0.12);
+}
+
+/* --------------------------------------------------------------------------
+   Dark Mode Fallbacks & Preferences
+   -------------------------------------------------------------------------- */
+@media (prefers-color-scheme: dark) {
+	:root {
+		--color-bg: oklch(0.14 0.015 250);
+		--color-surface: oklch(0.18 0.02 250);
+		--color-surface-elevated: oklch(0.22 0.025 250);
+		--color-surface-hover: oklch(0.26 0.03 250);
+		--color-border: oklch(0.30 0.025 250);
+		--color-border-subtle: oklch(0.24 0.02 250);
+
+		--color-text-primary: oklch(0.95 0.01 250);
+		--color-text-secondary: oklch(0.72 0.015 250);
+		--color-text-muted: oklch(0.55 0.015 250);
+
+		--color-primary: oklch(0.68 0.18 260);
+		--color-primary-light: oklch(0.25 0.06 260);
+		--color-success: oklch(0.70 0.18 145);
+		--color-success-bg: oklch(0.22 0.06 145);
+		--color-error: oklch(0.68 0.22 25);
+		--color-error-bg: oklch(0.24 0.07 25);
+
+		--movement-theme-bg: oklch(0.24 0.05 250);
+		--movement-theme-border: oklch(0.38 0.08 250);
+		--shadow-sm: 0 2px 8px oklch(0 0 0 / 0.2);
+		--shadow-md: 0 8px 24px oklch(0 0 0 / 0.35);
+		--shadow-lg: 0 16px 48px oklch(0 0 0 / 0.5);
+	}
+}
+
+/* --------------------------------------------------------------------------
+   Global Reset & Base Setup
+   -------------------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+html {
+	font-family: var(--font-body);
+	background-color: var(--color-bg);
+	color: var(--color-text-primary);
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	text-size-adjust: 100%;
+}
+
+body {
+	min-height: 100vh;
+	min-height: 100dvh;
+	line-height: 1.5;
+	overflow-x: hidden;
+	padding-bottom: calc(var(--bottom-nav-height) + var(--safe-area-bottom));
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-family: var(--font-heading);
+	line-height: 1.2;
+	font-weight: 700;
+	color: var(--color-text-primary);
+}
+
+img, picture, video, canvas, svg {
+	display: block;
+	max-width: 100%;
+}
+
+button, input, select, textarea {
+	font: inherit;
+	color: inherit;
+}
+
+button {
+	cursor: pointer;
+	border: none;
+	background: none;
+}
+
+/* Accessibility Focus Ring */
+:focus-visible {
+	outline: 2px solid var(--color-primary);
+	outline-offset: 3px;
+}
+
+/* --------------------------------------------------------------------------
+   CSS Container Queries (@container) Setup
+   -------------------------------------------------------------------------- */
+.container-card {
+	container-type: inline-size;
+	container-name: card;
+	width: 100%;
+}
+
+.container-mcq {
+	container-type: inline-size;
+	container-name: mcq;
+	width: 100%;
+}
+
+@container card (min-width: 480px) {
+	.responsive-card-inner {
+		padding: 2rem;
+	}
+}
+
+@container mcq (min-width: 480px) {
+	.responsive-options-grid {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 0.75rem;
+	}
+}
+
+/* --------------------------------------------------------------------------
+   CSS Grid & Subgrid Utilities
+   -------------------------------------------------------------------------- */
+.grid-catalog {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+	gap: 1.25rem;
+}
+
+.grid-subgrid-rows {
+	display: grid;
+	grid-template-rows: subgrid;
+	grid-row: span 4;
+}
+
+.grid-subgrid-cols {
+	display: grid;
+	grid-template-columns: subgrid;
+	grid-column: span 2;
+}
+
+/* --------------------------------------------------------------------------
+   Aspect Ratio & CLS Prevention Utilities (CLS = 0.00)
+   -------------------------------------------------------------------------- */
+.aspect-4-3 {
+	aspect-ratio: 4 / 3;
+	overflow: hidden;
+}
+
+.aspect-1-1 {
+	aspect-ratio: 1 / 1;
+	overflow: hidden;
+}
+
+.aspect-16-9 {
+	aspect-ratio: 16 / 9;
+	overflow: hidden;
+}
+
+/* --------------------------------------------------------------------------
+   View Transitions API & Motion Rules
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: no-preference) {
+	::view-transition-old(root),
+	::view-transition-new(root) {
+		animation-duration: 0.25s;
+		animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+	}
+}
+
+/* --------------------------------------------------------------------------
+   Ergonomic Shell Layout Utilities
+   -------------------------------------------------------------------------- */
+.app-shell-main {
+	max-width: var(--container-max-width);
+	margin: 0 auto;
+	padding: 1rem 1.25rem;
+}
+
+.one-handed-zone {
+	/* Interactive targets concentrated in the lower viewport */
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	margin-top: auto;
+}

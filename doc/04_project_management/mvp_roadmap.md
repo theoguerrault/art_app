@@ -19,7 +19,7 @@ When the user instructs the agent to `"continue implementation"`, `"continue l'i
 ## 2. Implementation Phases & Step-by-Step Checklist
 
 ### Phase 1: Project Scaffolding & Configuration
-- [ ] **Step 1.1: Initialize SvelteKit PWA Project Structure**
+- [x] **Step 1.1: Initialize SvelteKit PWA Project Structure**
   - **Scope & Required Files:**
     - Initialize SvelteKit with Svelte 5 (`npx sv create . --template minimal --types ts --no-add-ons`) inside the project root (`/`), or configure within `src/` if preserving existing documentation and scripts.
     - Install core dependencies: `@sveltejs/kit`, `svelte`, `vite`, and `@vite-pwa/sveltekit`.
@@ -32,7 +32,7 @@ When the user instructs the agent to `"continue implementation"`, `"continue l'i
 ---
 
 ### Phase 2: Database Schema & Supabase Client Integration
-- [ ] **Step 2.1: Execute Supabase DDL Schema & RLS Policies**
+- [x] **Step 2.1: Execute Supabase DDL Schema & RLS Policies**
   - **Scope & Required Files:**
     - Create `supabase/migrations/0001_initial_schema.sql` containing the SQL tables (`courants`, `contenus_courants`, `oeuvres`, `contenus_oeuvres`, `historique_reponses`, `user_artwork_progress`) and RLS policies defined in [`doc/02_system_architecture/database_and_security.md`](file:///Users/theoguerrault/Documents/Projets/art_app/doc/02_system_architecture/database_and_security.md).
     - If local Supabase CLI is active, apply the migration; otherwise, prepare the script for Supabase SQL Editor execution.
@@ -42,7 +42,7 @@ When the user instructs the agent to `"continue implementation"`, `"continue l'i
     - Verify all foreign key constraints (`ON DELETE CASCADE`) and index declarations match [`database_and_security.md`](file:///Users/theoguerrault/Documents/Projets/art_app/doc/02_system_architecture/database_and_security.md).
     - Verify sample seed data inserts without error and returns via SQL queries.
 
-- [ ] **Step 2.2: Initialize Supabase Client & TypeScript Definitions**
+- [x] **Step 2.2: Initialize Supabase Client & TypeScript Definitions**
   - **Scope & Required Files:**
     - Install `@supabase/supabase-js`.
     - Create `src/lib/supabase/client.ts` exporting the initialized Supabase client configured via `PUBLIC_SUPABASE_URL` and `PUBLIC_SUPABASE_ANON_KEY`.
@@ -54,7 +54,7 @@ When the user instructs the agent to `"continue implementation"`, `"continue l'i
 ---
 
 ### Phase 3: Core Design System & Native CSS Architecture
-- [ ] **Step 3.1: Implement OKLCH Color Tokens & Responsive Layout Utilities**
+- [x] **Step 3.1: Implement OKLCH Color Tokens & Responsive Layout Utilities**
   - **Scope & Required Files:**
     - Create `src/app.html` defining semantic viewport tags, PWA manifest links, and Google Fonts preloading (`Inter` / `Outfit`).
     - Create `src/app.css` (or `src/index.css`) declaring `:root` OKLCH color palettes, dark mode fallbacks, CSS container query setups (`@container`), and CSS Grid/Subgrid utility classes as specified in [`doc/02_system_architecture/frontend_stack.md`](file:///Users/theoguerrault/Documents/Projets/art_app/doc/02_system_architecture/frontend_stack.md).
