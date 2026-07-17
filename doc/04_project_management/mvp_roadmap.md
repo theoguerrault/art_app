@@ -96,7 +96,7 @@ When the user instructs the agent to `"continue implementation"`, `"continue l'i
 ---
 
 ### Phase 5: Offline Cache Buffer & Synchronization Engine
-- [ ] **Step 5.1: Implement IndexedDB Failover Buffer (`src/lib/offline/storage.ts`)**
+- [x] **Step 5.1: Implement IndexedDB Failover Buffer (`src/lib/offline/storage.ts`)**
   - **Scope & Required Files:**
     - Create `src/lib/offline/storage.ts` encapsulating IndexedDB operations using native `idb` or vanilla `indexedDB` APIs as outlined in [`doc/03_core_engine/offline_synchronization.md`](file:///Users/theoguerrault/Documents/Projets/art_app/doc/03_core_engine/offline_synchronization.md).
     - Create Object Stores: `cached_artworks`, `cached_mcqs`, `user_progress_cache`, and `offline_sync_queue`.
@@ -104,7 +104,7 @@ When the user instructs the agent to `"continue implementation"`, `"continue l'i
   - **Verification Criteria:**
     - Verify operations handle database upgrade events (`onupgradeneeded`) without throwing errors.
 
-- [ ] **Step 5.2: Build Offline-to-Supabase Synchronization Queue (`src/lib/offline/sync.ts`)**
+- [x] **Step 5.2: Build Offline-to-Supabase Synchronization Queue (`src/lib/offline/sync.ts`)**
   - **Scope & Required Files:**
     - Create `src/lib/offline/sync.ts` exporting `flushOfflineQueue()`.
     - Implement network connectivity listener (`window.addEventListener('online', flushOfflineQueue)`).
@@ -115,7 +115,7 @@ When the user instructs the agent to `"continue implementation"`, `"continue l'i
 ---
 
 ### Phase 6: Primary Application Views & Navigation Routes
-- [ ] **Step 6.1: Implement "Today" Tab (`src/routes/+page.svelte` & `+page.ts`)**
+- [x] **Step 6.1: Implement "Today" Tab (`src/routes/+page.svelte` & `+page.ts`)**
   - **Scope & Required Files:**
     - Create `src/routes/+page.ts` implementing the daily artwork selection algorithm described in [`doc/01_product/learning_mechanics.md`](file:///Users/theoguerrault/Documents/Projets/art_app/doc/01_product/learning_mechanics.md):
       1. Check Leitner items due (`next_review_at <= NOW()`) outside cooldown (`last_presented_daily_at < NOW() - INTERVAL '7 days'`).
@@ -127,7 +127,7 @@ When the user instructs the agent to `"continue implementation"`, `"continue l'i
     - Verify data load reads cache when offline (`navigator.onLine === false`).
     - Verify Leitner calculation dates (`+1 day`, `+3 days`, `+7 days`, `+14 days`, `+30 days`) conform to [`learning_mechanics.md`](file:///Users/theoguerrault/Documents/Projets/art_app/doc/01_product/learning_mechanics.md).
 
-- [ ] **Step 6.2: Implement "Catalog" Tab (`src/routes/catalogue/+page.svelte` & `+page.ts`)**
+- [x] **Step 6.2: Implement "Catalog" Tab (`src/routes/catalogue/+page.svelte` & `+page.ts`)**
   - **Scope & Required Files:**
     - Create `src/routes/catalogue/+page.ts` fetching `oeuvres` records (`id`, `titre`, `artiste`, `image_url_thumb`, `slug`) grouped by movement (`courants`), maintaining payload sizes under 10 KB as defined in [`database_and_security.md`](file:///Users/theoguerrault/Documents/Projets/art_app/doc/02_system_architecture/database_and_security.md).
     - Create `src/routes/catalogue/+page.svelte` rendering the movement overview with progress badges ("3/5 discovered") and CSS Subgrid artwork layout ([`frontend_stack.md`](file:///Users/theoguerrault/Documents/Projets/art_app/doc/02_system_architecture/frontend_stack.md)).
@@ -136,7 +136,7 @@ When the user instructs the agent to `"continue implementation"`, `"continue l'i
     - Verify list query omits `qcm_synthese` and `description_courte` fields during grid render.
     - Verify search input filters across title and artist fields using `$derived()` state.
 
-- [ ] **Step 6.3: Implement "Progress" Tab (`src/routes/progression/+page.svelte`)**
+- [x] **Step 6.3: Implement "Progress" Tab (`src/routes/progression/+page.svelte`)**
   - **Scope & Required Files:**
     - Create `src/routes/progression/+page.ts` fetching aggregated user statistics (`historique_reponses` & `user_artwork_progress`).
     - Create `src/routes/progression/+page.svelte` rendering:
