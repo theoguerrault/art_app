@@ -66,7 +66,7 @@ When the user instructs the agent to `"continue implementation"`, `"continue l'i
 ---
 
 ### Phase 4: Core Interactive Components (Svelte 5 Runes)
-- [ ] **Step 4.1: Build Daily Artwork Flip Card Component (`ArtworkCard.svelte`)**
+- [x] **Step 4.1: Build Daily Artwork Flip Card Component (`ArtworkCard.svelte`)**
   - **Scope & Required Files:**
     - Create `src/lib/components/ArtworkCard.svelte` using Svelte 5 Runes (`$props`, `$state`).
     - Implement 3D flip transform (front side displaying artwork image, title, artist, date, and movement badge; back side displaying text description and key anecdote).
@@ -75,7 +75,7 @@ When the user instructs the agent to `"continue implementation"`, `"continue l'i
     - Verify clicking/tapping the card toggles `$state(isFlipped)` and executes CSS transitions.
     - Run `npm run check` to ensure `$props()` type check passes against `Artwork` interface.
 
-- [ ] **Step 4.2: Build Client-Side Quick MCQ Component (`QuickMCQ.svelte`)**
+- [x] **Step 4.2: Build Client-Side Quick MCQ Component (`QuickMCQ.svelte`)**
   - **Scope & Required Files:**
     - Create `src/lib/components/QuickMCQ.svelte` receiving the JSONB `qcm_synthese` object as `$props()`.
     - Implement answer validation (`$state` tracking selected index and verifying against `correctIndex`).
@@ -85,7 +85,7 @@ When the user instructs the agent to `"continue implementation"`, `"continue l'i
     - Verify state updates complete within `< 16ms` INP budget check via clean DOM handlers.
     - Verify option selection locks after the initial click to prevent score modification.
 
-- [ ] **Step 4.3: Build Bottom Navigation Bar (`BottomNav.svelte`) & Mount in Layout**
+- [x] **Step 4.3: Build Bottom Navigation Bar (`BottomNav.svelte`) & Mount in Layout**
   - **Scope & Required Files:**
     - Create `src/lib/components/BottomNav.svelte` implementing the 3 tabs (`/` Today, `/catalogue` Catalog, `/progression` Progress) defined in [`doc/01_product/core_features.md`](file:///Users/theoguerrault/Documents/Projets/art_app/doc/01_product/core_features.md).
     - Implement active tab indicator (`aria-current="page"`) and CSS View Transitions trigger (`document.startViewTransition()`).
