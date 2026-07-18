@@ -1,7 +1,12 @@
 <script lang="ts">
 	import type { PageData } from './$types';
+	import { Target, Package, ChartLineUp } from 'phosphor-svelte';
 
 	let { data }: { data: PageData } = $props();
+
+	$effect(() => {
+		document.documentElement.style.setProperty('--artwork-hue', '220');
+	});
 
 	// Calculate overall statistics
 	let totalAnswers = $derived(data.historyList.length);
@@ -44,42 +49,42 @@
 
 <div class="progress-view">
 	<header class="progress-header">
-		<h1 class="page-title">Learning Progression</h1>
-		<p class="page-subtitle">Track your long-term memory retention across the 5-Box Leitner system.</p>
+		<h1 class="page-title">Progression de l'apprentissage</h1>
+		<p class="page-subtitle">Suivez la rétention de votre mémoire à long terme à travers le système Leitner à 5 boîtes.</p>
 	</header>
 
 	{#if totalAnswers > 0 || data.progressList.length > 0}
 		<section class="overview-cards">
 			<div class="stat-card">
-				<span class="stat-icon">🎯</span>
+				<span class="stat-icon"><Target size={38} weight="fill" /></span>
 				<div class="stat-content">
 					<span class="stat-value">{successPercentage}%</span>
-					<span class="stat-label">MCQ Accuracy ({correctAnswers}/{totalAnswers})</span>
+					<span class="stat-label">Précision QCM ({correctAnswers}/{totalAnswers})</span>
 				</div>
 			</div>
 
 			<div class="stat-card">
-				<span class="stat-icon">📦</span>
+				<span class="stat-icon"><Package size={38} weight="fill" /></span>
 				<div class="stat-content">
 					<span class="stat-value">{boxDistribution()[5]}</span>
-					<span class="stat-label">Mastered Concepts (Box 5)</span>
+					<span class="stat-label">Concepts Maîtrisés (Boîte 5)</span>
 				</div>
 			</div>
 		</section>
 
 		<section class="leitner-section">
-			<h2 class="section-title">5-Box Leitner Distribution</h2>
+			<h2 class="section-title">Distribution Leitner (5 boîtes)</h2>
 			<div class="leitner-grid">
 				{#each [1, 2, 3, 4, 5] as box}
 					<div class="leitner-box" class:mastered={box === 5}>
-						<span class="box-number">Box {box}</span>
+						<span class="box-number">Boîte {box}</span>
 						<span class="box-count">{(boxDistribution() as any)[box] || 0}</span>
 						<span class="box-interval">
-							{#if box === 1}Daily Review
-							{:else if box === 2}+3 Days
-							{:else if box === 3}+7 Days
-							{:else if box === 4}+14 Days
-							{:else}+30 Days (Mastered){/if}
+							{#if box === 1}Révision Quot.
+							{:else if box === 2}+3 Jours
+							{:else if box === 3}+7 Jours
+							{:else if box === 4}+14 Jours
+							{:else}+30 Jours (Maîtrisé){/if}
 						</span>
 					</div>
 				{/each}
@@ -87,13 +92,13 @@
 		</section>
 
 		<section class="movements-section">
-			<h2 class="section-title">Mastery by Artistic Movement</h2>
+			<h2 class="section-title">Maîtrise par Mouvement Artistique</h2>
 			<div class="movements-list">
 				{#each movementMastery() as m}
 					<div class="movement-bar-item">
 						<div class="bar-top">
 							<span class="movement-name">{m.nom}</span>
-							<span class="movement-percent">{m.masteryPercentage}% Mastery (Avg Box {m.avgBox})</span>
+							<span class="movement-percent">{m.masteryPercentage}% Maîtrise (Boîte Moy. {m.avgBox})</span>
 						</div>
 						<div class="progress-track">
 							<div
@@ -108,12 +113,12 @@
 		</section>
 	{:else}
 		<div class="empty-state">
-			<span class="empty-icon">📈</span>
-			<h3>No Learning Data Yet</h3>
-			<p>You haven't completed any daily reviews or catalog quizzes yet. Start exploring to build your Leitner mastery trajectory!</p>
+			<span class="empty-icon"><ChartLineUp size={56} weight="fill" /></span>
+			<h3>Aucune donnée d'apprentissage</h3>
+			<p>Vous n'avez pas encore effectué de révisions quotidiennes ou de quiz du catalogue. Commencez à explorer pour développer votre maîtrise Leitner !</p>
 			<div class="cta-actions">
-				<a href="/" class="cta-btn primary">Try Today's Review</a>
-				<a href="/catalogue" class="cta-btn secondary">Explore Catalog</a>
+				<a href="/" class="cta-btn primary">Essayer la révision du jour</a>
+				<a href="/catalogue" class="cta-btn secondary">Explorer le catalogue</a>
 			</div>
 		</div>
 	{/if}
@@ -162,7 +167,9 @@
 	}
 
 	.stat-icon {
-		font-size: 2.5rem;
+		display: flex;
+		align-items: center;
+		color: var(--color-primary);
 	}
 
 	.stat-content {
@@ -290,9 +297,10 @@
 	}
 
 	.empty-icon {
-		font-size: 3.5rem;
-		display: block;
+		display: flex;
+		justify-content: center;
 		margin-bottom: 1rem;
+		color: var(--color-primary);
 	}
 
 	.empty-state h3 {

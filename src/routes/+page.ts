@@ -2,6 +2,7 @@ import type { PageLoad } from './$types';
 import { supabase } from '$lib/supabase/client';
 import { readFromLocalCache, saveToLocalCache } from '$lib/offline/storage';
 import type { Artwork, UserProgress, ContentArtwork, Movement, ActiveLessonView } from '$lib/types/database';
+import { sanitizeArtworks } from '$lib/utils/artworks';
 
 export const ssr = false; // Client-side rendering enabled for daily storage state logic
 
@@ -34,9 +35,9 @@ export const load: PageLoad = async () => {
 
 	if (!isOnline) {
 		// Offline data retrieval
-		artworks = await readFromLocalCache('cached_artworks');
-		const cachedMcqs: ContentArtwork[] = await readFromLocalCache('cached_mcqs');
-		progressList = await readFromLocalCache('user_progress_cache');
+		artworks = sanitizeArtworks(await readFromLocalCache('cached_artworks'));
+		const cachedMcqs: ContentArtwork[] = (await readFromLocalCache('cached_mcqs')) || [];
+		progressList = (await readFromLocalCache('user_progress_cache')) || [];
 
 		for (const mcq of cachedMcqs) {
 			if (mcq && mcq.id_oeuvre) contentsMap[mcq.id_oeuvre] = mcq;
@@ -52,11 +53,11 @@ export const load: PageLoad = async () => {
 			]);
 
 			if (artworksRes.data && artworksRes.data.length > 0) {
-				artworks = artworksRes.data;
+				artworks = sanitizeArtworks(artworksRes.data);
 				await saveToLocalCache('cached_artworks', artworks);
 			} else {
 				// Fallback if DB query returned empty or unseeded
-				artworks = await readFromLocalCache('cached_artworks');
+				artworks = sanitizeArtworks(await readFromLocalCache('cached_artworks'));
 			}
 
 			if (movementsRes.data) {
@@ -67,7 +68,7 @@ export const load: PageLoad = async () => {
 				progressList = progressRes.data;
 				await saveToLocalCache('user_progress_cache', progressList);
 			} else {
-				progressList = await readFromLocalCache('user_progress_cache');
+				progressList = (await readFromLocalCache('user_progress_cache')) || [];
 			}
 
 			if (contentsRes.data) {
@@ -77,16 +78,16 @@ export const load: PageLoad = async () => {
 				}
 				await saveToLocalCache('cached_mcqs', fetchedContents);
 			} else {
-				const cachedMcqs: ContentArtwork[] = await readFromLocalCache('cached_mcqs');
+				const cachedMcqs: ContentArtwork[] = (await readFromLocalCache('cached_mcqs')) || [];
 				for (const mcq of cachedMcqs) {
 					if (mcq && mcq.id_oeuvre) contentsMap[mcq.id_oeuvre] = mcq;
 				}
 			}
 		} catch (err) {
 			console.warn('[TodayLoad] Error fetching from Supabase, falling back to cache:', err);
-			artworks = await readFromLocalCache('cached_artworks');
-			const cachedMcqs: ContentArtwork[] = await readFromLocalCache('cached_mcqs');
-			progressList = await readFromLocalCache('user_progress_cache');
+			artworks = sanitizeArtworks(await readFromLocalCache('cached_artworks'));
+			const cachedMcqs: ContentArtwork[] = (await readFromLocalCache('cached_mcqs')) || [];
+			progressList = (await readFromLocalCache('user_progress_cache')) || [];
 			for (const mcq of cachedMcqs) {
 				if (mcq && mcq.id_oeuvre) contentsMap[mcq.id_oeuvre] = mcq;
 			}
@@ -164,21 +165,21 @@ export const load: PageLoad = async () => {
 
 		lesson = {
 			...selectedArtwork,
-			nom_courant: movement?.nom || 'Art Movement',
+			nom_courant: movement?.nom || 'Mouvement Artistique',
 			oklch_token: movement?.oklch_token || 'var(--movement-theme)',
-			anecdote_accroche: content?.anecdote_accroche || 'Explore the remarkable story and composition of this timeless masterpiece.',
-			anecdote_technique: content?.anecdote_technique || 'Analyze the technical details, brushwork, and historical significance behind this artwork.',
-			anecdote_secrete: content?.anecdote_secrete || 'Discover the hidden symbolism and historical mysteries preserved across centuries.',
+			anecdote_accroche: content?.anecdote_accroche || 'Explorez l\'histoire remarquable et la composition de ce chef-d\'œuvre intemporel.',
+			anecdote_technique: content?.anecdote_technique || 'Analysez les détails techniques, le travail au pinceau et la signification historique de cette œuvre.',
+			anecdote_secrete: content?.anecdote_secrete || 'Découvrez le symbolisme caché et les mystères historiques préservés à travers les siècles.',
 			qcm: content?.qcm || {
-				question: `What artistic movement or period is best represented by "${selectedArtwork.titre}"?`,
+				question: `Quel mouvement artistique ou période est le mieux représenté par "${selectedArtwork.titre}" ?`,
 				options: [
-					movement?.nom || 'Impressionism',
-					'Abstract Expressionism',
-					'Neoclassicism',
-					'Surrealism'
+					movement?.nom || 'Impressionnisme',
+					'Expressionnisme abstrait',
+					'Néoclassicisme',
+					'Surréalisme'
 				],
 				correctIndex: 0,
-				explanation: `"${selectedArtwork.titre}" created by ${selectedArtwork.artiste} is a foundational example of ${movement?.nom || 'Impressionism'}.`
+				explanation: `"${selectedArtwork.titre}" créé par ${selectedArtwork.artiste} est un exemple fondamental de ${movement?.nom || 'Impressionnisme'}.`
 			}
 		};
 	}

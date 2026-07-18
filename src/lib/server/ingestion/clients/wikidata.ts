@@ -6,7 +6,7 @@ export interface ArtworkData {
   medium_display: string | null;
   dimensions: string | null;
   style_title: string | null;
-  department_title: string | null; // Museum / Location
+  department_title: string | null;
   place_of_origin: string | null;
   description_clean: string;
   image_url_full: string | null;
@@ -22,7 +22,7 @@ const WIKIDATA_SPARQL_ENDPOINT = 'https://query.wikidata.org/sparql';
 /**
  * Executes a SPARQL query against Wikidata and returns the raw JSON bindings with exponential backoff retry
  */
-async function executeSparqlQuery(query: string, maxRetries: number = 3): Promise<any[]> {
+export async function executeSparqlQuery(query: string, maxRetries: number = 3): Promise<any[]> {
   const url = `${WIKIDATA_SPARQL_ENDPOINT}?query=${encodeURIComponent(query)}&format=json`;
   let lastError: any = null;
 
@@ -73,10 +73,10 @@ export function normalizeWikidataArtwork(input: any | any[], fallbackId?: string
 
   const title = binding.itemLabel?.value || binding.title?.value || 'Untitled Artwork';
   const artist_title = binding.artistLabel?.value || binding.artist?.value || binding.creatorLabel?.value || 'Unknown Artist';
-  
+
   let date_display = binding.dateStr?.value || binding.date?.value || null;
   if (date_display && date_display.includes('T')) {
-    date_display = date_display.split('T')[0]; // Format YYYY-MM-DD or YYYY
+    date_display = date_display.split('T')[0];
   }
 
   const mediums = Array.from(new Set(rows.map(r => r.medium?.value || r.materialLabel?.value).filter(Boolean)));
@@ -87,7 +87,7 @@ export function normalizeWikidataArtwork(input: any | any[], fallbackId?: string
 
   const department_title = binding.museum?.value || binding.locationLabel?.value || null;
   const place_of_origin = binding.country?.value || binding.countryLabel?.value || null;
-  
+
   let dimensions: string | null = null;
   if (binding.height?.value && binding.width?.value) {
     dimensions = `${binding.height.value} × ${binding.width.value} cm`;
@@ -202,153 +202,7 @@ export function normalizeWikidataArtwork(input: any | any[], fallbackId?: string
     image_url_full,
     image_url_thumb,
     is_public_domain: true,
+    article_extract: raw_metadata.article_extract || null,
     raw_metadata
   };
-}
-
-/**
- * Fast (< 50ms) fetch of the English Wikipedia article summary/intro extract (~3-4 sentences, < 1 KB JSON)
- */
-export async function fetchWikipediaSummary(title: string, lang: string = 'en'): Promise<string | null> {
-  if (!title) return null;
-  try {
-    const url = `https://${lang}.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title.replace(/ /g, '_'))}`;
-    const response = await fetch(url, {
-      headers: { 'User-Agent': USER_AGENT }
-    });
-    if (!response.ok) return null;
-    const data = await response.json();
-    return data?.extract || null;
-  } catch (err) {
-    console.warn(`[Wikipedia API] Failed to fetch summary for ${title}:`, err);
-    return null;
-  }
-}
-
-/**
- * Fetches exact artwork metadata and CC0 image from Wikidata using its QID (e.g., Q12418 for Mona Lisa)
- */
-export async function fetchWikidataArtworkById(idOrQid: string | number): Promise<ArtworkData> {
-  let qid = String(idOrQid).trim();
-  if (/^\d+$/.test(qid)) {
-    qid = `Q${qid}`;
-  } else if (!qid.toUpperCase().startsWith('Q')) {
-    throw new Error(`Invalid Wikidata ID format: ${qid}. Expected Q-ID (e.g. Q12418).`);
-  } else {
-    qid = qid.toUpperCase();
-  }
-
-  // Comprehensive query capturing rich historical and artistic properties without join explosion
-  const query = `
-SELECT ?itemLabel ?itemDescription ?creatorLabel ?dateStr ?materialLabel ?movementLabel ?locationLabel ?countryLabel ?heightVal ?widthVal ?imageUrl ?depictsLabel ?genreLabel ?patronLabel ?eventLabel ?ownerLabel ?collectionLabel ?creationPlaceLabel ?inspiredByLabel ?techniqueLabel ?exhibitionLabel ?seriesLabel ?discoveryPlaceLabel ?symbolLabel ?influencedByLabel ?wikiTitle
-WHERE {
-  BIND(wd:${qid} AS ?item)
-  OPTIONAL { ?item wdt:P170 ?creator. }
-  OPTIONAL { ?item wdt:P571 ?dateStr. }
-  OPTIONAL { ?item wdt:P186 ?material. }
-  OPTIONAL { ?item wdt:P135 ?movement. }
-  OPTIONAL { ?item wdt:P276 ?location. }
-  OPTIONAL { ?item wdt:P495 ?country. }
-  OPTIONAL { ?item wdt:P2048 ?heightVal. }
-  OPTIONAL { ?item wdt:P2049 ?widthVal. }
-  OPTIONAL { ?item wdt:P18 ?imageUrl. }
-  OPTIONAL { ?item wdt:P921 ?depicts. }
-  OPTIONAL { ?item wdt:P136 ?genre. }
-  OPTIONAL { ?item wdt:P88 ?patron. }
-  OPTIONAL { ?item wdt:P793 ?event. }
-  OPTIONAL { ?item wdt:P114 ?owner. }
-  OPTIONAL { ?item wdt:P195 ?collection. }
-  OPTIONAL { ?item wdt:P1071 ?creationPlace. }
-  OPTIONAL { ?item wdt:P144 ?inspiredBy. }
-  OPTIONAL { ?item wdt:P2094 ?technique. }
-  OPTIONAL { ?item wdt:P608 ?exhibition. }
-  OPTIONAL { ?item wdt:P361 ?series. }
-  OPTIONAL { ?item wdt:P189 ?discoveryPlace. }
-  OPTIONAL { ?item wdt:P180 ?symbol. }
-  OPTIONAL { ?item wdt:P737 ?influencedBy. }
-  OPTIONAL { 
-    ?article schema:about ?item ; 
-             schema:isPartOf <https://en.wikipedia.org/> ; 
-             schema:name ?wikiTitle . 
-  }
-  SERVICE wikibase:label { bd:serviceParam wikibase:language "en,fr". }
-}
-LIMIT 50
-  `;
-
-  const bindings = await executeSparqlQuery(query);
-  if (!bindings || bindings.length === 0) {
-    throw new Error(`Wikidata API Error: No data returned for QID ${qid}`);
-  }
-
-  return normalizeWikidataArtwork(bindings, qid);
-}
-
-/**
- * Searches artworks by keyword (painting title or artist name) across Wikidata
- */
-export async function searchWikidataArtworks(query: string, limit: number = 5): Promise<ArtworkData[]> {
-  const cleanQuery = query.replace(/["\\]/g, ' ').trim();
-  if (!cleanQuery) return [];
-
-  const sparql = `
-SELECT DISTINCT ?item ?itemLabel ?itemDescription ?artistLabel ?dateStr ?museum ?imageUrl ?sitelinks WHERE {
-  {
-    SERVICE wikibase:mwapi {
-      bd:serviceParam wikibase:endpoint "www.wikidata.org";
-                      wikibase:api "EntitySearch";
-                      mwapi:search "${cleanQuery}";
-                      mwapi:language "en".
-      ?item wikibase:apiOutputItem mwapi:item.
-    }
-    ?item wdt:P31/wdt:P279* wd:Q3305213.
-    OPTIONAL { ?item wikibase:sitelinks ?sitelinks. }
-  } UNION {
-    SERVICE wikibase:mwapi {
-      bd:serviceParam wikibase:endpoint "www.wikidata.org";
-                      wikibase:api "EntitySearch";
-                      mwapi:search "${cleanQuery}";
-                      mwapi:language "en".
-      ?artistEntity wikibase:apiOutputItem mwapi:item.
-    }
-    ?artistEntity wdt:P31 wd:Q5.
-    ?item wdt:P170 ?artistEntity;
-          wdt:P31/wdt:P279* wd:Q3305213.
-    OPTIONAL { ?item wikibase:sitelinks ?sitelinks. }
-  }
-  OPTIONAL { ?item wdt:P170 ?creator. ?creator rdfs:label ?artistLabel. FILTER(LANG(?artistLabel) = "en" || LANG(?artistLabel) = "fr") }
-  OPTIONAL { ?item wdt:P571 ?dateStr. }
-  OPTIONAL { ?item wdt:P276 ?loc. ?loc rdfs:label ?museum. FILTER(LANG(?museum) = "en" || LANG(?museum) = "fr") }
-  OPTIONAL { ?item wdt:P18 ?imageUrl. }
-  SERVICE wikibase:label { bd:serviceParam wikibase:language "en,fr". }
-}
-ORDER BY DESC(?sitelinks)
-LIMIT ${limit}
-  `;
-
-  const bindings = await executeSparqlQuery(sparql);
-  return bindings.map(b => normalizeWikidataArtwork([b]));
-}
-
-/**
- * Retrieves the top most famous paintings worldwide according to Wikipedia sitelinks/popularity
- */
-export async function fetchTopFamousArtworks(limit: number = 10): Promise<ArtworkData[]> {
-  const sparql = `
-SELECT ?item ?itemLabel ?itemDescription ?artistLabel ?dateStr ?museum ?imageUrl ?sitelinks WHERE {
-  ?item wdt:P31 wd:Q3305213;
-        wikibase:sitelinks ?sitelinks.
-  FILTER(?sitelinks > 40)
-  OPTIONAL { ?item wdt:P170 ?creator. ?creator rdfs:label ?artistLabel. FILTER(LANG(?artistLabel) = "en" || LANG(?artistLabel) = "fr") }
-  OPTIONAL { ?item wdt:P571 ?dateStr. }
-  OPTIONAL { ?item wdt:P276 ?loc. ?loc rdfs:label ?museum. FILTER(LANG(?museum) = "en" || LANG(?museum) = "fr") }
-  OPTIONAL { ?item wdt:P18 ?imageUrl. }
-  SERVICE wikibase:label { bd:serviceParam wikibase:language "en,fr". }
-}
-ORDER BY DESC(?sitelinks)
-LIMIT ${limit}
-  `;
-
-  const bindings = await executeSparqlQuery(sparql);
-  return bindings.map(b => normalizeWikidataArtwork([b]));
 }

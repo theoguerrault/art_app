@@ -1,9 +1,9 @@
 # Dynamic AI MCQ Engine - AI Art Coach
 
 ## 1. On-Demand Generation Engine
-**AI Art Coach** integrates an AI MCQ generation engine (`scripts/test-chicago-quiz/`) to generate multiple-choice questions from factual metadata. 
+**AI Art Coach** integrates an AI MCQ generation engine to generate multiple-choice questions from factual metadata. 
 
-The engine uses the `@google/genai` SDK and **Zod Schema constraints (Structured Outputs)** to process verified metadata (ingested from Wikidata and museum APIs via [`data_ingestion.md`](file:///Users/theoguerrault/Documents/Projets/art_app/doc/03_core_engine/data_ingestion.md)) into structured multiple-choice questions (`QcmSchema`).
+The engine (`src/lib/server/ingestion/quiz-generator.ts`) uses the `@google/genai` SDK and **Zod Schema constraints (Structured Outputs)** to process verified metadata (ingested from Wikidata and museum APIs via [`data_ingestion.md`](file:///Users/theoguerrault/Documents/Projets/art_app/doc/03_core_engine/data_ingestion.md)) into structured multiple-choice questions (`QcmSchema`).
 
 ---
 
@@ -108,38 +108,4 @@ When generating multiple questions for a single artwork or movement, the generat
 - **Excluding Source Quotes (`getPreviousSourceQuotes`):** Prevents the model from referencing metadata sentences already used as proof in existing questions.
 - **Excluding Source Fields (`getPreviousSourceFields`):** Filters out previously tested metadata keys to force selection from alternative fields.
 
----
 
-## 7. CLI Test Harness & Execution (`scripts/test-chicago-quiz/`)
-The TypeScript CLI harness (`scripts/test-chicago-quiz/`) executes generation, validation, and database ingestion from the command line.
-
-### 7.1 Directory Architecture
-```text
-scripts/test-chicago-quiz/
-├── package.json               # Dependencies: @google/genai, commander, dotenv, zod, tsx, typescript
-├── tsconfig.json
-├── quiz-state.json            # Local JSON store tracking test execution history and Leitner progression
-├── .env.local                 # GEMINI_API_KEY=... & SUPABASE_SERVICE_ROLE_KEY=...
-└── src/
-    ├── index.ts               # CLI Entry point & command orchestration
-    ├── wikidata-client.ts     # SPARQL client
-    ├── quiz-generator.ts      # Structured MCQ generation logic & model fallback execution
-    └── quiz-state.ts          # State loader/saver & local Leitner calculation
-```
-
-### 7.2 CLI Commands
-Execute terminal commands from inside `scripts/test-chicago-quiz/`:
-
-```bash
-# Generate and validate an MCQ for a specific Wikidata QID (e.g., Mona Lisa - Q12418)
-npx tsx src/index.ts --id Q12418
-
-# Search Wikidata by title or artist and test MCQ generation on the #1 result
-npx tsx src/index.ts --search "Starry Night"
-
-# Fetch top N famous artworks globally and generate questions for the highest-ranked result
-npx tsx src/index.ts --top 5
-
-# Reset local quiz history (`quiz-state.json`) and test fresh generation
-npx tsx src/index.ts --id Q12418 --reset
-```

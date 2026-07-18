@@ -4,7 +4,6 @@
 To achieve zero-latency interactions (< 16ms INP) without waiting for round-trip network confirmation during daily learning sessions:
 1. **Instant Client-Side State Mutation:** The Svelte 5 component evaluates the answer locally using `$state()` Runes and instantly plays visual celebrations and Leitner badge updates governed by [`learning_mechanics.md`](file:///Users/theoguerrault/Documents/Projets/art_app/doc/01_product/learning_mechanics.md).
 2. **Asynchronous Authoritative Persistence (`Supabase SQL`):** If online (`navigator.onLine === true`), the client fires non-blocking asynchronous requests updating `supabase.from('user_artwork_progress').upsert()` and appending the record to `supabase.from('historique_reponses').insert()`.
-3. **CLI & Development State (`quiz-state.json` / `quiz-state.ts`):** For offline AI generator testing and pipeline debugging within `scripts/test-chicago-quiz/`, the exact same Leitner calculation rules and intervals are mirrored inside local JSON storage without requiring a live database connection.
 
 ---
 

@@ -36,7 +36,7 @@ When the user instructs the agent to `"continue implementation"`, `"continue l'i
   - **Scope & Required Files:**
     - Create `supabase/migrations/0001_initial_schema.sql` containing the SQL tables (`courants`, `contenus_courants`, `oeuvres`, `contenus_oeuvres`, `historique_reponses`, `user_artwork_progress`) and RLS policies defined in [`doc/02_system_architecture/database_and_security.md`](file:///Users/theoguerrault/Documents/Projets/art_app/doc/02_system_architecture/database_and_security.md).
     - If local Supabase CLI is active, apply the migration; otherwise, prepare the script for Supabase SQL Editor execution.
-    - Create `supabase/seed.sql` (or use the `scripts/test-chicago-quiz/` generator harness) to insert 3 to 5 sample movements, artworks, and `qcm_synthese` records for UI testing in Phases 4 through 6.
+    - Create `supabase/seed.sql` to insert 3 to 5 sample movements, artworks, and `qcm_synthese` records for UI testing in Phases 4 through 6.
   - **Verification Criteria:**
     - Verify SQL syntax validity.
     - Verify all foreign key constraints (`ON DELETE CASCADE`) and index declarations match [`database_and_security.md`](file:///Users/theoguerrault/Documents/Projets/art_app/doc/02_system_architecture/database_and_security.md).
@@ -147,18 +147,8 @@ When the user instructs the agent to `"continue implementation"`, `"continue l'i
 
 ---
 
-### Phase 7: AI Generator CLI & Production Pipeline Alignment
-- [ ] **Step 7.1: Connect CLI Test Harness to Supabase Database (`scripts/test-chicago-quiz/`)**
-  - **Scope & Required Files:**
-    - Update `scripts/test-chicago-quiz/src/index.ts` to allow pushing generated JSON payloads directly into `contenus_oeuvres` and `contenus_courants` tables via Supabase Service Role key ([`doc/03_core_engine/ai_mcq_engine.md`](file:///Users/theoguerrault/Documents/Projets/art_app/doc/03_core_engine/ai_mcq_engine.md)).
-    - Verify anti-duplication logic (`antiDuplicationContext`) prevents re-generation of existing facts.
-  - **Verification Criteria:**
-    - Run script against a test artwork ID and verify `UPSERT` execution into Supabase tables.
-
----
-
-### Phase 8: Final PWA Verification & Web Vitals Auditing
-- [ ] **Step 8.1: Full Production Build & Workbox Service Worker Validation**
+### Phase 7: Final PWA Verification & Web Vitals Auditing
+- [ ] **Step 7.1: Full Production Build & Workbox Service Worker Validation**
   - **Scope & Required Files:**
     - Run `npm run build` and check output bundle sizes (`sveltekit` JS chunks under 30 KB gzipped).
     - Verify Service Worker registration (`sw.js`) and precache manifest generation.

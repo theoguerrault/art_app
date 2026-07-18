@@ -3,6 +3,7 @@ import { error } from '@sveltejs/kit';
 import { supabase } from '$lib/supabase/client';
 import { readFromLocalCache, saveToLocalCache } from '$lib/offline/storage';
 import type { Artwork, Movement, ContentArtwork, UserProgress, ActiveLessonView } from '$lib/types/database';
+import { sanitizeArtwork } from '$lib/utils/artworks';
 
 export const ssr = false;
 
@@ -17,7 +18,8 @@ export const load: PageLoad = async ({ params }) => {
 
 	if (!isOnline) {
 		const cachedArtworks: Artwork[] = (await readFromLocalCache('cached_artworks')) || [];
-		artwork = cachedArtworks.find((a) => a.slug === slugOrId || a.id.toString() === slugOrId) || null;
+		const found = cachedArtworks.find((a) => a.slug === slugOrId || a.id.toString() === slugOrId) || null;
+		artwork = found ? sanitizeArtwork(found) : null;
 
 		if (artwork) {
 			const cachedMcqs: ContentArtwork[] = (await readFromLocalCache('cached_mcqs')) || [];
@@ -40,10 +42,11 @@ export const load: PageLoad = async ({ params }) => {
 			const { data: artData, error: artError } = await query.maybeSingle();
 
 			if (artData) {
-				artwork = artData;
+				artwork = sanitizeArtwork(artData);
 			} else {
 				const cachedArtworks: Artwork[] = (await readFromLocalCache('cached_artworks')) || [];
-				artwork = cachedArtworks.find((a) => a.slug === slugOrId || a.id.toString() === slugOrId) || null;
+				const found = cachedArtworks.find((a) => a.slug === slugOrId || a.id.toString() === slugOrId) || null;
+				artwork = found ? sanitizeArtwork(found) : null;
 			}
 
 			if (artwork) {
@@ -67,7 +70,8 @@ export const load: PageLoad = async ({ params }) => {
 		} catch (err) {
 			console.warn('[DetailLoad] Supabase query failed, checking cache:', err);
 			const cachedArtworks: Artwork[] = (await readFromLocalCache('cached_artworks')) || [];
-			artwork = cachedArtworks.find((a) => a.slug === slugOrId || a.id.toString() === slugOrId) || null;
+			const found = cachedArtworks.find((a) => a.slug === slugOrId || a.id.toString() === slugOrId) || null;
+			artwork = found ? sanitizeArtwork(found) : null;
 			if (artwork) {
 				const cachedMcqs: ContentArtwork[] = (await readFromLocalCache('cached_mcqs')) || [];
 				content = cachedMcqs.find((c) => c.id_oeuvre === artwork?.id) || null;
@@ -83,17 +87,19 @@ export const load: PageLoad = async ({ params }) => {
 
 	const lesson: ActiveLessonView = {
 		...artwork,
-		nom_courant: movement?.nom || 'Art Movement',
+		nom_courant: movement?.nom || 'Mouvement Artistique',
 		oklch_token: movement?.oklch_token || 'var(--movement-theme)',
-		anecdote_accroche: content?.anecdote_accroche || 'Explore the profound story and composition of this timeless piece.',
-		anecdote_technique: content?.anecdote_technique || 'Analyze the technical mastery, color harmony, and historical significance.',
-		anecdote_secrete: content?.anecdote_secrete || 'Uncover the hidden details and historical anecdotes behind this creation.',
+		anecdote_accroche: content?.anecdote_accroche || 'Explorez l\'histoire profonde et la composition de cette pièce intemporelle.',
+		anecdote_technique: content?.anecdote_technique || 'Analysez la maîtrise technique, l\'harmonie des couleurs et la signification historique.',
+		anecdote_secrete: content?.anecdote_secrete || 'Découvrez les détails cachés et les anecdotes historiques derrière cette création.',
+		detailed_description: content?.detailed_description || null,
 		qcm: content?.qcm || {
-			question: `What artistic era or period characterizes "${artwork.titre}"?`,
-			options: [movement?.nom || 'Historical Period', 'Surrealism', 'Cubism', 'Baroque'],
+			question: `Quelle ère ou période artistique caractérise "${artwork.titre}" ?`,
+			options: [movement?.nom || 'Période historique', 'Surréalisme', 'Cubisme', 'Baroque'],
 			correctIndex: 0,
-			explanation: `"${artwork.titre}" by ${artwork.artiste} exemplifies ${movement?.nom || 'Historical Period'}.`
-		}
+			explanation: `"${artwork.titre}" par ${artwork.artiste} illustre parfaitement ${movement?.nom || 'Période historique'}.`
+		},
+		mots_cles: content?.mots_cles || []
 	};
 
 	return {

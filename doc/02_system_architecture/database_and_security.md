@@ -59,6 +59,9 @@ CREATE TABLE IF NOT EXISTS public.oeuvres (
     aspect_ratio FLOAT NOT NULL DEFAULT 1.33,
     ordre_dans_courant INT NOT NULL,
     is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    musee VARCHAR(200) NULL,
+    dimensions VARCHAR(100) NULL,
+    medium VARCHAR(200) NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     UNIQUE(id_courant, ordre_dans_courant)
 );
@@ -68,6 +71,9 @@ CREATE TABLE IF NOT EXISTS public.contenus_oeuvres (
     anecdote_accroche TEXT NOT NULL,   -- Tier 1: Visual / Pop-culture hook
     anecdote_technique TEXT NOT NULL,  -- Tier 2: Stylistic / Color analysis
     anecdote_secrete TEXT NOT NULL,    -- Tier 3: Little-known historical secret
+    extended_analysis TEXT NULL,       -- Deep visual/formal analysis from Wikipedia REST API
+    historical_context TEXT NULL,      -- Deep provenance/history from Wikipedia REST API
+    detailed_description TEXT NULL,    -- Rich coherent artwork description (~300-500 words, FR) from Wikipedia + Gemini, cached
     qcm JSONB NOT NULL,                -- Full QcmSchema: { "sourceQuote": "...", "conceptTag": "...", "difficulty": "medium", "question": "...", "options": ["A","B","C","D"], "correctIndex": 2, "explanation": "..." }
     mots_cles JSONB NOT NULL DEFAULT '[]'::jsonb, -- Array for keyword search
     generated_by_model VARCHAR(50) NOT NULL DEFAULT 'gemini-2.5-pro',
@@ -139,13 +145,19 @@ SELECT
     o.image_url_thumb,
     o.aspect_ratio,
     o.ordre_dans_courant,
+    o.musee,
+    o.dimensions,
+    o.medium,
     c.id AS id_courant,
     c.nom AS nom_courant,
     c.oklch_token,
     co.anecdote_accroche,
     co.anecdote_technique,
     co.anecdote_secrete,
-    co.qcm
+    co.extended_analysis,
+    co.historical_context,
+    co.qcm,
+    co.mots_cles
 FROM public.oeuvres o
 JOIN public.courants c ON o.id_courant = c.id
 JOIN public.contenus_oeuvres co ON o.id = co.id_oeuvre
@@ -193,4 +205,76 @@ CREATE POLICY "Individual progress manage" ON public.user_artwork_progress
 ## 5. Architectural Rationale for 1:1 Relations
 Separating `oeuvres` (parent table) from `contenus_oeuvres` (child 1:1 table) provides two technical functions:
 - **Payload Optimization (`adapter-static`):** When accessing `/catalogue`, the PWA queries only `oeuvres` (`id`, `titre`, `artiste`, `image_url_thumb`), generating a JSON payload under 8 KB for 30 items. Including text descriptions (~3 KB per record) in the parent table increases the list payload by over 90 KB.
-- **Isolated Content Updates:** The AI generation pipeline (`scripts/test-chicago-quiz/`) updates pedagogical text and structured JSONB MCQs in `contenus_oeuvres` without locking or modifying structural metadata in `oeuvres`.
+- **Isolated Content Updates:** The AI generation pipeline updates pedagogical text and structured JSONB MCQs in `contenus_oeuvres` without locking or modifying structural metadata in `oeuvres`.
+
+---
+
+## 6. Prisma ORM Integration
+
+The application uses **Prisma ORM** as the server-side database access layer. It connects to the Supabase PostgreSQL database, manages schema introspection, and generates TypeScript definitions.
+
+### 6.1 Configuration & Multi-Schema Setup
+Prisma is configured in `prisma/schema.prisma`. It utilizes the `multiSchema` preview feature to access both the `public` schema (application tables) and the `auth` schema (Supabase GoTrue system tables).
+
+```prisma
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["multiSchema"]
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+  schemas   = ["auth", "public"]
+}
+```
+
+### 6.2 Connection Environment Variables
+Prisma configuration relies on two distinct database connection URIs defined in system environment variables:
+- **`DATABASE_URL`**: Connects through the Supabase connection pooler (transaction mode, port 6543) for runtime queries.
+- **`DIRECT_URL`**: Connects directly to the PostgreSQL database (port 5432) for schema migrations and introspection.
+
+### 6.3 Command Reference & Code Generation
+To generate the Prisma Client and compile TypeScript types:
+
+```bash
+npx prisma generate
+```
+
+To sync local schema changes with the database:
+
+```bash
+npx prisma db pull
+```
+
+### 6.4 Client Initialization & Server-Side Usage
+Instantiate `PrismaClient` in `src/lib/server/prisma.ts` to ensure database access runs strictly on the server:
+
+```typescript
+import { PrismaClient } from '@prisma/client';
+
+export const prisma = new PrismaClient();
+```
+
+*Note: Prisma Client must be imported and run exclusively in server-side load files (`+page.server.ts`, `+layout.server.ts`) or API endpoints (`+server.ts`).*
+
+#### Query Example: Fetching Active Artworks with Relations
+```typescript
+import { prisma } from '$lib/server/prisma';
+
+export async function load() {
+  const activeArtworks = await prisma.oeuvres.findMany({
+    where: { is_active: true },
+    include: {
+      contenus_oeuvres: true,
+      courants: true,
+    },
+    orderBy: {
+      ordre_dans_courant: 'asc',
+    },
+  });
+  return { activeArtworks };
+}
+```
+

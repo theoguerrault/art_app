@@ -1,10 +1,11 @@
 <script lang="ts">
 	import type { PageData } from './$types';
-	import ArtworkCard from '$lib/components/ArtworkCard.svelte';
-	import QuickMCQ from '$lib/components/QuickMCQ.svelte';
+	import ArtworkCard from '$lib/features/artwork/components/ArtworkCard.svelte';
+	import QuickMCQ from '$lib/features/quiz/components/QuickMCQ.svelte';
 	import { supabase } from '$lib/supabase/client';
 	import { queueOfflineAnswer, saveToLocalCache, readFromLocalCache } from '$lib/offline/storage';
 	import { getLeitnerReviewDate } from './+page';
+	import { Package, Palette } from 'phosphor-svelte';
 
 	let { data }: { data: PageData } = $props();
 
@@ -12,6 +13,24 @@
 	let currentBoxLevel = $state<number>(1);
 	let answered = $state(false);
 	let lastScore = $state<number | null>(null);
+
+	function extractHue(oklchToken: string | undefined): number {
+		if (!oklchToken) return 45;
+		const matches = oklchToken.match(/[\d.]+/g);
+		if (matches && matches.length >= 3) {
+			return parseFloat(matches[2]);
+		}
+		return 45;
+	}
+
+	$effect(() => {
+		if (lesson) {
+			const hue = extractHue(lesson.oklch_token);
+			document.documentElement.style.setProperty('--artwork-hue', hue.toString());
+		} else {
+			document.documentElement.style.setProperty('--artwork-hue', '45');
+		}
+	});
 
 	async function handleAnswer({ score, isCorrect, selectedIndex }: { score: number; isCorrect: boolean; selectedIndex: number }) {
 		if (!lesson || answered) return;
@@ -106,10 +125,10 @@
 <div class="today-view">
 	<header class="today-header">
 		<div class="date-badge">
-			<span>Today's Feature</span>
+			<span>À la une aujourd'hui</span>
 		</div>
-		<h1 class="page-title">Daily Discovery</h1>
-		<p class="page-subtitle">Spend 3 minutes studying today's masterpiece to level up your Leitner mastery.</p>
+		<h1 class="page-title">Découverte Quotidienne</h1>
+		<p class="page-subtitle">Prenez 3 minutes pour étudier l'œuvre du jour et améliorer votre maîtrise de l'art.</p>
 	</header>
 
 	{#if lesson}
@@ -134,20 +153,20 @@
 		{#if answered}
 			<div class="leitner-feedback" style:--movement-color={lesson.oklch_token}>
 				<div class="leitner-level">
-					<span class="level-icon">📦</span>
-					<span>Leitner Box Status: <strong>Level {currentBoxLevel} / 5</strong></span>
+					<span class="level-icon"><Package size={22} weight="fill" /></span>
+					<span>Statut de la boîte Leitner : <strong>Niveau {currentBoxLevel} / 5</strong></span>
 				</div>
 				<p class="leitner-note">
-					Next scheduled review for this concept: <strong>{new Date(getLeitnerReviewDate(currentBoxLevel)).toLocaleDateString()}</strong>
+					Prochaine révision prévue pour ce concept : <strong>{new Date(getLeitnerReviewDate(currentBoxLevel)).toLocaleDateString()}</strong>
 				</p>
 			</div>
 		{/if}
 	{:else}
 		<div class="empty-state">
-			<span class="empty-icon">🎨</span>
-			<h3>All Caught Up!</h3>
-			<p>No review due right now. Visit the Catalog to explore new artistic movements at your own pace.</p>
-			<a href="/catalogue" class="cta-link">Explore Catalog →</a>
+			<span class="empty-icon"><Palette size={48} weight="fill" /></span>
+			<h3>Tout est à jour !</h3>
+			<p>Aucune révision prévue pour le moment. Visitez le catalogue pour explorer de nouveaux mouvements artistiques à votre rythme.</p>
+			<a href="/catalogue" class="cta-link">Explorer le catalogue →</a>
 		</div>
 	{/if}
 </div>
@@ -233,9 +252,10 @@
 	}
 
 	.empty-icon {
-		font-size: 3rem;
-		display: block;
+		display: flex;
+		justify-content: center;
 		margin-bottom: 1rem;
+		color: var(--color-primary);
 	}
 
 	.empty-state h3 {

@@ -19,13 +19,14 @@ For users studying beyond the daily recommendation:
 ## 2. UI & Accessibility Specifications
 The application applies standard browser CSS specifications and accessibility criteria:
 
-### 2.1 Perceptual Color System & Contrast
-- The interface defines colors using a perceptual color model to maintain uniform visual weight and exact WCAG AA contrast compliance across light and dark modes.
+### 2.1 Perceptual Color System & Theme Configuration
+- The interface defines colors using a perceptual OKLCH color model to maintain uniform visual weight and exact WCAG AA contrast compliance across light and dark modes.
+- **Default Theme:** By default, the application displays in Light Mode (`data-theme="light"`). Users can explicitly switch between Light Mode and Dark Mode via the `/settings` tab, with state persisted locally in `localStorage`.
 - Each artistic movement assigns thematic color variables to adapt card borders, badges, and interactive indicators to the respective historical era.
 
 ### 2.2 Animated Transitions & Layout Stability
-- **Animated Transitions:** Navigating across views (`/`, `/catalogue`, `/progression`) applies seamless visual transitions between interface states.
+- **Animated Transitions:** Navigating across views (`/`, `/catalogue`, `/progression`, `/settings`) applies seamless visual transitions using the View Transitions API between interface states.
 - **Zero Layout Shift:** Image containers pre-allocate exact aspect ratios prior to image loading, preventing visual jumps during rendering.
 
 ### 2.3 One-Handed Mobile Ergonomics
-- Interactive controls (bottom navigation bar, quiz option buttons, card flip targets) reside within the lower two-thirds of the viewport to support one-handed thumb navigation on mobile screens.
+- Interactive controls (bottom navigation bar across all 4 main tabs, quiz option buttons, card flip targets) reside within the lower two-thirds of the viewport to support one-handed thumb navigation on mobile screens.

@@ -2,6 +2,7 @@ import type { PageLoad } from './$types';
 import { supabase } from '$lib/supabase/client';
 import { readFromLocalCache, saveToLocalCache } from '$lib/offline/storage';
 import type { Artwork, Movement, UserProgress } from '$lib/types/database';
+import { sanitizeArtworks } from '$lib/utils/artworks';
 
 export const ssr = false;
 
@@ -13,7 +14,7 @@ export const load: PageLoad = async () => {
 	let progressList: UserProgress[] = [];
 
 	if (!isOnline) {
-		const fullArtworks: Artwork[] = (await readFromLocalCache('cached_artworks')) || [];
+		const fullArtworks: Artwork[] = sanitizeArtworks((await readFromLocalCache('cached_artworks')) || []);
 		artworks = fullArtworks.map((a) => ({
 			id: a.id,
 			slug: a.slug,
@@ -38,9 +39,9 @@ export const load: PageLoad = async () => {
 			]);
 
 			if (artworksRes.data && artworksRes.data.length > 0) {
-				artworks = artworksRes.data as unknown as Partial<Artwork>[];
+				artworks = sanitizeArtworks(artworksRes.data as unknown as Partial<Artwork>[]);
 			} else {
-				const fullArtworks: Artwork[] = (await readFromLocalCache('cached_artworks')) || [];
+				const fullArtworks: Artwork[] = sanitizeArtworks((await readFromLocalCache('cached_artworks')) || []);
 				artworks = fullArtworks.map((a) => ({
 					id: a.id,
 					slug: a.slug,
@@ -65,7 +66,7 @@ export const load: PageLoad = async () => {
 			}
 		} catch (err) {
 			console.warn('[CatalogLoad] Supabase query error, falling back to cache:', err);
-			const fullArtworks: Artwork[] = (await readFromLocalCache('cached_artworks')) || [];
+			const fullArtworks: Artwork[] = sanitizeArtworks((await readFromLocalCache('cached_artworks')) || []);
 			artworks = fullArtworks.map((a) => ({
 				id: a.id,
 				slug: a.slug,

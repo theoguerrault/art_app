@@ -1,17 +1,19 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { goto } from '$app/navigation';
+	import { PaintBrush, Books, ChartLineUp, Gear } from 'phosphor-svelte';
 
 	interface TabItem {
 		href: string;
 		label: string;
-		icon: string;
+		icon: any;
 	}
 
 	const tabs: TabItem[] = [
-		{ href: '/', label: 'Today', icon: '🎨' },
-		{ href: '/catalogue', label: 'Catalog', icon: '📚' },
-		{ href: '/progression', label: 'Progress', icon: '📈' }
+		{ href: '/', label: 'Aujourd\'hui', icon: PaintBrush },
+		{ href: '/catalogue', label: 'Catalogue', icon: Books },
+		{ href: '/progression', label: 'Progression', icon: ChartLineUp },
+		{ href: '/settings', label: 'Paramètres', icon: Gear }
 	];
 
 	let currentPath = $derived(page.url?.pathname || '/');
@@ -44,10 +46,11 @@
 	}
 </script>
 
-<nav class="bottom-nav" aria-label="Main navigation">
+<nav class="bottom-nav" aria-label="Navigation principale">
 	<ul class="nav-list" role="list">
 		{#each tabs as tab}
 			{@const active = isActive(tab.href)}
+			{@const IconComponent = tab.icon}
 			<li class="nav-item">
 				<a
 					href={tab.href}
@@ -56,7 +59,9 @@
 					aria-current={active ? 'page' : undefined}
 					onclick={(e) => handleTabClick(e, tab.href)}
 				>
-					<span class="nav-icon" aria-hidden="true">{tab.icon}</span>
+					<span class="nav-icon" aria-hidden="true">
+						<IconComponent size={24} weight={active ? 'fill' : 'regular'} />
+					</span>
 					<span class="nav-label">{tab.label}</span>
 				</a>
 			</li>
@@ -135,13 +140,16 @@
 	}
 
 	.nav-icon {
+		display: flex;
+		align-items: center;
+		justify-content: center;
 		font-size: 1.35rem;
 		line-height: 1;
 		transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
 	}
 
 	.nav-link.active .nav-icon {
-		transform: scale(1.18);
+		transform: scale(1.15);
 	}
 
 	.nav-label {
@@ -149,8 +157,12 @@
 		letter-spacing: 0.02em;
 	}
 
+	:global([data-theme="dark"]) .bottom-nav {
+		box-shadow: 0 -4px 16px oklch(0 0 0 / 0.25);
+	}
+
 	@media (prefers-color-scheme: dark) {
-		.bottom-nav {
+		:global([data-theme="system"]) .bottom-nav {
 			box-shadow: 0 -4px 16px oklch(0 0 0 / 0.25);
 		}
 	}

@@ -1,7 +1,7 @@
 import type { Artwork, UserProgress } from '$lib/types/database';
 
 const DB_NAME = 'ai_art_coach_db';
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 
 export type CacheStoreName = 'cached_artworks' | 'cached_mcqs' | 'user_progress_cache' | 'offline_sync_queue';
 

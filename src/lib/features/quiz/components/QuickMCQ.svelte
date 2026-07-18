@@ -1,5 +1,7 @@
 <script lang="ts">
 	import type { MCQ, QCMSynthese } from '$lib/types/database';
+	import { CheckCircle, XCircle, Target, Lightbulb } from 'phosphor-svelte';
+	import { createQuizSession } from '../logic/useQuizSession.svelte';
 
 	interface QuickMCQProps {
 		qcm_synthese?: QCMSynthese | MCQ | null;
@@ -15,48 +17,39 @@
 		onAnswer
 	}: QuickMCQProps = $props();
 
-	let activeQcm = $derived(qcm_synthese || qcm || null);
-	let selectedIndex = $state<number | null>(null);
+	// Initialize state machine
+	const session = createQuizSession(null, onAnswer);
 
-	let isAnswered = $derived(selectedIndex !== null);
-	let isCorrect = $derived(
-		activeQcm && selectedIndex !== null ? selectedIndex === activeQcm.correctIndex : false
-	);
-
-	function selectOption(index: number) {
-		if (isAnswered || disabled || !activeQcm) return;
-
-		selectedIndex = index;
-		const correct = index === activeQcm.correctIndex;
-		const score = correct ? 100 : 0;
-
-		if (onAnswer) {
-			onAnswer({ score, isCorrect: correct, selectedIndex: index });
-		}
-	}
+	// Sync props to state if they change externally
+	$effect(() => {
+		session.setQcm(qcm_synthese || qcm || null);
+	});
+	$effect(() => {
+		session.setDisabled(disabled);
+	});
 
 	function handleKeyDown(event: KeyboardEvent, index: number) {
 		if (event.key === 'Enter' || event.key === ' ') {
 			event.preventDefault();
-			selectOption(index);
+			session.selectOption(index);
 		}
 	}
 </script>
 
 <div class="mcq-wrapper container-mcq">
-	{#if activeQcm}
+	{#if session.qcm}
 		<div class="mcq-card">
 			<div class="question-header">
-				<span class="mcq-badge">Knowledge Check</span>
-				<h3 class="question-text">{activeQcm.question}</h3>
+				<span class="mcq-badge">Test de connaissances</span>
+				<h3 class="question-text">{session.qcm.question}</h3>
 			</div>
 
-			<div class="options-container responsive-options-grid" role="group" aria-label="Multiple choice options">
-				{#each activeQcm.options as option, idx}
-					{@const isSelected = selectedIndex === idx}
-					{@const isCorrectOption = idx === activeQcm.correctIndex}
-					{@const showSuccess = isAnswered && isCorrectOption}
-					{@const showError = isAnswered && isSelected && !isCorrectOption}
+			<div class="options-container responsive-options-grid" role="group" aria-label="Options à choix multiples">
+				{#each session.qcm.options as option, idx}
+					{@const isSelected = session.selectedIndex === idx}
+					{@const isCorrectOption = idx === session.qcm.correctIndex}
+					{@const showSuccess = session.isAnswered && isCorrectOption}
+					{@const showError = session.isAnswered && isSelected && !isCorrectOption}
 
 					<button
 						type="button"
@@ -64,41 +57,51 @@
 						class:selected={isSelected}
 						class:correct-state={showSuccess}
 						class:error-state={showError}
-						class:locked={isAnswered || disabled}
-						disabled={isAnswered || disabled}
-						onclick={() => selectOption(idx)}
+						class:locked={session.isAnswered || session.disabled}
+						disabled={session.isAnswered || session.disabled}
+						onclick={() => session.selectOption(idx)}
 						onkeydown={(e) => handleKeyDown(e, idx)}
 						aria-pressed={isSelected}
 					>
 						<span class="option-letter">{String.fromCharCode(65 + idx)}</span>
 						<span class="option-text">{option}</span>
 						{#if showSuccess}
-							<span class="status-icon" aria-label="Correct">✓</span>
+							<span class="status-icon" aria-label="Correct">
+								<CheckCircle size={20} weight="fill" />
+							</span>
 						{:else if showError}
-							<span class="status-icon" aria-label="Incorrect">✕</span>
+							<span class="status-icon" aria-label="Incorrect">
+								<XCircle size={20} weight="fill" />
+							</span>
 						{/if}
 					</button>
 				{/each}
 			</div>
 
-			{#if isAnswered && activeQcm.explanation}
+			{#if session.isAnswered && session.qcm.explanation}
 				<div
 					class="explanation-box"
-					class:explanation-success={isCorrect}
-					class:explanation-error={!isCorrect}
+					class:explanation-success={session.isCorrect}
+					class:explanation-error={!session.isCorrect}
 					role="region"
 					aria-live="polite"
 				>
 					<div class="explanation-title">
-						<span>{isCorrect ? '🎯 Correct!' : '💡 Good effort!'}</span>
+						{#if session.isCorrect}
+							<Target size={20} weight="fill" class="title-icon success-icon" />
+							<span>Correct !</span>
+						{:else}
+							<Lightbulb size={20} weight="fill" class="title-icon info-icon" />
+							<span>Bel effort !</span>
+						{/if}
 					</div>
-					<p class="explanation-text">{activeQcm.explanation}</p>
+					<p class="explanation-text">{session.qcm.explanation}</p>
 				</div>
 			{/if}
 		</div>
 	{:else}
 		<div class="mcq-empty">
-			<p>No question available for this item.</p>
+			<p>Aucune question disponible pour cet élément.</p>
 		</div>
 	{/if}
 </div>
@@ -199,8 +202,9 @@
 	}
 
 	.status-icon {
-		font-weight: 800;
-		font-size: 1.1rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 		margin-left: auto;
 	}
 
@@ -247,6 +251,9 @@
 	}
 
 	.explanation-title {
+		display: flex;
+		align-items: center;
+		gap: 0.45rem;
 		font-weight: 700;
 		font-size: 0.95rem;
 		margin-bottom: 0.35rem;

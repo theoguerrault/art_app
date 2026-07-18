@@ -1,9 +1,14 @@
 <script lang="ts">
 	import type { PageData } from './$types';
+	import { MagnifyingGlass, X, Check } from 'phosphor-svelte';
 
 	let { data }: { data: PageData } = $props();
 
 	let searchQuery = $state('');
+
+	$effect(() => {
+		document.documentElement.style.setProperty('--artwork-hue', '220');
+	});
 
 	// Map progress by id_oeuvre
 	let progressSet = $derived(() => {
@@ -60,21 +65,21 @@
 </script>
 
 <div class="catalog-view">
-	<header class="catalog-header">
-		<h1 class="page-title">Art Movements Catalog</h1>
-		<p class="page-subtitle">Chronological progression of artistic mastery across centuries.</p>
-
+	<header class="catalog-header sticky-header">
+		<h1 class="page-title">Catalogue</h1>
 		<div class="search-bar">
-			<span class="search-icon" aria-hidden="true">🔍</span>
+			<span class="search-icon" aria-hidden="true">
+				<MagnifyingGlass size={20} weight="bold" />
+			</span>
 			<input
 				type="search"
-				placeholder="Filter by artwork title or artist..."
+				placeholder="Rechercher une œuvre..."
 				bind:value={searchQuery}
-				aria-label="Filter artworks by title or artist"
+				aria-label="Rechercher une œuvre"
 			/>
 			{#if searchQuery}
-				<button type="button" class="clear-btn" onclick={() => (searchQuery = '')} aria-label="Clear search">
-					✕
+				<button type="button" class="clear-btn" onclick={() => (searchQuery = '')} aria-label="Effacer">
+					<X size={18} weight="bold" />
 				</button>
 			{/if}
 		</div>
@@ -82,55 +87,46 @@
 
 	<div class="movements-list">
 		{#each groupedMovements() as group}
-			<section
-				class="movement-section"
-				style:--movement-color={group.movement.oklch_token || 'var(--color-primary)'}
-			>
-				<div class="movement-header">
+			<section class="movement-section" style:--movement-color={group.movement.oklch_token || 'var(--color-primary)'}>
+				<div class="movement-header sticky-subheader">
 					<div>
 						<h2 class="movement-title">{group.movement.nom}</h2>
-						<span class="movement-century">{group.movement.siecle || 'Historical Era'}</span>
+						<span class="movement-century">{group.movement.siecle || 'Ère historique'}</span>
 					</div>
-					<div class="progress-badge">
-						<span>{group.discoveredCount} / {group.totalCount} discovered</span>
+					<div class="progress-simple">
+						{group.discoveredCount}/{group.totalCount}
 					</div>
 				</div>
 
 				{#if group.items.length > 0}
-					<div class="grid-catalog">
+					<div class="grid-catalog-minimal">
 						{#each group.items as art}
-							<a
-								href="/catalogue/{art.slug || art.id}"
-								class="artwork-item grid-subgrid-rows"
-								aria-label="View details for {art.titre} by {art.artiste}"
-							>
+							<a href="/catalogue/{art.slug || art.id}" class="artwork-card-minimal" aria-label="Voir {art.titre}">
 								<div class="thumb-wrapper">
-									<img
-										src={art.image_url_thumb}
-										alt="{art.titre} by {art.artiste}"
-										loading="lazy"
-										decoding="async"
-									/>
+									<img src={art.image_url_thumb} alt={art.titre} loading="lazy" decoding="async" />
 									{#if progressSet().has(art.id)}
-										<span class="discovered-indicator" title="Discovered">✓</span>
+										<span class="discovered-indicator" title="Découverte">
+											<Check size={14} weight="bold" />
+										</span>
 									{/if}
 								</div>
-								<h3 class="art-title">{art.titre}</h3>
-								<p class="art-artist">{art.artiste}</p>
-								<span class="art-date">{art.date_creation}</span>
+								<div class="art-info">
+									<h3 class="art-title">{art.titre}</h3>
+									<p class="art-artist">{art.artiste}</p>
+								</div>
 							</a>
 						{/each}
 					</div>
 				{:else}
-					<p class="no-items-note">No matching artworks found in this movement.</p>
+					<p class="no-items-note">Aucune œuvre trouvée.</p>
 				{/if}
 			</section>
 		{/each}
 
 		{#if groupedMovements().length === 0}
 			<div class="empty-search">
-				<p>No artworks matched your search "{searchQuery}".</p>
-				<button type="button" class="reset-btn" onclick={() => (searchQuery = '')}>Reset Search</button>
+				<p>Aucun résultat pour "{searchQuery}".</p>
+				<button type="button" class="reset-btn" onclick={() => (searchQuery = '')}>Réinitialiser</button>
 			</div>
 		{/if}
 	</div>
@@ -140,31 +136,33 @@
 	.catalog-view {
 		display: flex;
 		flex-direction: column;
-		gap: 2rem;
+		gap: 1.5rem;
 		padding-bottom: 2rem;
 	}
 
-	.catalog-header {
-		text-align: center;
-		margin-top: 0.5rem;
+	.sticky-header {
+		position: sticky;
+		top: 0;
+		z-index: 20;
+		background: color-mix(in oklch, var(--color-bg) 85%, transparent);
+		backdrop-filter: blur(12px);
+		-webkit-backdrop-filter: blur(12px);
+		padding: 1rem 0 1.5rem;
+		margin: -1rem 0 0;
+		border-bottom: 1px solid var(--color-border-subtle);
 	}
 
 	.page-title {
 		font-size: 2rem;
 		font-weight: 800;
 		color: var(--color-text-primary);
-	}
-
-	.page-subtitle {
-		font-size: 0.95rem;
-		color: var(--color-text-secondary);
-		margin: 0.35rem auto 1.25rem;
+		margin-bottom: 1rem;
+		padding: 0 1.25rem;
 	}
 
 	.search-bar {
 		position: relative;
-		max-width: 500px;
-		margin: 0 auto;
+		margin: 0 1.25rem;
 		display: flex;
 		align-items: center;
 	}
@@ -172,194 +170,223 @@
 	.search-icon {
 		position: absolute;
 		left: 1rem;
-		font-size: 1.1rem;
+		display: flex;
+		align-items: center;
 		pointer-events: none;
 		color: var(--color-text-muted);
 	}
 
 	.search-bar input {
 		width: 100%;
-		padding: 0.8rem 2.8rem;
-		border-radius: 9999px;
-		border: 1.5px solid var(--color-border);
+		padding: 0.85rem 2.5rem 0.85rem 2.8rem;
+		border-radius: 12px;
+		border: none;
 		background-color: var(--color-surface);
 		color: var(--color-text-primary);
-		font-size: 0.95rem;
-		box-shadow: var(--shadow-sm);
-		transition: border-color 0.15s ease, box-shadow 0.15s ease;
+		font-size: 1rem;
+		box-shadow: inset 0 0 0 1px var(--color-border);
+		transition: box-shadow 0.2s ease, background-color 0.2s ease;
+		-webkit-appearance: none;
 	}
 
 	.search-bar input:focus {
 		outline: none;
-		border-color: var(--color-primary);
-		box-shadow: var(--shadow-md);
+		background-color: var(--color-bg);
+		box-shadow: inset 0 0 0 2px var(--color-primary);
+	}
+
+	.search-bar input::placeholder {
+		color: var(--color-text-muted);
 	}
 
 	.clear-btn {
 		position: absolute;
-		right: 1rem;
-		font-size: 0.85rem;
-		font-weight: 700;
+		right: 0.5rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 		color: var(--color-text-muted);
-		padding: 0.25rem;
+		width: 2rem;
+		height: 2rem;
+		border-radius: 50%;
 	}
 
 	.clear-btn:hover {
 		color: var(--color-text-primary);
+		background: var(--color-surface-hover);
 	}
 
 	.movements-list {
 		display: flex;
 		flex-direction: column;
-		gap: 2.5rem;
+		gap: 2rem;
+		padding: 0 1.25rem;
 	}
 
 	.movement-section {
 		display: flex;
 		flex-direction: column;
-		gap: 1.25rem;
-		padding: 1.5rem;
-		background-color: var(--color-surface);
-		border-left: 5px solid var(--movement-color);
-		border-radius: var(--radius-lg);
-		box-shadow: var(--shadow-sm);
+		gap: 1rem;
+	}
+
+	.sticky-subheader {
+		position: sticky;
+		top: 110px; /* Offset to sit below the sticky header */
+		z-index: 10;
+		background: color-mix(in oklch, var(--color-bg) 92%, transparent);
+		backdrop-filter: blur(8px);
+		-webkit-backdrop-filter: blur(8px);
+		padding: 0.75rem 0;
+		margin: 0;
 	}
 
 	.movement-header {
 		display: flex;
 		justify-content: space-between;
-		align-items: center;
-		flex-wrap: wrap;
-		gap: 1rem;
-		border-bottom: 1px solid var(--color-border-subtle);
-		padding-bottom: 0.85rem;
+		align-items: flex-end;
+		border-bottom: 2px solid var(--movement-color);
+		padding-bottom: 0.25rem;
 	}
 
 	.movement-title {
-		font-size: 1.35rem;
-		font-weight: 800;
+		font-size: 1.2rem;
+		font-weight: 700;
 		color: var(--color-text-primary);
+		line-height: 1.2;
 	}
 
 	.movement-century {
-		font-size: 0.825rem;
-		font-weight: 600;
+		font-size: 0.8rem;
+		font-weight: 500;
 		color: var(--color-text-secondary);
-		text-transform: uppercase;
-		letter-spacing: 0.05em;
+		display: block;
+		margin-top: 0.15rem;
 	}
 
-	.progress-badge {
-		font-size: 0.8125rem;
-		font-weight: 700;
-		padding: 0.35rem 0.75rem;
-		border-radius: 9999px;
-		background-color: var(--color-bg);
-		border: 1px solid var(--movement-color);
-		color: var(--color-text-primary);
+	.progress-simple {
+		font-size: 0.85rem;
+		font-weight: 600;
+		color: var(--movement-color);
+		background: color-mix(in oklch, var(--movement-color) 15%, transparent);
+		padding: 0.25rem 0.6rem;
+		border-radius: 6px;
+		margin-bottom: 0.25rem;
 	}
 
-	.grid-catalog {
+	.grid-catalog-minimal {
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-		gap: 1.25rem;
+		grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+		gap: 1rem 0.85rem;
 	}
 
-	.artwork-item {
+	.artwork-card-minimal {
 		display: flex;
 		flex-direction: column;
 		text-decoration: none;
 		color: inherit;
-		background: var(--color-bg);
-		border: 1px solid var(--color-border);
-		border-radius: var(--radius-md);
-		padding: 0.85rem;
-		transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+		gap: 0.5rem;
+		border-radius: 8px;
+		transition: opacity 0.2s ease;
 	}
 
-	.artwork-item:hover {
-		transform: translateY(-3px);
-		box-shadow: var(--shadow-md);
-		border-color: var(--movement-color);
+	.artwork-card-minimal:active {
+		opacity: 0.6;
 	}
 
 	.thumb-wrapper {
 		position: relative;
 		width: 100%;
-		aspect-ratio: 4 / 3;
-		border-radius: var(--radius-sm);
+		aspect-ratio: 1 / 1;
+		border-radius: 12px;
 		overflow: hidden;
 		background-color: var(--color-border-subtle);
-		margin-bottom: 0.75rem;
+		box-shadow: 0 2px 8px rgba(0,0,0,0.04);
 	}
 
 	.thumb-wrapper img {
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
-		transition: transform 0.3s ease;
+		transition: transform 0.4s cubic-bezier(0.2, 0, 0, 1);
 	}
 
-	.artwork-item:hover .thumb-wrapper img {
-		transform: scale(1.04);
+	/* Micro-interaction on desktop */
+	@media (hover: hover) {
+		.artwork-card-minimal:hover .thumb-wrapper img {
+			transform: scale(1.05);
+		}
 	}
 
 	.discovered-indicator {
 		position: absolute;
 		top: 0.5rem;
 		right: 0.5rem;
-		background: var(--color-success);
-		color: oklch(0.99 0 0);
-		font-weight: 800;
-		font-size: 0.75rem;
-		width: 1.6rem;
-		height: 1.6rem;
+		background: rgba(255, 255, 255, 0.9);
+		color: var(--color-success);
+		backdrop-filter: blur(4px);
+		-webkit-backdrop-filter: blur(4px);
+		width: 1.5rem;
+		height: 1.5rem;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		border-radius: 50%;
-		box-shadow: var(--shadow-sm);
+		box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+	}
+
+	:global([data-theme="dark"]) .discovered-indicator {
+		background: rgba(0, 0, 0, 0.6);
+	}
+
+	.art-info {
+		display: flex;
+		flex-direction: column;
+		padding: 0 0.15rem;
 	}
 
 	.art-title {
-		font-size: 0.95rem;
-		font-weight: 700;
-		line-height: 1.3;
+		font-size: 0.9rem;
+		font-weight: 600;
+		line-height: 1.25;
 		color: var(--color-text-primary);
-		margin-bottom: 0.2rem;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
 	}
 
 	.art-artist {
-		font-size: 0.825rem;
-		font-weight: 500;
+		font-size: 0.8rem;
+		font-weight: 400;
 		color: var(--color-text-secondary);
-	}
-
-	.art-date {
-		font-size: 0.75rem;
-		color: var(--color-text-muted);
-		margin-top: 0.35rem;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		margin-top: 0.15rem;
 	}
 
 	.no-items-note {
 		color: var(--color-text-muted);
 		font-size: 0.9rem;
-		font-style: italic;
+		padding: 1rem 0;
 	}
 
 	.empty-search {
 		text-align: center;
-		padding: 3rem;
-		background: var(--color-surface);
-		border-radius: var(--radius-lg);
+		padding: 3rem 1rem;
+	}
+
+	.empty-search p {
+		color: var(--color-text-secondary);
+		margin-bottom: 1rem;
 	}
 
 	.reset-btn {
-		margin-top: 1rem;
 		padding: 0.6rem 1.25rem;
-		background: var(--color-primary);
-		color: oklch(0.99 0 0);
-		border-radius: var(--radius-md);
+		background: var(--color-surface);
+		color: var(--color-text-primary);
+		border-radius: 20px;
 		font-weight: 600;
+		box-shadow: inset 0 0 0 1px var(--color-border);
 	}
 </style>

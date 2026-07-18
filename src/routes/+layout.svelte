@@ -3,6 +3,7 @@
 	import favicon from '$lib/assets/favicon.svg';
 	import BottomNav from '$lib/components/BottomNav.svelte';
 	import { onNavigate } from '$app/navigation';
+	import { themeStore } from '$lib/core/theme.svelte';
 
 	let { children } = $props();
 
@@ -21,7 +22,7 @@
 
 <svelte:head>
 	<link rel="icon" href={favicon} />
-	<title>AI Art Coach</title>
+	<title>Coach Art IA</title>
 </svelte:head>
 
 <main class="app-shell-main">
