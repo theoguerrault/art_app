@@ -148,10 +148,28 @@ When the user instructs the agent to `"continue implementation"`, `"continue l'i
 ---
 
 ### Phase 7: Final PWA Verification & Web Vitals Auditing
-- [ ] **Step 7.1: Full Production Build & Workbox Service Worker Validation**
+- [x] **Step 7.1: Full Production Build & Workbox Service Worker Validation**
   - **Scope & Required Files:**
     - Run `npm run build` and check output bundle sizes (`sveltekit` JS chunks under 30 KB gzipped).
     - Verify Service Worker registration (`sw.js`) and precache manifest generation.
   - **Verification Criteria:**
     - Verify offline test (`Offline` network throttling): `Today` and `Catalog` pages load from `IndexedDB` / `CacheStorage`.
     - Verify zero accessibility (`a11y`) errors across the 3 primary tabs.
+
+---
+
+### Phase 8: Authentication & MVP Polish
+- [x] **Step 8.1: Supabase Authentication System**
+  - **Scope & Required Files:**
+    - Configure Supabase Auth (Email/Password or Magic Link) in `client.ts` and set up an Auth listener (`onAuthStateChange`).
+    - Create a generic `/login` and `/register` route or modal.
+    - Update data fetching in `+page.ts` files to securely pass `auth.uid()` and migrate anonymous `user_progress_cache` data to the authenticated account upon first login.
+  - **Verification Criteria:**
+    - Verify users can sign up, log in, and log out securely.
+    - Verify RLS policies correctly enforce data isolation for authenticated users.
+
+- [x] **Step 8.2: Global Offline Indicator**
+  - **Scope & Required Files:**
+    - Add a global non-intrusive UI toast/banner in `+layout.svelte` that appears when `navigator.onLine` is false to explicitly tell the user the app is functioning in offline mode.
+  - **Verification Criteria:**
+    - Verify disconnecting the network triggers the banner without breaking navigation.

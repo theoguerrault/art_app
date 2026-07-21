@@ -2,6 +2,7 @@
 	import { themeStore, type ThemeMode } from '$lib/core/theme.svelte';
 	import { Sun, Moon, Check, Sparkle, Target, Database, CloudCheck, Trash } from 'phosphor-svelte';
 	import { saveToLocalCache } from '$lib/offline/storage';
+	import { authStore } from '$lib/core/auth.svelte';
 
 	let dailyGoal = $state<number>(1);
 	let cacheCleared = $state<boolean>(false);
@@ -63,6 +64,57 @@
 			Personnalisez votre environnement d'apprentissage, la présentation visuelle et le comportement de synchronisation hors ligne.
 		</p>
 	</header>
+
+	<section class="settings-section" aria-labelledby="account-title">
+		<div class="section-header">
+			<h2 id="account-title" class="section-title">Mon Compte</h2>
+			<p class="section-desc">
+				Gérez votre connexion et la sauvegarde de vos données sur le cloud.
+			</p>
+		</div>
+
+		<div class="storage-card">
+			<div class="status-row">
+				<div class="status-indicator">
+					<div class="theme-icon light-icon" style="border-radius: 50%; width: 2.5rem; height: 2.5rem;">
+						<Target size={22} weight="fill" />
+					</div>
+					<div>
+						<span class="status-title">
+							{#if authStore.user}
+								Connecté en tant que {authStore.user.email}
+							{:else}
+								Mode Anonyme
+							{/if}
+						</span>
+						<span class="status-val">
+							{#if authStore.user}
+								Vos données sont synchronisées avec le cloud.
+							{:else}
+								Vos progrès sont sauvegardés uniquement sur cet appareil.
+							{/if}
+						</span>
+					</div>
+				</div>
+			</div>
+
+			<div class="action-row">
+				<div class="action-info">
+					<strong>Authentification</strong>
+					<span>Rejoignez-nous pour ne jamais perdre votre progression.</span>
+				</div>
+				{#if authStore.user}
+					<button type="button" class="btn-clear" onclick={async () => await authStore.signOut()}>
+						<span>Se déconnecter</span>
+					</button>
+				{:else}
+					<a href="/auth" class="cta-btn primary" style="text-decoration: none; padding: 0.5rem 1rem; border-radius: var(--radius-md); font-weight: 600; background: var(--color-primary); color: white; display: inline-block;">
+						Créer un compte
+					</a>
+				{/if}
+			</div>
+		</div>
+	</section>
 
 	<section class="settings-section" aria-labelledby="appearance-title">
 		<div class="section-header">

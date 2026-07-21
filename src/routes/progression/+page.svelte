@@ -26,10 +26,9 @@
 	// Mastery by movement
 	let movementMastery = $derived(() => {
 		return (data.movements || []).map((m) => {
-			// Find progress for this movement or mock calculation based on movement ID
+			// Find progress for this movement
 			const itemsInMovement = data.progressList.filter((p) => {
-				// We match via id_oeuvre or history
-				return true;
+				return data.artworkToMovement[p.id_oeuvre] === m.id;
 			});
 			const avgBox =
 				itemsInMovement.length > 0

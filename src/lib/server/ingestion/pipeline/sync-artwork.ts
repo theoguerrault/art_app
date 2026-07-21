@@ -107,13 +107,16 @@ export async function syncArtworkEnrichment(artworkIdOrSlug: string | number) {
     updatePayload.updated_at = new Date().toISOString();
     updatePayload.generated_by_model = "gemini-ingestion-pipeline";
 
+    const { prisma } = await import('$lib/server/prisma');
+
     if (currentContent) {
       console.log(`[SyncPipeline] Updating existing content for "${artwork.titre}"...`);
-      const { error: updateErr } = await (supabase.from('contenus_oeuvres') as any)
-        .update(updatePayload)
-        .eq('id_oeuvre', artwork.id);
-
-      if (updateErr) {
+      try {
+        await prisma.contenus_oeuvres.update({
+          where: { id_oeuvre: artwork.id },
+          data: updatePayload
+        });
+      } catch (updateErr: any) {
         console.error(`[SyncPipeline] DB Update Error:`, updateErr);
         return { error: 'Failed to update DB', details: updateErr?.message || String(updateErr) };
       }
@@ -121,10 +124,11 @@ export async function syncArtworkEnrichment(artworkIdOrSlug: string | number) {
       console.log(`[SyncPipeline] Inserting new content for "${artwork.titre}"...`);
       updatePayload.id_oeuvre = artwork.id;
       // Provide clean defaults if completely missing (no fake placeholders anymore, just null or empty arrays if allowed)
-      const { error: insertErr } = await (supabase.from('contenus_oeuvres') as any)
-        .insert(updatePayload);
-
-      if (insertErr) {
+      try {
+        await prisma.contenus_oeuvres.create({
+          data: updatePayload as any
+        });
+      } catch (insertErr: any) {
         console.error(`[SyncPipeline] DB Insert Error:`, insertErr);
         return { error: 'Failed to insert into DB', details: insertErr?.message || String(insertErr) };
       }

@@ -10,7 +10,7 @@ export const ssr = false; // Client-side rendering enabled for daily storage sta
  * Calculates the next review date based on Leitner Box Level rules:
  * Box 1 -> +1 day, Box 2 -> +3 days, Box 3 -> +7 days, Box 4 -> +14 days, Box 5 -> +30 days.
  */
-export function getLeitnerReviewDate(boxLevel: number, fromDate: Date = new Date()): string {
+export function _getLeitnerReviewDate(boxLevel: number, fromDate: Date = new Date()): string {
 	const daysMap: Record<number, number> = {
 		1: 1,
 		2: 3,

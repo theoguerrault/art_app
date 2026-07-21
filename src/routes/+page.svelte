@@ -4,8 +4,9 @@
 	import QuickMCQ from '$lib/features/quiz/components/QuickMCQ.svelte';
 	import { supabase } from '$lib/supabase/client';
 	import { queueOfflineAnswer, saveToLocalCache, readFromLocalCache } from '$lib/offline/storage';
-	import { getLeitnerReviewDate } from './+page';
+	import { _getLeitnerReviewDate } from './+page';
 	import { Package, Palette } from 'phosphor-svelte';
+	import { authStore } from '$lib/core/auth.svelte';
 
 	let { data }: { data: PageData } = $props();
 
@@ -44,7 +45,7 @@
 		// Calculate new Leitner box progression
 		let newBoxLevel = isCorrect ? Math.min(5, currentBoxLevel + 1) : 1;
 		let consecutive = isCorrect ? 1 : 0;
-		let nextReviewAt = getLeitnerReviewDate(newBoxLevel);
+		let nextReviewAt = _getLeitnerReviewDate(newBoxLevel);
 
 		currentBoxLevel = newBoxLevel;
 
@@ -157,7 +158,7 @@
 					<span>Statut de la boîte Leitner : <strong>Niveau {currentBoxLevel} / 5</strong></span>
 				</div>
 				<p class="leitner-note">
-					Prochaine révision prévue pour ce concept : <strong>{new Date(getLeitnerReviewDate(currentBoxLevel)).toLocaleDateString()}</strong>
+					Prochaine révision prévue pour ce concept : <strong>{new Date(_getLeitnerReviewDate(currentBoxLevel)).toLocaleDateString()}</strong>
 				</p>
 			</div>
 		{/if}

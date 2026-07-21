@@ -2,8 +2,11 @@
 	import '../app.css';
 	import favicon from '$lib/assets/favicon.svg';
 	import BottomNav from '$lib/components/BottomNav.svelte';
+	import OfflineBanner from '$lib/components/OfflineBanner.svelte';
 	import { onNavigate } from '$app/navigation';
 	import { themeStore } from '$lib/core/theme.svelte';
+	import { authStore } from '$lib/core/auth.svelte';
+	import { page } from '$app/stores';
 
 	let { children } = $props();
 
@@ -29,4 +32,8 @@
 	{@render children()}
 </main>
 
-<BottomNav />
+<OfflineBanner />
+
+{#if $page.url.pathname !== '/auth'}
+	<BottomNav />
+{/if}
