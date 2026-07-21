@@ -78,14 +78,14 @@ To overcome Wikidata's limitation of only providing 1-line label descriptions (`
   3. **Future Visits:** Because `contenus_oeuvres` is now permanently populated with real AI-curated content, any subsequent visit across any client or session loads directly from Supabase/IndexedDB (`0ms`), completely bypassing Wikipedia and Gemini API calls forever.
 
 ### 4.2 Wikipedia Detailed Description Service (`src/lib/server/ingestion/wikipedia-description.ts`)
-An additional, dedicated service generates a **coherent, long-form detailed description** (~300-500 words, always in French) for each artwork's detail page. Unlike the 5-field micro-synthesis above, this produces a single structured narrative.
+An additional, dedicated service generates a **structured JSON detailed description** (up to 4 specific sections: "Contexte historique", "Analyse visuelle", "Technique", "Postérité") for each artwork's detail page.
 
-- **Cache-First Pattern:** `getDetailedDescription(slug, supabase, apiKey)` always checks `contenus_oeuvres.detailed_description` first. If a non-empty cached description exists (>100 chars), it returns immediately with `source: "cache"`.
+- **Cache-First Pattern:** `getDetailedDescription(slug, supabase, apiKey)` always checks `contenus_oeuvres.detailed_description` first. If a non-empty cached JSON description exists, it returns immediately with `source: "cache"`.
 - **Wikipedia Scraping:** On cache miss, the service scrapes the full plain-text Wikipedia article via MediaWiki Action API (`action=query&prop=extracts&explaintext=1`). Falls back from French to English if the article is missing or too short (<200 chars). Includes disambiguation/homonymy resolution using OpenSearch.
-- **Gemini Synthesis (Strict No-Hallucination):** Sends the scraped text to `gemini-2.5-pro` with an explicit system instruction forbidding any fact not present in the source. Output is a structured 5-paragraph description: general presentation → visual description → technical analysis → historical context → provenance.
-- **DB Persistence:** The generated description is written to `contenus_oeuvres.detailed_description` via upsert, ensuring one-time generation cost.
-- **API Endpoint:** Exposed at `GET /api/artwork-description/[slug]`, returning `{ detailed_description: string, source: "cache" | "generated" }`.
-- **Frontend Integration:** The detail page (`/catalogue/[slug]`) displays the description in a dedicated section with skeleton loading animation. If the description exists in DB at load time, it renders instantly; otherwise, it fetches on-demand from the API.
+- **Gemini Synthesis (Strict No-Hallucination):** Sends the scraped text to `gemini-2.5-pro` with an explicit system instruction forbidding any fact not present in the source. Output is a structured JSON array of sections. If a section's information is missing, the AI is instructed to leave the content empty rather than inventing it from residual context.
+- **DB Persistence:** The generated JSON array is written to `contenus_oeuvres.detailed_description` via upsert, ensuring one-time generation cost.
+- **API Endpoint:** Exposed at `GET /api/artwork-description/[slug]`, returning `{ detailed_description: any[], source: "cache" | "generated" }`.
+- **Frontend Integration:** The detail page (`/catalogue/[slug]`) displays the description by iterating over the JSON structure. If the description exists in DB at load time, it renders instantly; otherwise, it fetches on-demand from the API.
 
 ---
 

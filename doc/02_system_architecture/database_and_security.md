@@ -73,7 +73,7 @@ CREATE TABLE IF NOT EXISTS public.contenus_oeuvres (
     anecdote_secrete TEXT NOT NULL,    -- Tier 3: Little-known historical secret
     extended_analysis TEXT NULL,       -- Deep visual/formal analysis from Wikipedia REST API
     historical_context TEXT NULL,      -- Deep provenance/history from Wikipedia REST API
-    detailed_description TEXT NULL,    -- Rich coherent artwork description (~300-500 words, FR) from Wikipedia + Gemini, cached
+    detailed_description JSONB NULL,   -- Rich structured artwork description in 4 sections from Wikipedia + Gemini, cached
     qcm JSONB NOT NULL,                -- Full QcmSchema: { "sourceQuote": "...", "conceptTag": "...", "difficulty": "medium", "question": "...", "options": ["A","B","C","D"], "correctIndex": 2, "explanation": "..." }
     mots_cles JSONB NOT NULL DEFAULT '[]'::jsonb, -- Array for keyword search
     generated_by_model VARCHAR(50) NOT NULL DEFAULT 'gemini-2.5-pro',

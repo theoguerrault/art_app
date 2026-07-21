@@ -38,7 +38,9 @@ export async function syncArtworkEnrichment(artworkIdOrSlug: string | number) {
     .eq('id_oeuvre', artwork.id)
     .maybeSingle();
 
-  const needsDescription = !currentContent?.detailed_description || currentContent.detailed_description.trim().length < 50;
+  const hasDescriptionArray = Array.isArray(currentContent?.detailed_description) && currentContent.detailed_description.length > 0;
+  const hasDescriptionString = typeof currentContent?.detailed_description === 'string' && currentContent.detailed_description.trim().length >= 50;
+  const needsDescription = !(hasDescriptionArray || hasDescriptionString);
   const needsAnecdotes = !currentContent?.anecdote_accroche || currentContent.anecdote_accroche.includes('Découvrez');
   const needsQuiz = !currentContent?.qcm || currentContent.qcm.question.includes('Question placeholder');
 
@@ -52,7 +54,7 @@ export async function syncArtworkEnrichment(artworkIdOrSlug: string | number) {
   // Step 3: Scrape & Generate Wikipedia Content
   if (needsDescription || needsAnecdotes) {
     console.log(`[SyncPipeline] Fetching Wikipedia data for "${artwork.titre}"...`);
-    const wikiExtract = await scrapeWikipediaArticle(artwork.titre, artwork.artiste);
+    const wikiExtract = await scrapeWikipediaArticle(artwork.titre, artwork.artiste, 'fr', artwork.wikipedia_title);
 
     if (wikiExtract && wikiExtract.text) {
       console.log(`[SyncPipeline] Generating rich content via Gemini...`);
@@ -84,7 +86,7 @@ export async function syncArtworkEnrichment(artworkIdOrSlug: string | number) {
         style_title: artwork.courants?.nom || null,
         department_title: artwork.musee,
         place_of_origin: artwork.pays || null,
-        description_clean: updatePayload.detailed_description || currentContent?.detailed_description || '',
+        description_clean: Array.isArray(updatePayload.detailed_description || currentContent?.detailed_description) ? (updatePayload.detailed_description || currentContent?.detailed_description).map((s: any) => s.content).join('\n') : (updatePayload.detailed_description || currentContent?.detailed_description || ''),
         image_url_full: artwork.image_url_full,
         image_url_thumb: artwork.image_url_thumb,
         is_public_domain: true,

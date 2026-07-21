@@ -13,7 +13,7 @@
 	<div class="analysis-section">
 		<div class="section-heading">
 			<Sparkle size={18} weight="fill" />
-			<span>Aperçu clé</span>
+			<span>L'Essentiel</span>
 		</div>
 		<p class="anecdote-text">{displayAnecdote}</p>
 	</div>

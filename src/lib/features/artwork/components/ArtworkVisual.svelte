@@ -1,6 +1,9 @@
 <script lang="ts">
 	import type { Artwork } from '$lib/types/database';
 
+	import { X } from 'phosphor-svelte';
+	import { fade, scale } from 'svelte/transition';
+
 	interface Props {
 		artwork: Artwork;
 		displayMovementName: string;
@@ -9,9 +12,10 @@
 	}
 
 	let { artwork, displayMovementName, displayOklchToken, cardAspectRatio }: Props = $props();
+	let showFullscreen = $state(false);
 </script>
 
-<div class="card-visual" style:aspect-ratio={cardAspectRatio}>
+<button class="card-visual" style:aspect-ratio={cardAspectRatio} onclick={() => showFullscreen = true} aria-label="Agrandir l'œuvre">
 	<div class="image-wrapper">
 		<img
 			src={artwork.image_url_full || artwork.image_url_thumb}
@@ -20,14 +24,28 @@
 			decoding="async"
 		/>
 	</div>
-	<div class="visual-overlay">
-		<span class="movement-badge">{displayMovementName}</span>
-		<div class="artwork-info">
-			<h2 class="artwork-title">{artwork.titre}</h2>
-			<p class="artwork-artist">{artwork.artiste} <span class="artwork-date">({artwork.date_creation})</span></p>
-		</div>
+</button>
+
+{#if showFullscreen}
+	<div 
+		class="fullscreen-modal" 
+		role="dialog" 
+		aria-modal="true" 
+		onclick={() => showFullscreen = false}
+		onkeydown={(e) => e.key === 'Escape' && (showFullscreen = false)}
+		tabindex="0"
+		transition:fade={{ duration: 200 }}
+	>
+		<button class="close-modal-btn" aria-label="Fermer" onclick={(e) => { e.stopPropagation(); showFullscreen = false; }}>
+			<X size={24} weight="bold" />
+		</button>
+		<img 
+			src={artwork.image_url_full || artwork.image_url_thumb} 
+			alt="{artwork.titre} par {artwork.artiste}" 
+			transition:scale={{ duration: 300, start: 0.95 }}
+		/>
 	</div>
-</div>
+{/if}
 
 <style>
 	.card-visual {
@@ -35,6 +53,15 @@
 		width: 100%;
 		overflow: hidden;
 		background-color: var(--color-border-subtle);
+		padding: 0;
+		border: none;
+		cursor: pointer;
+		display: block;
+	}
+
+	.card-visual:focus-visible {
+		outline: 2px solid var(--movement-color, var(--color-primary));
+		outline-offset: 2px;
 	}
 
 	.image-wrapper {
@@ -55,63 +82,45 @@
 		transform: scale(1.03);
 	}
 
-	.visual-overlay {
-		position: absolute;
+	.fullscreen-modal {
+		position: fixed;
 		inset: 0;
+		z-index: 9999;
+		background-color: rgba(0, 0, 0, 0.9);
 		display: flex;
-		flex-direction: column;
-		justify-content: flex-end;
-		padding: 1.5rem;
-		background: linear-gradient(
-			to top,
-			oklch(0.12 0.02 250 / 0.92) 0%,
-			oklch(0.12 0.02 250 / 0.65) 45%,
-			oklch(0.12 0.02 250 / 0) 100%
-		);
-		color: oklch(0.98 0.01 250);
-		z-index: 2;
+		align-items: center;
+		justify-content: center;
+		padding: 1rem;
+		cursor: zoom-out;
 	}
 
-	.movement-badge {
-		align-self: flex-start;
-		font-size: 0.75rem;
-		font-weight: 700;
-		text-transform: uppercase;
-		letter-spacing: 0.08em;
-		padding: 0.35rem 0.75rem;
-		border-radius: 9999px;
-		background-color: var(--movement-color, var(--color-primary));
-		color: oklch(0.99 0 0);
-		box-shadow: var(--shadow-sm);
-		margin-bottom: 0.75rem;
+	.fullscreen-modal img {
+		max-width: 100%;
+		max-height: 100%;
+		object-fit: contain;
+		border-radius: var(--radius-md);
+		box-shadow: var(--shadow-xl);
 	}
 
-	.artwork-title {
-		font-size: 1.5rem;
-		font-weight: 800;
-		line-height: 1.15;
-		color: oklch(0.99 0.005 250);
-		margin-bottom: 0.25rem;
-		text-shadow: 0 2px 4px oklch(0 0 0 / 0.4);
+	.close-modal-btn {
+		position: absolute;
+		top: 1.5rem;
+		right: 1.5rem;
+		width: 44px;
+		height: 44px;
+		border-radius: 50%;
+		background-color: rgba(255, 255, 255, 0.1);
+		color: white;
+		border: none;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		cursor: pointer;
+		transition: background-color 0.2s;
+		z-index: 10000;
 	}
 
-	.artwork-artist {
-		font-size: 1rem;
-		font-weight: 500;
-		color: oklch(0.88 0.015 250);
-	}
-
-	.artwork-date {
-		font-weight: 400;
-		color: oklch(0.78 0.015 250);
-	}
-
-	@container card (min-width: 540px) {
-		.artwork-title {
-			font-size: 1.85rem;
-		}
-		.visual-overlay {
-			padding: 2.25rem;
-		}
+	.close-modal-btn:hover {
+		background-color: rgba(255, 255, 255, 0.2);
 	}
 </style>

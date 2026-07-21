@@ -584,8 +584,8 @@ VALUES
   }).join(',\n');
   sql += contCourantsVals + ';\n\n';
 
-  sql += `-- 3. ARTWORKS (\`oeuvres\`)\nINSERT INTO public.oeuvres (id, slug, id_courant, titre, artiste, date_creation, image_url_full, image_url_thumb, aspect_ratio, ordre_dans_courant, is_active)\nVALUES\n`;
-  const oeuvresVals = oeuvres.map(o => `(${o.id}, $STR$${o.slug}$STR$, ${o.id_courant}, $STR$${o.titre}$STR$, $STR$${o.artiste}$STR$, $STR$${o.date_creation}$STR$, $STR$${o.image_url_full}$STR$, $STR$${o.image_url_thumb}$STR$, ${o.aspect_ratio}, ${o.ordre_dans_courant}, ${o.is_active})`).join(',\n');
+  sql += `-- 3. ARTWORKS (\`oeuvres\`)\nINSERT INTO public.oeuvres (id, slug, id_courant, titre, artiste, date_creation, image_url_full, image_url_thumb, aspect_ratio, ordre_dans_courant, is_active, wikipedia_title)\nVALUES\n`;
+  const oeuvresVals = oeuvres.map(o => `(${o.id}, $STR$${o.slug}$STR$, ${o.id_courant}, $STR$${o.titre}$STR$, $STR$${o.artiste}$STR$, $STR$${o.date_creation}$STR$, $STR$${o.image_url_full}$STR$, $STR$${o.image_url_thumb}$STR$, ${o.aspect_ratio}, ${o.ordre_dans_courant}, ${o.is_active}, NULL)`).join(',\n');
   sql += oeuvresVals + ';\n\n';
 
   sql += `-- 4. ARTWORK CONTENTS (\`contenus_oeuvres\`)\nINSERT INTO public.contenus_oeuvres (id_oeuvre, anecdote_accroche, anecdote_technique, anecdote_secrete, extended_analysis, historical_context, qcm, mots_cles, generated_by_model)\nVALUES\n`;

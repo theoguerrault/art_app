@@ -40,7 +40,7 @@
 	let dynamicAnecdoteTechnique = $state<string | null>(null);
 	let dynamicAnecdoteSecrete = $state<string | null>(null);
 
-	let detailedDescription = $state<string | null>(null);
+	let detailedDescription = $state<{title: string, content: string}[] | null>(null);
 	let isFetchingDescription = $state(false);
 	
 	let lastInitializedSlug = '';
@@ -88,7 +88,7 @@
 				dynamicAnecdoteSecrete = !isMissingOrPlaceholder(lesson.anecdote_secrete) ? lesson.anecdote_secrete : null;
 				
 				// 2. Handle Detailed Description Fetch
-				if (lesson.detailed_description && lesson.detailed_description.trim().length > 100) {
+				if (lesson.detailed_description && Array.isArray(lesson.detailed_description) && lesson.detailed_description.length > 0) {
 					detailedDescription = lesson.detailed_description;
 				} else if (navigator.onLine) {
 					detailedDescription = null;
@@ -205,94 +205,6 @@
 		/>
 	</section>
 
-	<section
-		class="specifications-section"
-		style:--movement-color={lesson.oklch_token}
-	>
-		<div class="specs-header">
-			<Info size={22} weight="fill" />
-			<h2>Caractéristiques & Provenance</h2>
-		</div>
-
-		<div class="spec-grid">
-			<div class="spec-tile">
-				<div class="tile-icon"><User size={20} weight="fill" /></div>
-				<div class="tile-content">
-					<span class="tile-label">Artiste</span>
-					<span class="tile-value">{lesson.artiste}</span>
-				</div>
-			</div>
-
-			<div class="spec-tile">
-				<div class="tile-icon">
-					<Calendar size={20} weight="fill" />
-				</div>
-				<div class="tile-content">
-					<span class="tile-label">Date de création / Période</span>
-					<span class="tile-value">{lesson.date_creation}</span>
-				</div>
-			</div>
-
-			<div class="spec-tile">
-				<div class="tile-icon"><Compass size={20} weight="fill" /></div>
-				<div class="tile-content">
-					<span class="tile-label">Mouvement Artistique</span>
-					<span class="tile-value">{lesson.nom_courant}</span>
-				</div>
-			</div>
-
-			{#if lesson.musee}
-				<div class="spec-tile">
-					<div class="tile-icon">
-						<Bank size={20} weight="fill" />
-					</div>
-					<div class="tile-content">
-						<span class="tile-label">Musée / Conservation</span>
-						<span class="tile-value">{lesson.musee}</span>
-					</div>
-				</div>
-			{/if}
-
-			{#if lesson.medium}
-				<div class="spec-tile">
-					<div class="tile-icon">
-						<PaintBrush size={20} weight="fill" />
-					</div>
-					<div class="tile-content">
-						<span class="tile-label">Médium & Technique</span>
-						<span class="tile-value">{lesson.medium}</span>
-					</div>
-				</div>
-			{/if}
-
-			{#if lesson.dimensions}
-				<div class="spec-tile">
-					<div class="tile-icon">
-						<Ruler size={20} weight="fill" />
-					</div>
-					<div class="tile-content">
-						<span class="tile-label">Dimensions</span>
-						<span class="tile-value">{lesson.dimensions}</span>
-					</div>
-				</div>
-			{/if}
-		</div>
-
-		{#if lesson.mots_cles && lesson.mots_cles.length > 0}
-			<div class="keywords-block">
-				<div class="keywords-heading">
-					<Tag size={18} weight="fill" />
-					<span>Thèmes & Mots-clés</span>
-				</div>
-				<div class="tags-list">
-					{#each lesson.mots_cles as keyword}
-						<span class="keyword-tag">#{keyword}</span>
-					{/each}
-				</div>
-			</div>
-		{/if}
-	</section>
-
 	{#if detailedDescription || isFetchingDescription}
 		<section class="detailed-description-section" style:--movement-color={lesson.oklch_token}>
 			<div class="description-header">
@@ -313,14 +225,12 @@
 				</div>
 			{:else if detailedDescription}
 				<div class="description-body">
-					{#each detailedDescription.split('\n\n') as paragraph}
-						{#if paragraph.trim()}
-							<p>{paragraph}</p>
+					{#each detailedDescription as section}
+						{#if section.content && section.content.trim()}
+							<h3 class="section-title">{section.title}</h3>
+							<p>{section.content}</p>
 						{/if}
 					{/each}
-				</div>
-				<div class="description-source">
-					<span>Source: Wikipédia · Analysé par Gemini AI</span>
 				</div>
 			{/if}
 		</section>
@@ -737,6 +647,17 @@
 		line-height: 1.7;
 		color: var(--color-text-secondary);
 		margin: 0;
+	}
+
+	.description-body .section-title {
+		font-size: 1.15rem;
+		font-weight: 700;
+		color: var(--color-text-primary);
+		margin: 1.25rem 0 0.25rem 0;
+	}
+	
+	.description-body .section-title:first-child {
+		margin-top: 0;
 	}
 
 	.description-body p:first-child {

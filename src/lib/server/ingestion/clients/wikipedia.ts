@@ -27,13 +27,14 @@ export function getPreferredLanguage(_preferred?: string): string {
 export async function scrapeWikipediaArticle(
   title: string,
   artist: string | null,
-  lang: string = 'fr'
+  lang: string = 'fr',
+  exactWikiTitle?: string | null
 ): Promise<WikipediaArtExtract | null> {
   // First try the requested lang, then fallback to 'en'
   const langsToTry = lang === 'en' ? ['en'] : [lang, 'en'];
   
   for (const targetLang of langsToTry) {
-    const result = await fetchArticleForLang(title, artist, targetLang);
+    const result = await fetchArticleForLang(title, artist, targetLang, exactWikiTitle);
     if (result && result.text && result.text.length >= 200) {
       return result;
     }
@@ -44,9 +45,10 @@ export async function scrapeWikipediaArticle(
 async function fetchArticleForLang(
   title: string,
   artist: string | null,
-  lang: string
+  lang: string,
+  exactWikiTitle?: string | null
 ): Promise<WikipediaArtExtract | null> {
-  let cleanTitle = title.replace(/ /g, '_');
+  let cleanTitle = exactWikiTitle ? exactWikiTitle.replace(/ /g, '_') : title.replace(/ /g, '_');
 
   try {
     // Attempt 1: Fetch summary to detect disambiguation
@@ -59,8 +61,8 @@ async function fetchArticleForLang(
       summary = summaryData?.extract || null;
     }
 
-    // Attempt 2: If 404 or disambiguation, search with artist name for precision
-    if (!summaryRes.ok || (summary && (summary.includes('peut faire référence à') || summary.includes('homonymie') || summary.includes('may refer to')))) {
+    // Attempt 2: If 404 or disambiguation AND no exact title was provided, search with artist name for precision
+    if (!exactWikiTitle && (!summaryRes.ok || (summary && (summary.includes('peut faire référence à') || summary.includes('homonymie') || summary.includes('may refer to'))))) {
       const queryTerm = artist
         ? `${title.replace(/\\([^)]*\\)/g, '').trim()} ${artist}`
         : title.replace(/\\([^)]*\\)/g, '').trim();
