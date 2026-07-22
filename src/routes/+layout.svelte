@@ -1,6 +1,5 @@
 <script lang="ts">
 	import '../app.css';
-	import favicon from '$lib/assets/favicon.svg';
 	import BottomNav from '$lib/components/BottomNav.svelte';
 	import OfflineBanner from '$lib/components/OfflineBanner.svelte';
 	import { onNavigate } from '$app/navigation';
@@ -24,8 +23,7 @@
 </script>
 
 <svelte:head>
-	<link rel="icon" href={favicon} />
-	<title>Coach Art IA</title>
+	<title>Artichaut</title>
 </svelte:head>
 
 <main class="app-shell-main">

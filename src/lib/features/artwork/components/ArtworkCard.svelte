@@ -8,16 +8,16 @@
 		artwork: Artwork;
 		movementName?: string;
 		oklchToken?: string;
-		anecdote?: string;
-		description?: string;
+		article?: string;
+		isEmpty?: boolean;
 	}
 
 	let {
 		artwork,
 		movementName = 'Art Historique',
 		oklchToken = 'var(--movement-theme)',
-		anecdote,
-		description
+		article,
+		isEmpty = false
 	}: ArtworkCardProps = $props();
 
 	let displayMovementName = $derived(
@@ -37,17 +37,12 @@
 	);
 
 	let displayAnecdote = $derived(
-		anecdote ||
-			('anecdote_accroche' in artwork && typeof (artwork as any).anecdote_accroche === 'string'
-				? (artwork as any).anecdote_accroche
+		article ||
+			('article_principal' in artwork && typeof (artwork as any).article_principal === 'string'
+				? ('introduction' in artwork && typeof (artwork as any).introduction === 'string' 
+					? `**${(artwork as any).introduction}**\n\n${(artwork as any).article_principal}` 
+					: (artwork as any).article_principal)
 				: 'Découvrez l\'histoire captivante et l\'essence historique de ce chef-d\'œuvre.')
-	);
-
-	let displayDescription = $derived(
-		description ||
-			('anecdote_technique' in artwork && typeof (artwork as any).anecdote_technique === 'string'
-				? (artwork as any).anecdote_technique
-				: 'Examinez l\'exécution technique, les règles de composition et les avancées artistiques.')
 	);
 
 	let cardAspectRatio = $derived(artwork.aspect_ratio ? `${artwork.aspect_ratio}` : '4 / 3');
@@ -66,10 +61,17 @@
 
 	<ArtworkSpecs {artwork} />
 
-	<ArtworkInsight 
-		{displayAnecdote} 
-		{displayDescription} 
-	/>
+	{#if isEmpty}
+		<div class="empty-content-box">
+			<p>Le contenu éditorial n'est pas encore disponible pour cette œuvre.</p>
+			<a href={`/admin/oeuvres/${artwork.id}`} class="admin-redirect-btn">Ajouter le contenu</a>
+		</div>
+	{:else}
+		<ArtworkInsight 
+			artworkTitle={`${artwork.titre} - ${artwork.artiste} (${artwork.date_creation})`}
+			{displayAnecdote} 
+		/>
+	{/if}
 </div>
 
 <style>
@@ -85,5 +87,31 @@
 		display: flex;
 		flex-direction: column;
 		transition: box-shadow 0.2s ease, border-color 0.2s ease;
+	}
+
+	.empty-content-box {
+		padding: 2rem;
+		text-align: center;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 1rem;
+		background: radial-gradient(circle at top right, var(--color-surface-elevated), var(--color-surface));
+		color: var(--color-text-secondary);
+	}
+
+	.admin-redirect-btn {
+		display: inline-block;
+		padding: 0.6rem 1.25rem;
+		background: var(--color-primary);
+		color: white;
+		border-radius: var(--radius-md);
+		font-weight: 600;
+		text-decoration: none;
+		transition: filter 0.2s ease;
+	}
+
+	.admin-redirect-btn:hover {
+		filter: brightness(1.1);
 	}
 </style>

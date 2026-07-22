@@ -173,3 +173,29 @@ When the user instructs the agent to `"continue implementation"`, `"continue l'i
     - Add a global non-intrusive UI toast/banner in `+layout.svelte` that appears when `navigator.onLine` is false to explicitly tell the user the app is functioning in offline mode.
   - **Verification Criteria:**
     - Verify disconnecting the network triggers the banner without breaking navigation.
+
+- [x] **Step 8.3: Visual Identity & Asset Polish**
+  - **Scope & Required Files:**
+    - Update `src/app.css` to implement the new "deep ink and pop neon" aesthetic (`#121212` background with `#FA47FF` vibrant accents).
+    - Migrate PWA assets and icons to the `static/` directory for standard SvelteKit serving.
+  - **Verification Criteria:**
+    - Verify dark mode applies the neon accents and PWA manifest correctly loads icons.
+
+---
+
+### Phase 9: AI Content Pipeline & Admin Tools
+- [x] **Step 9.1: Automated Artwork Content Generation**
+  - **Scope & Required Files:**
+    - Create `src/lib/server/ingestion/services/description.ts` implementing `generateArtworkContent` with Gemini.
+    - Create the API route `POST /api/admin/artworks/[id]/generate` to construct and save the generated editorial content.
+  - **Verification Criteria:**
+    - Verify generation produces structured article portions, and secret anecdotes directly from metadata.
+
+- [x] **Step 9.2: Wikipedia Fact-Checking & Auto-Correction**
+  - **Scope & Required Files:**
+    - Implement `factCheckArtworkContent` and `correctArtworkContentPortion` AI services.
+    - Create `POST /api/admin/artworks/[id]/factcheck` using the Wikipedia API to generate a strict reliability report.
+    - Chain the fact-checking flow in the admin UI (`admin/oeuvres/[id]/+page.svelte`) so it runs automatically after content generation.
+  - **Verification Criteria:**
+    - Verify the UI displays portions with `VERIFIED`, `FALSE`, or `UNVERIFIED` tags based on the Wikipedia Source of Truth.
+    - Verify the administrator can trigger AI auto-correction on `FALSE` paragraphs.

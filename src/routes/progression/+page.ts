@@ -32,7 +32,7 @@ export const load: PageLoad = async () => {
 			movements = (movementsRes.data as unknown as Movement[]) || [];
 			
 			if (oeuvresRes.data) {
-				for (const o of oeuvresRes.data) {
+				for (const o of oeuvresRes.data as {id: number; id_courant: number}[]) {
 					artworkToMovement[o.id] = o.id_courant;
 				}
 			}

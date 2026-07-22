@@ -130,7 +130,7 @@ SELECT
     c.oklch_token,
     co.anecdote_accroche,
     co.anecdote_technique,
-    co.anecdote_secrete,
+    co.anecdotes_secretes,
     co.qcm,
     co.mots_cles
 FROM public.oeuvres o

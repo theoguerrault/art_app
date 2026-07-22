@@ -18,7 +18,7 @@
 	}: QuickMCQProps = $props();
 
 	// Initialize state machine
-	const session = createQuizSession(null, onAnswer);
+	const session = createQuizSession(null, (...args) => onAnswer?.(...args));
 
 	// Sync props to state if they change externally
 	$effect(() => {

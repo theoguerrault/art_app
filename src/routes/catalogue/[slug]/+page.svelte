@@ -26,6 +26,7 @@
 		saveToLocalCache,
 		readFromLocalCache,
 	} from "$lib/offline/storage";
+	import { parseMarkdown } from '$lib/utils/markdown';
 
 	import { untrack } from 'svelte';
 
@@ -36,11 +37,11 @@
 	let showQuiz = $state(false);
 	let answered = $state(false);
 
-	let dynamicAnecdoteAccroche = $state<string | null>(null);
-	let dynamicAnecdoteTechnique = $state<string | null>(null);
-	let dynamicAnecdoteSecrete = $state<string | null>(null);
+	let dynamicArticlePrincipal = $state<string | null>(null);
+	let dynamicAnecdotesSecretes = $state<string[] | null>(null);
+	
+	let isContentEmpty = $derived(isMissingOrPlaceholder(dynamicArticlePrincipal || lesson.article_principal));
 
-	let detailedDescription = $state<{title: string, content: string}[] | null>(null);
 	let isFetchingDescription = $state(false);
 	
 	let lastInitializedSlug = '';
@@ -53,8 +54,14 @@
 			'Découvrez les détails cachés',
 			'Période historique',
 			'Mouvement Artistique',
+			'Contenu en cours de rédaction',
 		];
 		return placeholders.some((p) => str.includes(p));
+	}
+
+	function isMissingOrPlaceholderArray(arr: string[] | null | undefined): boolean {
+		if (!arr || arr.length === 0) return true;
+		return arr.some(str => isMissingOrPlaceholder(str));
 	}
 
 	function extractHue(oklch: string): number {
@@ -83,24 +90,19 @@
 				const hue = extractHue(lesson.oklch_token);
 				document.documentElement.style.setProperty("--artwork-hue", hue.toString());
 
-				dynamicAnecdoteAccroche = !isMissingOrPlaceholder(lesson.anecdote_accroche) ? lesson.anecdote_accroche : null;
-				dynamicAnecdoteTechnique = !isMissingOrPlaceholder(lesson.anecdote_technique) ? lesson.anecdote_technique : null;
-				dynamicAnecdoteSecrete = !isMissingOrPlaceholder(lesson.anecdote_secrete) ? lesson.anecdote_secrete : null;
+				dynamicArticlePrincipal = !isMissingOrPlaceholder(lesson.article_principal) ? lesson.article_principal : null;
+				dynamicAnecdotesSecretes = !isMissingOrPlaceholderArray(lesson.anecdotes_secretes) ? lesson.anecdotes_secretes : null;
 				
-				// 2. Handle Detailed Description Fetch
-				if (lesson.detailed_description && Array.isArray(lesson.detailed_description) && lesson.detailed_description.length > 0) {
-					detailedDescription = lesson.detailed_description;
-				} else if (navigator.onLine) {
-					detailedDescription = null;
+				// 2. Handle Description Fetch
+				if (dynamicArticlePrincipal === null && navigator.onLine) {
 					isFetchingDescription = true;
 					fetch(`/api/artwork-description/${encodeURIComponent(lesson.slug)}`)
 						.then((res) => res.json())
 						.then((data) => {
-							if (data?.detailed_description) {
-								detailedDescription = data.detailed_description;
-							}
+							if (data?.article_principal) dynamicArticlePrincipal = data.article_principal;
+							if (data?.anecdotes_secretes) dynamicAnecdotesSecretes = data.anecdotes_secretes;
 						})
-						.catch((err) => console.warn('[DetailPage] Failed to fetch detailed description:', err))
+						.catch((err) => console.warn('[DetailPage] Failed to fetch descriptions:', err))
 						.finally(() => {
 							isFetchingDescription = false;
 						});
@@ -200,88 +202,60 @@
 			artwork={lesson}
 			movementName={lesson.nom_courant}
 			oklchToken={lesson.oklch_token}
-			anecdote={dynamicAnecdoteAccroche || lesson.anecdote_accroche}
-			description={dynamicAnecdoteTechnique || lesson.anecdote_technique}
+			article={dynamicArticlePrincipal || lesson.article_principal}
+			isEmpty={isContentEmpty}
 		/>
 	</section>
 
-	{#if detailedDescription || isFetchingDescription}
-		<section class="detailed-description-section" style:--movement-color={lesson.oklch_token}>
-			<div class="description-header">
-				<Article size={22} weight="fill" />
-				<h2>Description Détaillée</h2>
-			</div>
 
-			{#if isFetchingDescription && !detailedDescription}
-				<div class="description-loading">
-					<div class="skeleton-block"></div>
-					<div class="skeleton-block short"></div>
-					<div class="skeleton-block"></div>
-					<div class="skeleton-block shorter"></div>
-					<span class="loading-hint">
-						<span class="spinning-icon"><Eye size={16} /></span>
-						Génération de la description détaillée depuis Wikipédia...
-					</span>
+
+	{#if !isContentEmpty}
+		{#if (dynamicAnecdotesSecretes && dynamicAnecdotesSecretes.length > 0) || (lesson.anecdotes_secretes && lesson.anecdotes_secretes.length > 0)}
+			<section class="deep-dive-section" style:--movement-color={lesson.oklch_token}>
+				<div class="secret-heading">
+					<Lightbulb size={20} weight="fill" />
+					<span>Le savais-tu ?</span>
 				</div>
-			{:else if detailedDescription}
-				<div class="description-body">
-					{#each detailedDescription as section}
-						{#if section.content && section.content.trim()}
-							<h3 class="section-title">{section.title}</h3>
-							<p>{section.content}</p>
-						{/if}
+				<ul class="secret-list">
+					{#each (dynamicAnecdotesSecretes || lesson.anecdotes_secretes) as anecdote}
+						<li class="secret-text">{@html parseMarkdown(anecdote)}</li>
 					{/each}
+				</ul>
+			</section>
+		{/if}
+
+		<section class="quiz-toggle-section">
+			{#if !showQuiz}
+				<button
+					type="button"
+					class="test-knowledge-btn"
+					onclick={() => (showQuiz = true)}
+				>
+					<Brain size={22} weight="fill" />
+					<span>Testez vos connaissances sur cette œuvre →</span>
+				</button>
+			{:else}
+				<div class="quiz-container">
+					<div class="quiz-top">
+						<h3>Test de connaissances à la demande</h3>
+						<button
+							type="button"
+							class="close-quiz-btn"
+							onclick={() => (showQuiz = false)}
+						>
+							<span>Fermer le quiz</span>
+							<X size={16} weight="bold" />
+						</button>
+					</div>
+					<QuickMCQ
+						qcm={lesson.qcm}
+						disabled={answered}
+						onAnswer={handleAnswer}
+					/>
 				</div>
 			{/if}
 		</section>
 	{/if}
-
-	{#if dynamicAnecdoteSecrete || lesson.anecdote_secrete}
-		<section class="deep-dive-section">
-			<div
-				class="secret-block"
-				style:--movement-color={lesson.oklch_token}
-			>
-				<div class="secret-heading">
-					<Lightbulb size={20} weight="fill" />
-					<span>Anecdote Secrète & Symbolisme</span>
-				</div>
-				<p class="secret-text">{dynamicAnecdoteSecrete || lesson.anecdote_secrete}</p>
-			</div>
-		</section>
-	{/if}
-
-	<section class="quiz-toggle-section">
-		{#if !showQuiz}
-			<button
-				type="button"
-				class="test-knowledge-btn"
-				onclick={() => (showQuiz = true)}
-			>
-				<Brain size={22} weight="fill" />
-				<span>Testez vos connaissances sur cette œuvre →</span>
-			</button>
-		{:else}
-			<div class="quiz-container">
-				<div class="quiz-top">
-					<h3>Test de connaissances à la demande</h3>
-					<button
-						type="button"
-						class="close-quiz-btn"
-						onclick={() => (showQuiz = false)}
-					>
-						<span>Fermer le quiz</span>
-						<X size={16} weight="bold" />
-					</button>
-				</div>
-				<QuickMCQ
-					qcm={lesson.qcm}
-					disabled={answered}
-					onAnswer={handleAnswer}
-				/>
-			</div>
-		{/if}
-	</section>
 </div>
 
 <style>
@@ -341,155 +315,17 @@
 		color: var(--color-text-secondary);
 	}
 
-	.specifications-section {
-		display: flex;
-		flex-direction: column;
-		gap: 1.5rem;
-		background: var(--color-surface);
-		padding: 1.85rem;
-		border-radius: var(--radius-xl);
-		border: 1.5px solid var(--color-border);
-		box-shadow: var(--shadow-sm);
-	}
-
-	.specs-header {
-		display: flex;
-		align-items: center;
-		gap: 0.6rem;
-		color: var(--movement-color, var(--color-primary));
-		border-bottom: 1px solid var(--color-border-subtle);
-		padding-bottom: 1rem;
-	}
-
-	.specs-header h2 {
-		font-size: 1.3rem;
-		font-weight: 800;
-		color: var(--color-text-primary);
-		margin: 0;
-	}
-
-	.spec-grid {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-		gap: 1.15rem;
-	}
-
-	.spec-tile {
-		display: flex;
-		align-items: flex-start;
-		gap: 0.9rem;
-		padding: 1.15rem;
-		background: var(--color-bg);
-		border: 1px solid var(--color-border-subtle);
-		border-radius: var(--radius-lg);
-		transition:
-			transform 0.15s ease,
-			border-color 0.15s ease,
-			box-shadow 0.15s ease;
-	}
-
-	.spec-tile:hover {
-		transform: translateY(-2px);
-		border-color: var(--movement-color, var(--color-primary));
-		box-shadow: var(--shadow-sm);
-	}
-
-	.tile-icon {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		width: 40px;
-		height: 40px;
-		border-radius: var(--radius-md);
-		background-color: var(--color-surface-elevated);
-		color: var(--movement-color, var(--color-primary));
-		flex-shrink: 0;
-	}
-
-	.tile-content {
-		display: flex;
-		flex-direction: column;
-		gap: 0.2rem;
-	}
-
-	.tile-label {
-		font-size: 0.78rem;
-		font-weight: 700;
-		text-transform: uppercase;
-		letter-spacing: 0.06em;
-		color: var(--color-text-muted);
-	}
-
-	.tile-value {
-		font-size: 1.02rem;
-		font-weight: 600;
-		color: var(--color-text-primary);
-		line-height: 1.35;
-	}
-
-	.keywords-block {
-		margin-top: 0.5rem;
-		padding-top: 1.25rem;
-		border-top: 1px solid var(--color-border-subtle);
-		display: flex;
-		flex-direction: column;
-		gap: 0.75rem;
-	}
-
-	.keywords-heading {
-		display: flex;
-		align-items: center;
-		gap: 0.45rem;
-		font-size: 0.88rem;
-		font-weight: 700;
-		text-transform: uppercase;
-		letter-spacing: 0.06em;
-		color: var(--movement-color, var(--color-primary));
-	}
-
-	.tags-list {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.6rem;
-	}
-
-	.keyword-tag {
-		display: inline-block;
-		font-size: 0.85rem;
-		font-weight: 600;
-		padding: 0.4rem 0.85rem;
-		border-radius: 9999px;
-		background-color: var(--color-bg);
-		border: 1px solid var(--color-border);
-		color: var(--color-text-secondary);
-		transition:
-			background-color 0.15s ease,
-			color 0.15s ease,
-			border-color 0.15s ease;
-	}
-
-	.keyword-tag:hover {
-		background-color: var(--color-surface-elevated);
-		border-color: var(--movement-color, var(--color-primary));
-		color: var(--color-text-primary);
-	}
 
 	.deep-dive-section {
 		display: flex;
 		flex-direction: column;
-		gap: 1.5rem;
+		gap: 1rem;
 		background: var(--color-surface);
 		padding: 1.75rem;
 		border-radius: var(--radius-lg);
 		border: 1px solid var(--color-border);
-		box-shadow: var(--shadow-sm);
-	}
-
-	.secret-block {
-		padding: 1.25rem;
-		background: var(--color-bg);
 		border-left: 4px solid var(--movement-color, var(--color-accent));
-		border-radius: var(--radius-md);
+		box-shadow: var(--shadow-sm);
 	}
 
 	.secret-heading {
@@ -506,6 +342,23 @@
 		font-size: 0.95rem;
 		line-height: 1.5;
 		color: var(--color-text-secondary);
+	}
+
+	:global(.secret-text strong) {
+		font-weight: 700;
+		color: var(--color-text-primary);
+	}
+
+	.secret-list {
+		margin: 0;
+		padding-left: 1.2rem;
+		display: flex;
+		flex-direction: column;
+		gap: 0.6rem;
+	}
+
+	.secret-list li {
+		padding-left: 0.2rem;
 	}
 
 	.quiz-toggle-section {
@@ -582,138 +435,5 @@
 		to { transform: rotate(360deg); }
 	}
 
-	.extended-content-section {
-		display: flex;
-		flex-direction: column;
-		gap: 1.25rem;
-	}
 
-	.wiki-loading-bar {
-		display: flex;
-		align-items: center;
-		gap: 0.6rem;
-		padding: 1rem 1.25rem;
-		background: var(--color-surface-elevated);
-		border-radius: var(--radius-md);
-		border: 1px dashed var(--movement-color, var(--color-primary));
-		color: var(--color-text-secondary);
-		font-size: 0.9rem;
-		font-weight: 500;
-	}
-
-	.spinning-icon {
-		display: inline-flex;
-		animation: spin 1.5s linear infinite;
-		color: var(--movement-color, var(--color-primary));
-	}
-
-	/* Detailed Description Section */
-	.detailed-description-section {
-		display: flex;
-		flex-direction: column;
-		gap: 1.25rem;
-		background: var(--color-surface);
-		padding: 1.85rem;
-		border-radius: var(--radius-xl);
-		border: 1.5px solid var(--color-border);
-		box-shadow: var(--shadow-sm);
-		animation: fadeIn 0.35s ease;
-	}
-
-	.description-header {
-		display: flex;
-		align-items: center;
-		gap: 0.6rem;
-		color: var(--movement-color, var(--color-primary));
-		border-bottom: 1px solid var(--color-border-subtle);
-		padding-bottom: 1rem;
-	}
-
-	.description-header h2 {
-		font-size: 1.3rem;
-		font-weight: 800;
-		color: var(--color-text-primary);
-		margin: 0;
-	}
-
-	.description-body {
-		display: flex;
-		flex-direction: column;
-		gap: 1rem;
-	}
-
-	.description-body p {
-		font-size: 0.98rem;
-		line-height: 1.7;
-		color: var(--color-text-secondary);
-		margin: 0;
-	}
-
-	.description-body .section-title {
-		font-size: 1.15rem;
-		font-weight: 700;
-		color: var(--color-text-primary);
-		margin: 1.25rem 0 0.25rem 0;
-	}
-	
-	.description-body .section-title:first-child {
-		margin-top: 0;
-	}
-
-	.description-body p:first-child {
-		font-size: 1.05rem;
-		color: var(--color-text-primary);
-		font-weight: 500;
-	}
-
-	.description-source {
-		display: flex;
-		align-items: center;
-		gap: 0.4rem;
-		padding-top: 0.85rem;
-		border-top: 1px solid var(--color-border-subtle);
-		font-size: 0.78rem;
-		font-weight: 600;
-		text-transform: uppercase;
-		letter-spacing: 0.06em;
-		color: var(--color-text-muted);
-	}
-
-	.description-loading {
-		display: flex;
-		flex-direction: column;
-		gap: 0.75rem;
-	}
-
-	.skeleton-block {
-		height: 1rem;
-		background: linear-gradient(90deg, var(--color-surface-elevated) 25%, var(--color-border-subtle) 50%, var(--color-surface-elevated) 75%);
-		background-size: 200% 100%;
-		border-radius: var(--radius-sm, 4px);
-		animation: shimmer 1.5s infinite ease-in-out;
-		width: 100%;
-	}
-
-	.skeleton-block.short {
-		width: 85%;
-	}
-
-	.skeleton-block.shorter {
-		width: 60%;
-	}
-
-	.loading-hint {
-		display: flex;
-		align-items: center;
-		gap: 0.5rem;
-		margin-top: 0.5rem;
-		font-size: 0.85rem;
-		color: var(--color-text-muted);
-		font-weight: 500;
-	}
-
-	@keyframes shimmer {
-		0% { background-position: -200% 0; }
-		100% { background-position: 200% 0; }
-	}
 </style>

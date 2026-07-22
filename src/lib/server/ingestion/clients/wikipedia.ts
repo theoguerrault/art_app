@@ -64,8 +64,8 @@ async function fetchArticleForLang(
     // Attempt 2: If 404 or disambiguation AND no exact title was provided, search with artist name for precision
     if (!exactWikiTitle && (!summaryRes.ok || (summary && (summary.includes('peut faire référence à') || summary.includes('homonymie') || summary.includes('may refer to'))))) {
       const queryTerm = artist
-        ? `${title.replace(/\\([^)]*\\)/g, '').trim()} ${artist}`
-        : title.replace(/\\([^)]*\\)/g, '').trim();
+        ? `${title.replace(/\([^)]*\)/g, '').trim()} ${artist}`
+        : title.replace(/\([^)]*\)/g, '').trim();
 
       const searchUrl = `https://${lang}.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(queryTerm)}&format=json`;
       const searchRes = await fetch(searchUrl, { headers: { 'User-Agent': USER_AGENT } });
@@ -87,7 +87,7 @@ async function fetchArticleForLang(
     }
 
     // Attempt 3: Fetch full extract using MediaWiki Action API
-    const url = `https://${lang}.wikipedia.org/w/api.php?action=query&prop=extracts&explaintext=1&titles=${encodeURIComponent(cleanTitle)}&format=json`;
+    const url = `https://${lang}.wikipedia.org/w/api.php?action=query&prop=extracts&explaintext=1&redirects=1&titles=${encodeURIComponent(cleanTitle)}&format=json`;
     const res = await fetch(url, { headers: { 'User-Agent': USER_AGENT } });
 
     let text: string | null = null;

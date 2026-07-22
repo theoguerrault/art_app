@@ -1,6 +1,5 @@
 import { supabase } from '$lib/supabase/client';
 import { scrapeWikipediaArticle } from '../clients/wikipedia';
-import { generateRichArtworkContent } from '../services/description';
 import { generateQuizFromArtworkMetadata } from '../services/quiz';
 
 /**
@@ -38,13 +37,10 @@ export async function syncArtworkEnrichment(artworkIdOrSlug: string | number) {
     .eq('id_oeuvre', artwork.id)
     .maybeSingle();
 
-  const hasDescriptionArray = Array.isArray(currentContent?.detailed_description) && currentContent.detailed_description.length > 0;
-  const hasDescriptionString = typeof currentContent?.detailed_description === 'string' && currentContent.detailed_description.trim().length >= 50;
-  const needsDescription = !(hasDescriptionArray || hasDescriptionString);
-  const needsAnecdotes = !currentContent?.anecdote_accroche || currentContent.anecdote_accroche.includes('Découvrez');
+  const needsAnecdotes = !currentContent?.article_principal || currentContent.article_principal.includes('Découvrez');
   const needsQuiz = !currentContent?.qcm || currentContent.qcm.question.includes('Question placeholder');
 
-  if (!needsDescription && !needsAnecdotes && !needsQuiz) {
+  if (!needsAnecdotes && !needsQuiz) {
     console.log(`[SyncPipeline] Artwork "${artwork.titre}" is already fully enriched.`);
     return { success: true, cached: true, content: currentContent };
   }
@@ -52,22 +48,13 @@ export async function syncArtworkEnrichment(artworkIdOrSlug: string | number) {
   const updatePayload: Record<string, any> = {};
 
   // Step 3: Scrape & Generate Wikipedia Content
-  if (needsDescription || needsAnecdotes) {
-    console.log(`[SyncPipeline] Fetching Wikipedia data for "${artwork.titre}"...`);
-    const wikiExtract = await scrapeWikipediaArticle(artwork.titre, artwork.artiste, 'fr', artwork.wikipedia_title);
-
-    if (wikiExtract && wikiExtract.text) {
-      console.log(`[SyncPipeline] Generating rich content via Gemini...`);
-      const richContent = await generateRichArtworkContent(artwork.titre, artwork.artiste, wikiExtract.text, wikiExtract.lang);
-
-      if (richContent) {
-        if (needsDescription) updatePayload.detailed_description = richContent.detailed_description;
-        if (!currentContent?.anecdote_accroche || currentContent.anecdote_accroche.includes('Découvrez')) updatePayload.anecdote_accroche = richContent.anecdote_accroche;
-        if (!currentContent?.anecdote_technique || currentContent.anecdote_technique.includes('Analyse')) updatePayload.anecdote_technique = richContent.anecdote_technique;
-        if (!currentContent?.anecdote_secrete || currentContent.anecdote_secrete.includes('Un secret')) updatePayload.anecdote_secrete = richContent.anecdote_secrete;
-      }
-    } else {
-      console.warn(`[SyncPipeline] No Wikipedia article found for "${artwork.titre}". Cannot generate description/anecdotes.`);
+  // AUTOMATIC GENERATION DISABLED - Now done manually via Admin Dashboard
+  if (needsAnecdotes) {
+    console.log(`[SyncPipeline] Artwork "${artwork.titre}" needs description, but automatic generation is disabled.`);
+    if (!currentContent) {
+        updatePayload.article_principal = "";
+        updatePayload.anecdotes_secretes = [];
+        updatePayload.verification_status = "PENDING";
     }
   }
 
@@ -96,11 +83,24 @@ export async function syncArtworkEnrichment(artworkIdOrSlug: string | number) {
       const generatedQuiz = await generateQuizFromArtworkMetadata(mappedArtworkForQuiz);
       if (generatedQuiz) {
         updatePayload.qcm = generatedQuiz;
-        // In the DB, the main quiz is stored in `qcm_synthese` for the Leitner system, but also `qcm` in contenus.
-        // I will map it to both if needed, but normally `qcm` in `contenus_oeuvres` is what the app uses.
+      } else if (!currentContent) {
+        updatePayload.qcm = {
+          question: `Question placeholder pour "${artwork.titre}"`,
+          options: ["Option A", "Option B", "Option C", "Option D"],
+          correctIndex: 0,
+          explanation: "Ce QCM est en cours de création."
+        };
       }
     } catch (err) {
       console.error(`[SyncPipeline] Failed to generate Quiz for "${artwork.titre}":`, err);
+      if (!currentContent) {
+        updatePayload.qcm = {
+          question: `Question placeholder pour "${artwork.titre}"`,
+          options: ["Option A", "Option B", "Option C", "Option D"],
+          correctIndex: 0,
+          explanation: "Ce QCM est en cours de création suite à une erreur."
+        };
+      }
     }
   }
 

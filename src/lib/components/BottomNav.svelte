@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { goto } from '$app/navigation';
-	import { PaintBrush, Books, ChartLineUp, Gear } from 'phosphor-svelte';
+	import { PaintBrush, Books, ChartLineUp, Gear, ShieldStar } from 'phosphor-svelte';
 
 	interface TabItem {
 		href: string;
@@ -13,6 +13,7 @@
 		{ href: '/', label: 'Aujourd\'hui', icon: PaintBrush },
 		{ href: '/catalogue', label: 'Catalogue', icon: Books },
 		{ href: '/progression', label: 'Progression', icon: ChartLineUp },
+		{ href: '/admin/oeuvres', label: 'Admin', icon: ShieldStar },
 		{ href: '/settings', label: 'Paramètres', icon: Gear }
 	];
 

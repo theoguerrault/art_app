@@ -55,9 +55,10 @@ export interface Artwork {
 
 export interface ContentArtwork {
 	id_oeuvre: number;
-	anecdote_accroche: string;
-	anecdote_technique: string;
-	anecdote_secrete: string;
+	introduction?: string | null;
+	article_principal: string;
+	article_portions?: any[] | null;
+	anecdotes_secretes: string[];
 	detailed_description?: string | null;
 	qcm: MCQ;
 	mots_cles: string[];
@@ -92,9 +93,9 @@ export interface AnswerHistory {
 export interface ActiveLessonView extends Artwork {
 	nom_courant: string;
 	oklch_token: string;
-	anecdote_accroche: string;
-	anecdote_technique: string;
-	anecdote_secrete: string;
+	introduction?: string | null;
+	article_principal: string;
+	anecdotes_secretes: string[];
 	detailed_description?: string | null;
 	qcm: MCQ;
 	mots_cles?: string[];

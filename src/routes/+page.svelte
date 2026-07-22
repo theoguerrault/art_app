@@ -138,8 +138,7 @@
 				artwork={lesson}
 				movementName={lesson.nom_courant}
 				oklchToken={lesson.oklch_token}
-				anecdote={lesson.anecdote_accroche}
-				description={lesson.anecdote_technique}
+				article={lesson.article_principal}
 			/>
 		</section>
 

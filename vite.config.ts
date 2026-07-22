@@ -8,6 +8,24 @@ export default defineConfig({
 		SvelteKitPWA({
 			devOptions: {
 				enabled: false
+			},
+			manifest: {
+				name: 'Artichaut',
+				short_name: 'Artichaut',
+				description: 'Your Art Companion',
+				theme_color: '#faf8f5',
+				icons: [
+					{
+						src: 'pwa-192x192.png',
+						sizes: '192x192',
+						type: 'image/png'
+					},
+					{
+						src: 'pwa-512x512.png',
+						sizes: '512x512',
+						type: 'image/png'
+					}
+				]
 			}
 		})
 	]

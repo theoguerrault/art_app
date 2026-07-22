@@ -217,7 +217,7 @@
 		align-items: center;
 	}
 
-	.input-icon {
+	:global(.input-icon) {
 		position: absolute;
 		left: 1rem;
 		color: var(--color-text-muted);
@@ -272,7 +272,7 @@
 		cursor: not-allowed;
 	}
 
-	.spinner {
+	:global(.spinner) {
 		animation: spin 1s linear infinite;
 	}
 

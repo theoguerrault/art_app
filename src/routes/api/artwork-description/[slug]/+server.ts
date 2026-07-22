@@ -28,6 +28,8 @@ export const GET: RequestHandler = async ({ params }) => {
 		// Map to expected shape
 		return json({
 			detailed_description: result.content?.detailed_description,
+			article_principal: result.content?.article_principal,
+			anecdotes_secretes: result.content?.anecdotes_secretes,
 			source: result.updated?.includes('detailed_description') ? 'generated' : 'cache'
 		});
 	} catch (err: any) {

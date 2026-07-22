@@ -1,5 +1,5 @@
 import { json } from '@sveltejs/kit';
-import { generateRichArtworkContent } from '$lib/server/ingestion/services/description';
+import { generateArtworkContent } from '$lib/server/ingestion/services/description';
 
 async function fetchWikipediaText(title: string): Promise<string> {
   const url = `https://fr.wikipedia.org/w/api.php?action=query&prop=extracts&explaintext=1&titles=${encodeURIComponent(title)}&format=json`;
@@ -27,14 +27,12 @@ export async function GET() {
       continue;
     }
     
-    const result = await generateRichArtworkContent(art.title, art.artist, wikiText, 'fr');
+    const result = await generateArtworkContent(art.title, art.artist);
     
     markdownOutput += `## ${art.title} (${art.artist})\n\n`;
-    if (result && result.detailed_description) {
-      markdownOutput += result.detailed_description + "\n\n";
-      markdownOutput += `**Accroche:** ${result.anecdote_accroche}\n\n`;
-      markdownOutput += `**Technique:** ${result.anecdote_technique}\n\n`;
-      markdownOutput += `**Secrète:** ${result.anecdote_secrete}\n\n`;
+    if (result && result.portions) {
+      markdownOutput += `**Article Principal:**\n\n${result.portions.join('\n\n')}\n\n`;
+      markdownOutput += `**Secrète:** ${result.anecdotes_secretes?.[0] || 'Aucune anecdote secrète'}\n\n`;
     } else {
       markdownOutput += "Échec de la génération.\n\n";
     }

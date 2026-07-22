@@ -89,9 +89,8 @@ export const load: PageLoad = async ({ params }) => {
 		...artwork,
 		nom_courant: movement?.nom || 'Mouvement Artistique',
 		oklch_token: movement?.oklch_token || 'var(--movement-theme)',
-		anecdote_accroche: content?.anecdote_accroche || 'Explorez l\'histoire profonde et la composition de cette pièce intemporelle.',
-		anecdote_technique: content?.anecdote_technique || 'Analysez la maîtrise technique, l\'harmonie des couleurs et la signification historique.',
-		anecdote_secrete: content?.anecdote_secrete || 'Découvrez les détails cachés et les anecdotes historiques derrière cette création.',
+		article_principal: content?.article_principal || 'Explorez l\'histoire profonde et la composition de cette pièce intemporelle.',
+		anecdotes_secretes: content?.anecdotes_secretes || ['Découvrez les détails cachés et les anecdotes historiques derrière cette création.'],
 		detailed_description: content?.detailed_description || null,
 		qcm: content?.qcm || {
 			question: `Quelle ère ou période artistique caractérise "${artwork.titre}" ?`,

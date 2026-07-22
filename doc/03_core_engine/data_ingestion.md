@@ -77,15 +77,20 @@ To overcome Wikidata's limitation of only providing 1-line label descriptions (`
   2. **Instant Client-Side Cache:** The Svelte client writes the newly synthesized extracts directly to the local IndexedDB offline store (`cached_mcqs`), and updates reactive state variables (`dynamicAnecdoteAccroche`, `dynamicAnecdoteTechnique`, `dynamicAnecdoteSecrete`, `extendedAnalysis`, `historicalContext`) so the UI renders immediately without a page reload.
   3. **Future Visits:** Because `contenus_oeuvres` is now permanently populated with real AI-curated content, any subsequent visit across any client or session loads directly from Supabase/IndexedDB (`0ms`), completely bypassing Wikipedia and Gemini API calls forever.
 
-### 4.2 Wikipedia Detailed Description Service (`src/lib/server/ingestion/wikipedia-description.ts`)
-An additional, dedicated service generates a **structured JSON detailed description** (up to 4 specific sections: "Contexte historique", "Analyse visuelle", "Technique", "Postérité") for each artwork's detail page.
+### 4.2 Admin-Driven Generation & Fact-Checking (`src/lib/server/ingestion/services/description.ts`)
+To ensure high-quality and verified content, the generation of the detailed editorial description is manually triggered by administrators via a dedicated dashboard, operating in a two-step AI pipeline:
 
-- **Cache-First Pattern:** `getDetailedDescription(slug, supabase, apiKey)` always checks `contenus_oeuvres.detailed_description` first. If a non-empty cached JSON description exists, it returns immediately with `source: "cache"`.
-- **Wikipedia Scraping:** On cache miss, the service scrapes the full plain-text Wikipedia article via MediaWiki Action API (`action=query&prop=extracts&explaintext=1`). Falls back from French to English if the article is missing or too short (<200 chars). Includes disambiguation/homonymy resolution using OpenSearch.
-- **Gemini Synthesis (Strict No-Hallucination):** Sends the scraped text to `gemini-2.5-pro` with an explicit system instruction forbidding any fact not present in the source. Output is a structured JSON array of sections. If a section's information is missing, the AI is instructed to leave the content empty rather than inventing it from residual context.
-- **DB Persistence:** The generated JSON array is written to `contenus_oeuvres.detailed_description` via upsert, ensuring one-time generation cost.
-- **API Endpoint:** Exposed at `GET /api/artwork-description/[slug]`, returning `{ detailed_description: any[], source: "cache" | "generated" }`.
-- **Frontend Integration:** The detail page (`/catalogue/[slug]`) displays the description by iterating over the JSON structure. If the description exists in DB at load time, it renders instantly; otherwise, it fetches on-demand from the API.
+1. **Content Generation (`/api/admin/artworks/[id]/generate`)**:
+   - The admin triggers the generation, which invokes the `generateArtworkContent` service.
+   - Using Gemini (`GEMINI_DEFAULT_MODELS` with exponential backoff), the service synthesizes a rich set of editorial content (Introduction, thematic portions/articles, and secret anecdotes) directly based on the artwork's metadata.
+   - The generated content is stored in `contenus_oeuvres` with a `PENDING` status for its verification.
+2. **Fact-Checking & Validation (`factCheckArtworkContent`)**:
+   - Automatically triggered by the admin dashboard immediately after the generation step completes, eliminating manual intervention.
+   - The AI receives the generated portions and the full text of the corresponding Wikipedia article (serving as the strict Source of Truth, truncated at 150,000 characters for context limits).
+   - The AI evaluates each portion and assigns a strict status: `VERIFIED` (confirmed by source), `FALSE` (contradicted by source), or `UNVERIFIED` (absent from source).
+   - It also generates a global reliability score and specific Wikipedia quotes as proof.
+3. **Auto-Correction (`correctArtworkContentPortion`)**:
+   - (Optional) If a portion is marked as `FALSE`, a secondary prompt can instruct the AI to rewrite strictly that specific paragraph to correct the false affirmations based on the Wikipedia source text.
 
 ---
 

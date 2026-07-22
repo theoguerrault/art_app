@@ -167,9 +167,8 @@ export const load: PageLoad = async () => {
 			...selectedArtwork,
 			nom_courant: movement?.nom || 'Mouvement Artistique',
 			oklch_token: movement?.oklch_token || 'var(--movement-theme)',
-			anecdote_accroche: content?.anecdote_accroche || 'Explorez l\'histoire remarquable et la composition de ce chef-d\'œuvre intemporel.',
-			anecdote_technique: content?.anecdote_technique || 'Analysez les détails techniques, le travail au pinceau et la signification historique de cette œuvre.',
-			anecdote_secrete: content?.anecdote_secrete || 'Découvrez le symbolisme caché et les mystères historiques préservés à travers les siècles.',
+			article_principal: content?.article_principal || 'Explorez l\'histoire remarquable et la composition de ce chef-d\'œuvre intemporel.',
+			anecdotes_secretes: content?.anecdotes_secretes || ['Découvrez le symbolisme caché et les mystères historiques préservés à travers les siècles.'],
 			qcm: content?.qcm || {
 				question: `Quel mouvement artistique ou période est le mieux représenté par "${selectedArtwork.titre}" ?`,
 				options: [

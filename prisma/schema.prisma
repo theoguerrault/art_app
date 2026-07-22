@@ -511,18 +511,21 @@ model contenus_courants {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model contenus_oeuvres {
-  id_oeuvre          Int      @id
-  anecdote_accroche  String
-  anecdote_technique String
-  anecdote_secrete   String
-  extended_analysis      String?
-  historical_context     String?
-  detailed_description   Json?
-  qcm                    Json
-  mots_cles          Json     @default("[]")
-  generated_by_model String   @default("gemini-2.5-pro") @db.VarChar(50)
-  updated_at         DateTime @default(now()) @db.Timestamptz(6)
-  oeuvres            oeuvres  @relation(fields: [id_oeuvre], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  id_oeuvre            Int      @id
+  article_principal    String
+  qcm                  Json
+  mots_cles            Json     @default("[]")
+  generated_by_model   String   @default("gemini-2.5-pro") @db.VarChar(50)
+  updated_at           DateTime @default(now()) @db.Timestamptz(6)
+  detailed_description Json?
+  extended_analysis    String?
+  historical_context   String?
+  anecdotes_secretes   String[]
+  verification_report  Json?
+  verification_status  String   @default("PENDING") @db.VarChar(20)
+  article_portions     Json?
+  introduction         String?
+  oeuvres              oeuvres  @relation(fields: [id_oeuvre], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@schema("public")
 }
@@ -576,8 +579,8 @@ model oeuvres {
   aspect_ratio          Float                   @default(1.33)
   ordre_dans_courant    Int
   is_active             Boolean                 @default(true)
-  wikipedia_title       String?                 @db.VarChar(255)
   created_at            DateTime                @default(now()) @db.Timestamptz(6)
+  wikipedia_title       String?                 @db.VarChar(255)
   contenus_oeuvres      contenus_oeuvres?
   historique_reponses   historique_reponses[]
   courants              courants                @relation(fields: [id_courant], references: [id], onUpdate: NoAction)

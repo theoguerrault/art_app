@@ -187,6 +187,7 @@
 		box-shadow: inset 0 0 0 1px var(--color-border);
 		transition: box-shadow 0.2s ease, background-color 0.2s ease;
 		-webkit-appearance: none;
+		appearance: none;
 	}
 
 	.search-bar input:focus {
@@ -351,6 +352,7 @@
 		color: var(--color-text-primary);
 		display: -webkit-box;
 		-webkit-line-clamp: 2;
+		line-clamp: 2;
 		-webkit-box-orient: vertical;
 		overflow: hidden;
 	}

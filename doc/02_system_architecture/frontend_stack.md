@@ -56,7 +56,7 @@ The styling layer enforces an innovative, ultra-minimalist art-gallery aesthetic
 - The application background dynamically shifts tone based on the current artwork (`--artwork-hue`).
 - Colors are declared in `:root` using `oklch(...)` (`L` Lightness, `C` Chroma, `H` Hue) to maintain uniform lightness across states.
 - **Light Mode (`data-theme="light"` / `:root`)**: Uses a desaturated warm paper base `oklch(0.985 0.008 var(--artwork-hue))` by default.
-- **Dark Mode (`data-theme="dark"` / `:root[data-theme="dark"]`)**: Uses a deep ink canvas `oklch(0.12 0.012 var(--artwork-hue))`.
+- **Dark Mode (`data-theme="dark"` / `:root[data-theme="dark"]`)**: Uses a deep ink canvas (`#121212`) enhanced with vibrant, neon "pop" accents (e.g., `#FA47FF`) for borders, shadows, and interactive elements.
 - **Reactive State (`$lib/theme.svelte.ts`)**: Managed by a Svelte 5 Runes class `ThemeStore` (`$state`) integrated into `/settings`. It prevents FOUC via an initial inline script in `app.html` that reads `localStorage` (defaulting to `'light'`), sets `data-theme` on the `<html>` root element, and updates the browser `<meta name="theme-color">` dynamically.
 
 ### 3.2 Editorial Typography
