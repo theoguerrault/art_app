@@ -7,7 +7,7 @@ export async function load({ params }) {
 
   const oeuvre = await prisma.oeuvres.findUnique({
     where: { id },
-    include: { contenus_oeuvres: true }
+    include: { oeuvre_translations: { where: { language_code: 'fr' } }, artistes: { include: { artiste_translations: { where: { language_code: 'fr' } } } } }
   });
 
   if (!oeuvre) throw error(404, 'Oeuvre not found');

@@ -2,6 +2,7 @@ import { json } from '@sveltejs/kit';
 import { prisma } from '$lib/server/prisma';
 import { correctArtworkContentPortion, factCheckArtworkContent } from '$lib/server/ingestion/services/description';
 import { scrapeWikipediaArticle } from '$lib/server/ingestion/clients/wikipedia';
+import { calculateGlobalScore } from '$lib/server/utils/score';
 
 export async function POST({ params, request }) {
   const id = parseInt(params.id, 10);
@@ -22,27 +23,29 @@ export async function POST({ params, request }) {
 
     const artwork = await prisma.oeuvres.findUnique({
       where: { id },
-      include: { contenus_oeuvres: true }
+      include: { oeuvre_translations: { where: { language_code: 'fr' } }, artistes: { include: { artiste_translations: { where: { language_code: 'fr' } } } } }
     });
 
-    if (!artwork || !artwork.contenus_oeuvres) {
+    if (!artwork || !artwork.oeuvre_translations || !artwork.oeuvre_translations[0]) {
       return json({ error: 'Artwork or content not found' }, { status: 404 });
     }
 
-    let updatedPortions = artwork.contenus_oeuvres.article_portions as any[] || [];
+    let updatedPortions = artwork.oeuvre_translations[0].article_portions as any[] || [];
     const portionToCorrect = updatedPortions.find(p => p.id === portionId);
     
     if (!portionToCorrect) {
       return json({ error: 'Portion not found' }, { status: 404 });
     }
 
-    const wikiExtract = await scrapeWikipediaArticle(artwork.titre, artwork.artiste, 'fr', artwork.wikipedia_title);
+    const titre = artwork.oeuvre_translations[0].titre;
+    const artisteNom = artwork.artistes?.artiste_translations?.[0]?.nom || 'Inconnu';
+    const wikiExtract = await scrapeWikipediaArticle(titre, artisteNom, 'fr');
     if (!wikiExtract || !wikiExtract.text) {
       return json({ error: 'Wikipedia text required for correction' }, { status: 500 });
     }
 
     const correctedText = await correctArtworkContentPortion(
-      artwork.titre,
+      titre,
       portionToCorrect,
       wikiExtract.text,
       wikiExtract.lang
@@ -59,7 +62,7 @@ export async function POST({ params, request }) {
     };
 
     const factCheckResult = await factCheckArtworkContent(
-      artwork.titre,
+      titre,
       [correctedPortion],
       wikiExtract.text,
       wikiExtract.lang
@@ -90,7 +93,7 @@ export async function POST({ params, request }) {
       return p;
     });
 
-    let report = artwork.contenus_oeuvres.verification_report as any;
+    let report = (artwork.oeuvre_translations[0].verification_report || {}) as any;
     if (report && report.statements) {
       report.statements = report.statements.map((s: any) => {
         if (s.id === portionId) {
@@ -104,12 +107,8 @@ export async function POST({ params, request }) {
         }
         return s;
       });
-      const validCount = updatedPortions.filter(p => p.status === 'VERIFIED').length;
-      const totalCount = updatedPortions.length;
-      if (totalCount > 0) {
-        report.global_score = Math.round((validCount / totalCount) * 100);
-      }
     }
+    report.global_score = calculateGlobalScore(report, updatedPortions, artwork.oeuvre_translations[0].introduction);
 
     const newArticlePrincipal = updatedPortions
       .filter(p => !p.type || p.type === 'article')
@@ -127,8 +126,8 @@ export async function POST({ params, request }) {
     if (hasFalse) globalStatus = 'FALSE';
     else if (hasUnverified) globalStatus = 'PENDING_VALIDATION';
 
-    const updated = await prisma.contenus_oeuvres.update({
-      where: { id_oeuvre: id },
+    const updated = await prisma.oeuvre_translations.update({
+      where: { id_oeuvre_language_code: { id_oeuvre: id, language_code: 'fr' } },
       data: {
         article_portions: updatedPortions,
         article_principal: newArticlePrincipal,

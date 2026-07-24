@@ -35,12 +35,20 @@ export interface ContentMovement {
 	updated_at: string;
 }
 
+export interface Artiste {
+	id: number;
+	slug: string;
+	nom: string;
+	created_at: string;
+}
+
 export interface Artwork {
 	id: number;
 	slug: string;
 	id_courant: number;
+	id_artiste: number;
 	titre: string;
-	artiste: string;
+	artistes?: Artiste;
 	date_creation: string;
 	image_url_full: string;
 	image_url_thumb: string;
@@ -55,15 +63,15 @@ export interface Artwork {
 
 export interface ContentArtwork {
 	id_oeuvre: number;
-	introduction?: string | null;
 	article_principal: string;
-	article_portions?: any[] | null;
-	anecdotes_secretes: string[];
-	detailed_description?: string | null;
+	introduction?: string;
+	article_portions?: any[];
 	qcm: MCQ;
 	mots_cles: string[];
 	generated_by_model: string;
 	updated_at: string;
+	verification_status?: string;
+	verification_report?: any;
 }
 
 export interface UserProgress {
@@ -93,10 +101,7 @@ export interface AnswerHistory {
 export interface ActiveLessonView extends Artwork {
 	nom_courant: string;
 	oklch_token: string;
-	introduction?: string | null;
 	article_principal: string;
-	anecdotes_secretes: string[];
-	detailed_description?: string | null;
 	qcm: MCQ;
 	mots_cles?: string[];
 }
@@ -109,20 +114,10 @@ export interface Database {
 				Insert: Omit<Movement, 'id' | 'created_at'> & { id?: number; created_at?: string };
 				Update: Partial<Movement>;
 			};
-			contenus_courants: {
-				Row: ContentMovement;
-				Insert: ContentMovement;
-				Update: Partial<ContentMovement>;
-			};
 			oeuvres: {
 				Row: Artwork;
 				Insert: Omit<Artwork, 'id' | 'created_at'> & { id?: number; created_at?: string };
 				Update: Partial<Artwork>;
-			};
-			contenus_oeuvres: {
-				Row: ContentArtwork;
-				Insert: ContentArtwork;
-				Update: Partial<ContentArtwork>;
 			};
 			historique_reponses: {
 				Row: AnswerHistory;

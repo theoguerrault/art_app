@@ -15,7 +15,7 @@ export async function syncArtworkEnrichment(artworkIdOrSlug: string | number) {
   const isNumeric = typeof artworkIdOrSlug === 'number' || /^\\d+$/.test(String(artworkIdOrSlug));
 
   let artworkQuery = (supabase.from('oeuvres') as any)
-    .select('*, courants(*)')
+    .select('*, courants(*), artistes(*)')
     .eq('is_active', true);
 
   if (isNumeric) {
@@ -32,9 +32,10 @@ export async function syncArtworkEnrichment(artworkIdOrSlug: string | number) {
   }
 
   // Step 2: Check current content state
-  const { data: currentContent } = await (supabase.from('contenus_oeuvres') as any)
+  const { data: currentContent } = await (supabase.from('oeuvre_translations') as any)
     .select('*')
     .eq('id_oeuvre', artwork.id)
+    .eq('language_code', 'fr')
     .maybeSingle();
 
   const needsAnecdotes = !currentContent?.article_principal || currentContent.article_principal.includes('Découvrez');
@@ -48,12 +49,10 @@ export async function syncArtworkEnrichment(artworkIdOrSlug: string | number) {
   const updatePayload: Record<string, any> = {};
 
   // Step 3: Scrape & Generate Wikipedia Content
-  // AUTOMATIC GENERATION DISABLED - Now done manually via Admin Dashboard
   if (needsAnecdotes) {
     console.log(`[SyncPipeline] Artwork "${artwork.titre}" needs description, but automatic generation is disabled.`);
     if (!currentContent) {
         updatePayload.article_principal = "";
-        updatePayload.anecdotes_secretes = [];
         updatePayload.verification_status = "PENDING";
     }
   }
@@ -66,14 +65,14 @@ export async function syncArtworkEnrichment(artworkIdOrSlug: string | number) {
       const mappedArtworkForQuiz = {
         id: artwork.id,
         title: artwork.titre,
-        artist_title: artwork.artiste,
+        artist_title: artwork.artistes?.nom || 'Inconnu',
         date_display: artwork.date_creation,
         medium_display: artwork.medium,
         dimensions: artwork.dimensions,
         style_title: artwork.courants?.nom || null,
         department_title: artwork.musee,
         place_of_origin: artwork.pays || null,
-        description_clean: Array.isArray(updatePayload.detailed_description || currentContent?.detailed_description) ? (updatePayload.detailed_description || currentContent?.detailed_description).map((s: any) => s.content).join('\n') : (updatePayload.detailed_description || currentContent?.detailed_description || ''),
+        description_clean: currentContent?.article_principal || '',
         image_url_full: artwork.image_url_full,
         image_url_thumb: artwork.image_url_thumb,
         is_public_domain: true,
@@ -114,8 +113,13 @@ export async function syncArtworkEnrichment(artworkIdOrSlug: string | number) {
     if (currentContent) {
       console.log(`[SyncPipeline] Updating existing content for "${artwork.titre}"...`);
       try {
-        await prisma.contenus_oeuvres.update({
-          where: { id_oeuvre: artwork.id },
+        await prisma.oeuvre_translations.update({
+          where: { 
+            id_oeuvre_language_code: {
+              id_oeuvre: artwork.id,
+              language_code: 'fr'
+            }
+          },
           data: updatePayload
         });
       } catch (updateErr: any) {
@@ -125,9 +129,10 @@ export async function syncArtworkEnrichment(artworkIdOrSlug: string | number) {
     } else {
       console.log(`[SyncPipeline] Inserting new content for "${artwork.titre}"...`);
       updatePayload.id_oeuvre = artwork.id;
+      updatePayload.language_code = 'fr';
       // Provide clean defaults if completely missing (no fake placeholders anymore, just null or empty arrays if allowed)
       try {
-        await prisma.contenus_oeuvres.create({
+        await prisma.oeuvre_translations.create({
           data: updatePayload as any
         });
       } catch (insertErr: any) {

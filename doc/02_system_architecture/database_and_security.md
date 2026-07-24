@@ -52,6 +52,7 @@ CREATE TABLE IF NOT EXISTS public.oeuvres (
     slug VARCHAR(150) NOT NULL UNIQUE,
     id_courant INT NOT NULL REFERENCES public.courants(id) ON DELETE RESTRICT,
     titre VARCHAR(200) NOT NULL,
+    titre_international VARCHAR(200) NULL,
     artiste VARCHAR(150) NOT NULL,
     date_creation VARCHAR(100) NOT NULL,
     image_url_full TEXT NOT NULL,      -- Full HD WebP CDN
@@ -139,6 +140,7 @@ SELECT
     o.id AS id_oeuvre,
     o.slug,
     o.titre,
+    o.titre_international,
     o.artiste,
     o.date_creation,
     o.image_url_full,

@@ -1,7 +1,23 @@
 import { z } from 'zod';
 import { Type } from '@google/genai';
 import { generateContentWithRetry } from '../clients/gemini';
-import type { ArtworkData } from '../clients/wikidata';
+
+export interface ArtworkData {
+  id: string | number;
+  title: string;
+  artist_title?: string | null;
+  date_display?: string | null;
+  medium_display?: string | null;
+  dimensions?: string | null;
+  style_title?: string | null;
+  department_title?: string | null;
+  place_of_origin?: string | null;
+  description_clean?: string | null;
+  image_url_full?: string | null;
+  image_url_thumb?: string | null;
+  is_public_domain?: boolean;
+  raw_metadata?: Record<string, any>;
+}
 
 /**
  * External Zod Schema for the final MCQ (Multiple Choice Question) returned to callers

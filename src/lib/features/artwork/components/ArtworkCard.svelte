@@ -10,6 +10,8 @@
 		oklchToken?: string;
 		article?: string;
 		isEmpty?: boolean;
+		hideDescription?: boolean;
+		eager?: boolean;
 	}
 
 	let {
@@ -17,7 +19,9 @@
 		movementName = 'Art Historique',
 		oklchToken = 'var(--movement-theme)',
 		article,
-		isEmpty = false
+		isEmpty = false,
+		hideDescription = false,
+		eager = true
 	}: ArtworkCardProps = $props();
 
 	let displayMovementName = $derived(
@@ -56,23 +60,25 @@
 		{artwork} 
 		{displayMovementName} 
 		{displayOklchToken} 
-		{cardAspectRatio} 
+		{cardAspectRatio}
+		{eager} 
 	/>
 
 	<ArtworkSpecs {artwork} />
-
-	{#if isEmpty}
-		<div class="empty-content-box">
-			<p>Le contenu éditorial n'est pas encore disponible pour cette œuvre.</p>
-			<a href={`/admin/oeuvres/${artwork.id}`} class="admin-redirect-btn">Ajouter le contenu</a>
-		</div>
-	{:else}
-		<ArtworkInsight 
-			artworkTitle={`${artwork.titre} - ${artwork.artiste} (${artwork.date_creation})`}
-			{displayAnecdote} 
-		/>
-	{/if}
 </div>
+
+{#if hideDescription}
+	<div class="hidden-description-box">
+		<p>La description est masquée pendant le quiz.</p>
+	</div>
+{:else}
+	<ArtworkInsight 
+		artworkTitle={`${artwork.titre} - ${artwork.artistes?.nom || 'Inconnu'} (${artwork.date_creation})`}
+		introduction={(artwork as any).introduction}
+		portions={(artwork as any).article_portions || []}
+		articlePrincipal={displayAnecdote} 
+	/>
+{/if}
 
 <style>
 	.artwork-card {
@@ -89,29 +95,14 @@
 		transition: box-shadow 0.2s ease, border-color 0.2s ease;
 	}
 
-	.empty-content-box {
-		padding: 2rem;
+
+
+	.hidden-description-box {
+		padding: 3rem 2rem;
 		text-align: center;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		gap: 1rem;
-		background: radial-gradient(circle at top right, var(--color-surface-elevated), var(--color-surface));
+		background: radial-gradient(circle at center, var(--color-surface-hover), var(--color-surface));
 		color: var(--color-text-secondary);
-	}
-
-	.admin-redirect-btn {
-		display: inline-block;
-		padding: 0.6rem 1.25rem;
-		background: var(--color-primary);
-		color: white;
-		border-radius: var(--radius-md);
-		font-weight: 600;
-		text-decoration: none;
-		transition: filter 0.2s ease;
-	}
-
-	.admin-redirect-btn:hover {
-		filter: brightness(1.1);
+		font-style: italic;
+		border-top: 1px dashed var(--color-border);
 	}
 </style>

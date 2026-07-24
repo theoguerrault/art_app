@@ -1,19 +1,77 @@
 <script lang="ts">
 	import type { PageData } from './$types';
 	import ArtworkCard from '$lib/features/artwork/components/ArtworkCard.svelte';
-	import QuickMCQ from '$lib/features/quiz/components/QuickMCQ.svelte';
-	import { supabase } from '$lib/supabase/client';
-	import { queueOfflineAnswer, saveToLocalCache, readFromLocalCache } from '$lib/offline/storage';
-	import { _getLeitnerReviewDate } from './+page';
-	import { Package, Palette } from 'phosphor-svelte';
-	import { authStore } from '$lib/core/auth.svelte';
+	import GlossaryBottomSheet from '$lib/components/ui/GlossaryBottomSheet.svelte';
+	import { Palette, Heart, SealCheck } from 'phosphor-svelte';
+	import { onMount } from 'svelte';
+	import { readFromLocalCache, saveToLocalCache } from '$lib/offline/storage';
 
 	let { data }: { data: PageData } = $props();
 
-	let lesson = $derived(data.lesson);
-	let currentBoxLevel = $state<number>(1);
-	let answered = $state(false);
-	let lastScore = $state<number | null>(null);
+	// Only show the artwork if it's 100% verified
+	let lesson = $derived(
+		data.lesson && (data.lesson as any).verification_status === 'VERIFIED' ? data.lesson : null
+	);
+
+	let isFavorite = $state(false);
+
+	let glossaryOpen = $state(false);
+	let glossaryTitle = $state('');
+	let glossarySubtitle = $state('');
+	let glossaryContent = $state('');
+
+	onMount(async () => {
+		if (lesson && typeof window !== 'undefined') {
+			const cacheKey = 'user_favorites_cache';
+			const favCache = await readFromLocalCache(cacheKey, 'favorites');
+			const cached = favCache ? favCache.data : [];
+			if (cached.includes(lesson.id)) {
+				isFavorite = true;
+			} else if (navigator.onLine) {
+				const res = await fetch('/api/favorites');
+				if (res.ok) {
+					const resData = await res.json();
+					isFavorite = resData.favorites.includes(lesson.id);
+					await saveToLocalCache(cacheKey, { id: 'favorites', data: resData.favorites });
+				}
+			}
+		}
+	});
+
+	async function toggleFavorite() {
+		if (!lesson) return;
+		isFavorite = !isFavorite;
+		const res = await fetch('/api/favorites', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ id_oeuvre: lesson.id })
+		});
+		if (!res.ok) {
+			isFavorite = !isFavorite;
+		} else {
+			const cacheKey = 'user_favorites_cache';
+			const favCache = await readFromLocalCache(cacheKey, 'favorites');
+			let cached = favCache ? favCache.data : [];
+			if (isFavorite && !cached.includes(lesson.id)) cached.push(lesson.id);
+			if (!isFavorite) cached = cached.filter((id: number) => id !== lesson.id);
+			await saveToLocalCache(cacheKey, { id: 'favorites', data: cached });
+		}
+	}
+
+	function openGlossary(type: 'artiste' | 'courant') {
+		const lessonData = lesson as any;
+		if (type === 'artiste' && lessonData?.glossary?.artiste_description) {
+			glossaryTitle = lesson!.artistes?.nom || 'Artiste';
+			glossarySubtitle = 'Artiste';
+			glossaryContent = lessonData.glossary.artiste_description;
+			glossaryOpen = true;
+		} else if (type === 'courant' && lessonData?.glossary?.courant_description) {
+			glossaryTitle = (lesson as any).nom_courant;
+			glossarySubtitle = 'Mouvement Artistique';
+			glossaryContent = lessonData.glossary.courant_description;
+			glossaryOpen = true;
+		}
+	}
 
 	function extractHue(oklchToken: string | undefined): number {
 		if (!oklchToken) return 45;
@@ -26,149 +84,90 @@
 
 	$effect(() => {
 		if (lesson) {
-			const hue = extractHue(lesson.oklch_token);
+			const hue = extractHue((lesson as any).oklch_token);
 			document.documentElement.style.setProperty('--artwork-hue', hue.toString());
 		} else {
 			document.documentElement.style.setProperty('--artwork-hue', '45');
 		}
 	});
-
-	async function handleAnswer({ score, isCorrect, selectedIndex }: { score: number; isCorrect: boolean; selectedIndex: number }) {
-		if (!lesson || answered) return;
-		answered = true;
-		lastScore = score;
-
-		const isOnline = typeof window !== 'undefined' ? navigator.onLine : true;
-		const userId = 'anonymous-user-001'; // Fallback or authenticated session ID
-		const nowStr = new Date().toISOString();
-
-		// Calculate new Leitner box progression
-		let newBoxLevel = isCorrect ? Math.min(5, currentBoxLevel + 1) : 1;
-		let consecutive = isCorrect ? 1 : 0;
-		let nextReviewAt = _getLeitnerReviewDate(newBoxLevel);
-
-		currentBoxLevel = newBoxLevel;
-
-		const answerPayload = {
-			user_id: userId,
-			id_oeuvre: lesson.id,
-			id_courant: lesson.id_courant,
-			is_correct: isCorrect,
-			reponse_choisie: selectedIndex,
-			score,
-			encounter_type: 'DAILY' as const,
-			answered_at: nowStr,
-			next_review_at: nextReviewAt,
-			box_level: newBoxLevel,
-			consecutive_correct: consecutive
-		};
-
-		if (isOnline) {
-			try {
-				// Save directly to Supabase if online
-				await Promise.all([
-					(supabase.from('historique_reponses') as any).insert({
-						user_id: userId,
-						id_oeuvre: lesson.id,
-						id_courant: lesson.id_courant,
-						is_correct: isCorrect,
-						reponse_choisie: selectedIndex,
-						score,
-						encounter_type: 'DAILY',
-						answered_at: nowStr
-					}),
-					(supabase.from('user_artwork_progress') as any).upsert(
-						{
-							user_id: userId,
-							id_oeuvre: lesson.id,
-							box_level: newBoxLevel,
-							consecutive_correct: consecutive,
-							next_review_at: nextReviewAt,
-							last_score: score,
-							last_presented_daily_at: nowStr,
-							updated_at: nowStr
-						},
-						{ onConflict: 'user_id, id_oeuvre' }
-					)
-				]);
-			} catch (err) {
-				console.warn('[TodayAnswer] Online sync failed, queuing to IndexedDB:', err);
-				await queueOfflineAnswer(answerPayload);
-			}
-		} else {
-			// Queue directly for offline synchronization
-			await queueOfflineAnswer(answerPayload);
-		}
-
-		// Update local cache progress directly for instant offline continuity
-		const cachedProgress: any[] = (await readFromLocalCache('user_progress_cache')) || [];
-		const idx = cachedProgress.findIndex((p: any) => p.id_oeuvre === lesson?.id);
-		const progressItem = {
-			user_id: userId,
-			id_oeuvre: lesson.id,
-			box_level: newBoxLevel,
-			consecutive_correct: consecutive,
-			next_review_at: nextReviewAt,
-			last_score: score,
-			last_presented_daily_at: nowStr,
-			updated_at: nowStr
-		};
-
-		if (idx >= 0) {
-			cachedProgress[idx] = progressItem;
-		} else {
-			cachedProgress.push(progressItem);
-		}
-		await saveToLocalCache('user_progress_cache', cachedProgress);
-	}
 </script>
 
 <div class="today-view">
+	{#if lesson && ((lesson as any).image_url_hd || lesson.image_url_thumb)}
+		<img
+			src={(lesson as any).image_url_hd || lesson.image_url_thumb}
+			alt=""
+			class="dynamic-bg-glow"
+			aria-hidden="true"
+		/>
+	{/if}
 	<header class="today-header">
 		<div class="date-badge">
 			<span>À la une aujourd'hui</span>
 		</div>
 		<h1 class="page-title">Découverte Quotidienne</h1>
-		<p class="page-subtitle">Prenez 3 minutes pour étudier l'œuvre du jour et améliorer votre maîtrise de l'art.</p>
+		<p class="page-subtitle">Explorez l'œuvre du jour et plongez dans l'histoire de l'art.</p>
 	</header>
 
 	{#if lesson}
 		<section class="card-section">
-			<ArtworkCard
-				artwork={lesson}
-				movementName={lesson.nom_courant}
-				oklchToken={lesson.oklch_token}
-				article={lesson.article_principal}
-			/>
-		</section>
-
-		<section class="quiz-section">
-			<QuickMCQ
-				qcm={lesson.qcm}
-				disabled={answered}
-				onAnswer={handleAnswer}
-			/>
-		</section>
-
-		{#if answered}
-			<div class="leitner-feedback" style:--movement-color={lesson.oklch_token}>
-				<div class="leitner-level">
-					<span class="level-icon"><Package size={22} weight="fill" /></span>
-					<span>Statut de la boîte Leitner : <strong>Niveau {currentBoxLevel} / 5</strong></span>
+			<div class="detail-header">
+				{#if (lesson as any).glossary?.courant_description}
+					<button
+						type="button"
+						class="movement-tag clickable"
+						style:background-color={(lesson as any).oklch_token}
+						onclick={() => openGlossary('courant')}
+					>
+						{(lesson as any).nom_courant}
+					</button>
+				{:else}
+					<span class="movement-tag" style:background-color={(lesson as any).oklch_token}>
+						{(lesson as any).nom_courant}
+					</span>
+				{/if}
+				<div class="actions-row">
+					{#if (lesson as any).verification_status === 'VERIFIED'}
+						<span class="verified-pill" title="Contenu vérifié à 100%">
+							<SealCheck size={22} weight="fill" />
+						</span>
+					{/if}
+					<button class="favorite-btn" onclick={toggleFavorite} aria-label="Toggle Favorite">
+						<Heart size={24} weight={isFavorite ? 'fill' : 'bold'} color={isFavorite ? '#ff3b30' : 'currentColor'} />
+					</button>
 				</div>
-				<p class="leitner-note">
-					Prochaine révision prévue pour ce concept : <strong>{new Date(_getLeitnerReviewDate(currentBoxLevel)).toLocaleDateString()}</strong>
+				<h2 class="artwork-title">{lesson.titre}</h2>
+				<p class="artwork-meta">
+					{#if (lesson as any).glossary?.artiste_description}
+						<button type="button" class="artist-link" onclick={() => openGlossary('artiste')}>{lesson.artistes?.nom}</button>
+					{:else}
+						{lesson.artistes?.nom}
+					{/if}
+					({lesson.date_creation})
 				</p>
 			</div>
-		{/if}
+			<ArtworkCard
+				artwork={lesson}
+				movementName={(lesson as any).nom_courant}
+				oklchToken={(lesson as any).oklch_token}
+				article={(lesson as any).article_principal}
+			/>
+		</section>
 	{:else}
 		<div class="empty-state">
 			<span class="empty-icon"><Palette size={48} weight="fill" /></span>
 			<h3>Tout est à jour !</h3>
-			<p>Aucune révision prévue pour le moment. Visitez le catalogue pour explorer de nouveaux mouvements artistiques à votre rythme.</p>
+			<p>Aucune œuvre disponible pour le moment. Visitez le catalogue pour explorer les mouvements artistiques.</p>
 			<a href="/catalogue" class="cta-link">Explorer le catalogue →</a>
 		</div>
 	{/if}
+
+	<GlossaryBottomSheet
+		bind:isOpen={glossaryOpen}
+		title={glossaryTitle}
+		subtitle={glossarySubtitle}
+		content={glossaryContent}
+	/>
 </div>
 
 <style>
@@ -211,37 +210,111 @@
 		margin: 0.35rem auto 0;
 	}
 
-	.card-section, .quiz-section {
+	.card-section {
 		width: 100%;
+		display: flex;
+		flex-direction: column;
+		gap: 0;
 	}
 
-	.leitner-feedback {
-		margin-top: 0.5rem;
-		padding: 1.25rem;
-		border-radius: var(--radius-md);
-		background-color: var(--color-surface);
-		border: 1.5px solid var(--movement-color, var(--color-primary));
-		box-shadow: var(--shadow-sm);
+	/* ── Detail-style header (matches [slug]/+page.svelte) ── */
+	.detail-header {
 		text-align: center;
-		animation: slideUp 0.3s ease;
+		margin-bottom: 1.5rem;
 	}
 
-	.leitner-level {
+	.movement-tag {
+		display: inline-block;
+		padding: 0.35rem 0.85rem;
+		border-radius: 20px;
+		font-size: 0.75rem;
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		color: var(--color-bg);
+		margin-bottom: 0.75rem;
+		border: none;
+	}
+
+	.movement-tag.clickable {
+		cursor: pointer;
+		transition: transform 0.2s ease, opacity 0.2s ease;
+	}
+
+	.movement-tag.clickable:hover {
+		transform: scale(1.05);
+		opacity: 0.9;
+	}
+
+	.artwork-title {
+		font-family: 'Instrument Serif', serif;
+		font-size: 2.5rem;
+		font-weight: 400;
+		margin: 0 0 0.5rem 0;
+		color: var(--color-text-primary);
+		line-height: 1.1;
+	}
+
+	.actions-row {
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		gap: 0.5rem;
-		font-size: 1.05rem;
-		font-weight: 700;
+		gap: 0.75rem;
+		margin-bottom: 0.5rem;
+	}
+
+	.verified-pill {
+		color: var(--color-success);
+		display: flex;
+		align-items: center;
+		flex-shrink: 0;
+	}
+
+	.favorite-btn {
+		background: none;
+		border: none;
+		padding: 0;
+		color: var(--color-text-muted);
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		transition: transform 0.2s ease, color 0.2s ease;
+		flex-shrink: 0;
+	}
+
+	.favorite-btn:hover {
+		transform: scale(1.1);
+	}
+
+	.favorite-btn:active {
+		transform: scale(0.95);
+	}
+
+	.artwork-meta {
+		font-size: 1rem;
+		color: var(--color-text-muted);
+		margin: 0;
+	}
+
+	.artist-link {
+		background: none;
+		border: none;
+		padding: 0;
+		font: inherit;
 		color: var(--color-text-primary);
-		margin-bottom: 0.35rem;
+		font-weight: 600;
+		cursor: pointer;
+		text-decoration: underline;
+		text-decoration-style: dotted;
+		text-underline-offset: 4px;
+		transition: color 0.2s ease;
 	}
 
-	.leitner-note {
-		font-size: 0.875rem;
-		color: var(--color-text-secondary);
+	.artist-link:hover {
+		color: var(--color-primary);
 	}
 
+	/* ── Empty state ── */
 	.empty-state {
 		text-align: center;
 		padding: 3.5rem 1.5rem;
@@ -274,7 +347,7 @@
 	.cta-link {
 		display: inline-block;
 		padding: 0.75rem 1.5rem;
-		border-radius: var(--radius-md);
+		border-radius: var(--radius-pill);
 		background-color: var(--color-primary);
 		color: oklch(0.99 0 0);
 		font-weight: 700;
@@ -285,16 +358,5 @@
 	.cta-link:hover {
 		transform: translateY(-2px);
 		box-shadow: var(--shadow-md);
-	}
-
-	@keyframes slideUp {
-		from {
-			opacity: 0;
-			transform: translateY(8px);
-		}
-		to {
-			opacity: 1;
-			transform: translateY(0);
-		}
 	}
 </style>

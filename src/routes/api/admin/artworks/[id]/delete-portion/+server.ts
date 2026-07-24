@@ -1,5 +1,6 @@
 import { json } from '@sveltejs/kit';
 import { prisma } from '$lib/server/prisma';
+import { calculateGlobalScore } from '$lib/server/utils/score';
 
 export async function POST({ params, request }) {
   const id = parseInt(params.id, 10);
@@ -12,14 +13,14 @@ export async function POST({ params, request }) {
 
     const artwork = await prisma.oeuvres.findUnique({
       where: { id },
-      include: { contenus_oeuvres: true }
+      include: { oeuvre_translations: { where: { language_code: 'fr' } } }
     });
 
-    if (!artwork || !artwork.contenus_oeuvres) {
+    if (!artwork || !artwork.oeuvre_translations || !artwork.oeuvre_translations[0]) {
       return json({ error: 'Artwork not found' }, { status: 404 });
     }
 
-    let updatedPortions = artwork.contenus_oeuvres.article_portions as any[] || [];
+    let updatedPortions = artwork.oeuvre_translations[0].article_portions as any[] || [];
     
     // Filter out the deleted portion
     updatedPortions = updatedPortions.filter(p => p.id !== portionId);
@@ -41,20 +42,14 @@ export async function POST({ params, request }) {
     if (hasFalse) globalStatus = 'FALSE';
     else if (hasUnverified) globalStatus = 'PENDING_VALIDATION';
 
-    let report = artwork.contenus_oeuvres.verification_report as any;
+    let report = (artwork.oeuvre_translations[0].verification_report || {}) as any;
     if (report && report.statements) {
       report.statements = report.statements.filter((s: any) => s.id !== portionId);
-      const validCount = updatedPortions.filter(p => p.status === 'VERIFIED').length;
-      const totalCount = updatedPortions.length;
-      if (totalCount > 0) {
-        report.global_score = Math.round((validCount / totalCount) * 100);
-      } else {
-        report.global_score = 0;
-      }
     }
+    report.global_score = calculateGlobalScore(report, updatedPortions, artwork.oeuvre_translations[0].introduction);
 
-    const updated = await prisma.contenus_oeuvres.update({
-      where: { id_oeuvre: id },
+    const updated = await prisma.oeuvre_translations.update({
+      where: { id_oeuvre_language_code: { id_oeuvre: id, language_code: 'fr' } },
       data: {
         article_portions: updatedPortions,
         article_principal: newArticlePrincipal,

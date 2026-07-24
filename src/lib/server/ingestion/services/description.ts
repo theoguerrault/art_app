@@ -43,10 +43,10 @@ export async function generateArtworkContent(
   title: string,
   artist: string | null
 ): Promise<GeneratedArtworkContent | null> {
-  const systemInstruction = `Tu es un rédacteur pour une application mobile artistique. Ton but est de rendre l'art accessible et passionnant.
-Adopte un ton moderne, simple et pédagogique, qui soit à la fois professionnel et décontracté.
-RÈGLE ABSOLUE : Rédige une description factuelle et encyclopédique, mais N'INTERPELLE JAMAIS le lecteur (interdit d'utiliser "vous", "tu", "Savez-vous que", etc.).
-Privilégie une structure aérée : utilise des titres pour les grandes parties, et liste les faits de manière concise et percutante (donne un maximum d'informations avec un minimum de texte).`;
+  const systemInstruction = `
+RÈGLES ABSOLUES :
+1. N'INTERPELLE JAMAIS le lecteur (interdit d'utiliser "vous", "tu", "Savez-vous que", etc.).
+2. Ne répète pas les informations de base de l'"introduction" dans la description principale ("portions").`;
 
   const userPrompt = `Pourquoi l'oeuvre "${title}"${artist ? ` par ${artist}` : ''} est-elle connue ?`;
 
@@ -63,21 +63,14 @@ Privilégie une structure aérée : utilise des titres pour les grandes parties,
           type: Type.OBJECT,
           properties: {
             title: { type: Type.STRING, description: "Titre de la partie (sans numéro)" },
-            content: { type: Type.STRING, description: "Le contenu de la partie au format Markdown (liste à puces, très concis)" }
+            content: { type: Type.STRING, description: "Le contenu de la partie au format Markdown." }
           },
           required: ["title", "content"]
         },
-        description: "L'Article Principal découpé en grandes parties thématiques (le nombre de parties est libre). L'objectif est d'être très informatif et concis."
-      },
-      anecdotes_secretes: {
-        type: Type.ARRAY,
-        items: {
-          type: Type.STRING
-        },
-        description: "Le savais-tu : 2 à 3 fun facts (mystères, scandales). Chaque anecdote doit commencer par un titre accrocheur en gras."
+        description: "Pourquoi l'oeuvre est elle connue."
       }
     },
-    required: ['portions', 'anecdotes_secretes']
+    required: ['introduction', 'portions']
   };
 
   try {
@@ -87,7 +80,7 @@ Privilégie une structure aérée : utilise des titres pour les grandes parties,
       userPrompt,
       responseSchema,
       models: GEMINI_DEFAULT_MODELS,
-      temperature: 0.2
+      temperature: 0.7
     });
     return result;
   } catch (err) {
@@ -108,7 +101,7 @@ export async function factCheckArtworkContent(
 ): Promise<FactCheckReport | null> {
   const trimmedText = trimWikipediaText(wikipediaText);
 
-const systemInstruction = `Tu es un Fact-Checker impitoyable et expert en art.
+  const systemInstruction = `Tu es un Fact-Checker impitoyable et expert en art.
 
 MISSION : Tu vas recevoir un tableau de "portions" (paragraphes) d'un texte généré par une IA sur une œuvre d'art, ainsi que l'article Wikipédia correspondant (Source de Vérité). Ton rôle est d'analyser chaque portion pour vérifier si les affirmations qu'elle contient sont confirmées, contredites, ou absentes de Wikipédia.
 
@@ -157,7 +150,7 @@ RÈGLES ABSOLUES :
       models: GEMINI_DEFAULT_MODELS,
       temperature: 0.1
     });
-    
+
     return report;
   } catch (err) {
     console.error(`[DescriptionService] Failed fact-checking for "${title}":`, err);
@@ -212,10 +205,114 @@ Mission : Réécris le paragraphe original en corrigeant ces erreurs en te basan
       models: GEMINI_DEFAULT_MODELS,
       temperature: 0.2
     });
-    
+
     return result?.corrected_text || null;
   } catch (err) {
     console.error(`[DescriptionService] Failed auto-correcting portion for "${title}":`, err);
+    return null;
+  }
+}
+
+export async function regenerateArtworkIntroduction(title: string, artist: string | null, existingContext: string = ''): Promise<string | null> {
+  const systemInstruction = `Tu es un expert en histoire de l'art. Rédige une courte introduction sobre et concise présentant l'œuvre (ce que c'est, date, technique, contexte de création, etc.). N'utilise jamais de vouvoiement ou de tutoiement ("vous", "tu", "Savez-vous que"). Ne répète pas les informations suivantes :\n${existingContext}`;
+
+  const userPrompt = `Rédige l'introduction pour l'œuvre "${title}"${artist ? ` par ${artist}` : ''}.`;
+
+  const responseSchema = {
+    type: Type.OBJECT,
+    properties: {
+      introduction: { type: Type.STRING }
+    },
+    required: ['introduction']
+  };
+
+  try {
+    console.log(`[DescriptionService] Regenerating intro for "${title}"...`);
+    const result = await generateContentWithRetry<{ introduction: string }>({
+      systemInstruction,
+      userPrompt,
+      responseSchema,
+      models: GEMINI_DEFAULT_MODELS,
+      temperature: 0.7
+    });
+    return result?.introduction || null;
+  } catch (err) {
+    console.error(`[DescriptionService] Failed regenerating intro for "${title}":`, err);
+    return null;
+  }
+}
+
+export async function regenerateArtworkPortion(title: string, artist: string | null, portionTitle: string, portionContext: string): Promise<{title: string, content: string} | null> {
+  const systemInstruction = `Tu es un expert en histoire de l'art. Réécris cette partie spécifique de la description de l'œuvre tout en gardant son sens principal, mais en améliorant la fluidité ou en développant légèrement. N'utilise jamais de vouvoiement ou de tutoiement. Formate le contenu en Markdown.`;
+
+  const userPrompt = `Œuvre : "${title}"${artist ? ` par ${artist}` : ''}. 
+Titre de la partie : "${portionTitle}"
+Contenu actuel : "${portionContext}"
+
+Réécris cette partie en te concentrant sur ce même sujet.`;
+
+  const responseSchema = {
+    type: Type.OBJECT,
+    properties: {
+      title: { type: Type.STRING, description: "Titre de la partie (sans numéro)" },
+      content: { type: Type.STRING, description: "Le contenu de la partie au format Markdown." }
+    },
+    required: ['title', 'content']
+  };
+
+  try {
+    console.log(`[DescriptionService] Regenerating portion "${portionTitle}" for "${title}"...`);
+    const result = await generateContentWithRetry<{ title: string, content: string }>({
+      systemInstruction,
+      userPrompt,
+      responseSchema,
+      models: GEMINI_DEFAULT_MODELS,
+      temperature: 0.7
+    });
+    return result || null;
+  } catch (err) {
+    console.error(`[DescriptionService] Failed regenerating portion for "${title}":`, err);
+    return null;
+  }
+}
+
+export async function generateAdditionalArtworkPortion(title: string, artist: string | null, instruction: string, existingContentStr: string): Promise<{title: string, content: string} | null> {
+  const systemInstruction = `Tu es un expert en histoire de l'art. Tu dois ajouter une nouvelle partie à la description de l'œuvre en respectant l'instruction de l'utilisateur. 
+RÈGLES :
+1. N'utilise jamais de vouvoiement ou de tutoiement.
+2. NE RÉPÈTE AUCUNE INFORMATION DÉJÀ PRÉSENTE dans le contenu existant de l'œuvre. Formate le contenu en Markdown.`;
+
+  const userPrompt = `Œuvre : "${title}"${artist ? ` par ${artist}` : ''}.
+
+[CONTENU EXISTANT DE L'ŒUVRE (À ne pas répéter)]
+${existingContentStr}
+
+[INSTRUCTION POUR LA NOUVELLE PARTIE]
+${instruction}
+
+Rédige la nouvelle partie avec un titre pertinent en lien avec l'instruction fournie.`;
+
+  const responseSchema = {
+    type: Type.OBJECT,
+    properties: {
+      title: { type: Type.STRING, description: "Titre de la partie (sans numéro)" },
+      content: { type: Type.STRING, description: "Le contenu de la partie au format Markdown." }
+    },
+    required: ['title', 'content']
+  };
+
+  try {
+    console.log(`[DescriptionService] Generating additional portion for "${title}"...`);
+    const result = await generateContentWithRetry<{ title: string, content: string }>({
+      systemInstruction,
+      userPrompt,
+      responseSchema,
+      models: GEMINI_DEFAULT_MODELS,
+      temperature: 0.7
+    });
+    return result || null;
+  } catch (err) {
+    console.error(`[DescriptionService] Failed generating additional portion for "${title}":`, err);
     return null;
   }
 }

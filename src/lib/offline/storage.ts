@@ -1,9 +1,9 @@
 import type { Artwork, UserProgress } from '$lib/types/database';
 
 const DB_NAME = 'ai_art_coach_db';
-const DB_VERSION = 2;
+const DB_VERSION = 3;
 
-export type CacheStoreName = 'cached_artworks' | 'cached_mcqs' | 'user_progress_cache' | 'offline_sync_queue';
+export type CacheStoreName = 'cached_artworks' | 'cached_mcqs' | 'user_progress_cache' | 'offline_sync_queue' | 'user_favorites_cache';
 
 export interface OfflineSyncQueueItem {
 	queue_id?: number;
@@ -65,6 +65,11 @@ export function getDB(): Promise<IDBDatabase> {
 					autoIncrement: true
 				});
 				queueStore.createIndex('answered_at', 'answered_at', { unique: false });
+			}
+
+			// Store 5: user_favorites_cache
+			if (!db.objectStoreNames.contains('user_favorites_cache')) {
+				db.createObjectStore('user_favorites_cache', { keyPath: 'id' });
 			}
 		};
 	});

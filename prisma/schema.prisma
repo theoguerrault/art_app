@@ -451,6 +451,7 @@ model users {
   webauthn_credentials        webauthn_credentials[]
   historique_reponses         historique_reponses[]
   user_artwork_progress       user_artwork_progress[]
+  user_favorites              user_favorites[]
 
   @@index([created_at(sort: Desc)], map: "idx_users_created_at_desc")
   @@index([email], map: "idx_users_email")
@@ -497,51 +498,54 @@ model webauthn_credentials {
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
-model contenus_courants {
-  id_courant            Int      @id
+model courant_translations {
+  id_courant            Int
+  language_code         String   @db.VarChar(5)
+  nom                   String   @db.VarChar(150)
   description_courte    String
   caracteristiques_cles Json
   contexte_historique   String
   qcm_synthese          Json
+  verification_status   String   @default("PENDING") @db.VarChar(20)
   updated_at            DateTime @default(now()) @db.Timestamptz(6)
   courants              courants @relation(fields: [id_courant], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
+  @@id([id_courant, language_code])
   @@schema("public")
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
-model contenus_oeuvres {
-  id_oeuvre            Int      @id
-  article_principal    String
-  qcm                  Json
-  mots_cles            Json     @default("[]")
-  generated_by_model   String   @default("gemini-2.5-pro") @db.VarChar(50)
-  updated_at           DateTime @default(now()) @db.Timestamptz(6)
-  detailed_description Json?
-  extended_analysis    String?
-  historical_context   String?
-  anecdotes_secretes   String[]
-  verification_report  Json?
-  verification_status  String   @default("PENDING") @db.VarChar(20)
-  article_portions     Json?
-  introduction         String?
-  oeuvres              oeuvres  @relation(fields: [id_oeuvre], references: [id], onDelete: Cascade, onUpdate: NoAction)
+model oeuvre_translations {
+  id_oeuvre           Int
+  language_code       String   @db.VarChar(5)
+  titre               String   @db.VarChar(200)
+  article_principal   String
+  qcm                 Json
+  mots_cles           Json     @default("[]")
+  generated_by_model  String   @default("gemini-2.5-pro") @db.VarChar(50)
+  updated_at          DateTime @default(now()) @db.Timestamptz(6)
+  verification_report Json?
+  verification_status String   @default("PENDING") @db.VarChar(20)
+  introduction        String?
+  article_portions    Json?
+  anecdotes_secretes  Json?
+  oeuvres             oeuvres  @relation(fields: [id_oeuvre], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
+  @@id([id_oeuvre, language_code])
   @@schema("public")
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model courants {
-  id                  Int                   @id @default(autoincrement())
-  slug                String                @unique @db.VarChar(100)
-  nom                 String                @db.VarChar(150)
-  siecle              String                @db.VarChar(100)
-  oklch_token         String                @db.VarChar(50)
-  ordre_chronologique Int                   @unique
-  created_at          DateTime              @default(now()) @db.Timestamptz(6)
-  contenus_courants   contenus_courants?
-  historique_reponses historique_reponses[]
-  oeuvres             oeuvres[]
+  id                   Int                    @id @default(autoincrement())
+  slug                 String                 @unique @db.VarChar(100)
+  siecle               String                 @db.VarChar(100)
+  oklch_token          String                 @db.VarChar(50)
+  ordre_chronologique  Int                    @unique
+  created_at           DateTime               @default(now()) @db.Timestamptz(6)
+  courant_translations courant_translations[]
+  historique_reponses  historique_reponses[]
+  oeuvres              oeuvres[]
 
   @@schema("public")
 }
@@ -571,20 +575,22 @@ model oeuvres {
   id                    Int                     @id @default(autoincrement())
   slug                  String                  @unique @db.VarChar(150)
   id_courant            Int
-  titre                 String                  @db.VarChar(200)
-  artiste               String                  @db.VarChar(150)
+  id_artiste            Int
   date_creation         String                  @db.VarChar(100)
   image_url_full        String
   image_url_thumb       String
+  image_source          String?                 @db.VarChar(50)
+  image_rights          String?                 @db.VarChar(100)
   aspect_ratio          Float                   @default(1.33)
   ordre_dans_courant    Int
   is_active             Boolean                 @default(true)
   created_at            DateTime                @default(now()) @db.Timestamptz(6)
-  wikipedia_title       String?                 @db.VarChar(255)
-  contenus_oeuvres      contenus_oeuvres?
+  oeuvre_translations   oeuvre_translations[]
   historique_reponses   historique_reponses[]
   courants              courants                @relation(fields: [id_courant], references: [id], onUpdate: NoAction)
+  artistes              artistes                @relation(fields: [id_artiste], references: [id], onUpdate: NoAction)
   user_artwork_progress user_artwork_progress[]
+  user_favorites        user_favorites[]
 
   @@unique([id_courant, ordre_dans_courant])
   @@schema("public")
@@ -607,6 +613,45 @@ model user_artwork_progress {
 
   @@id([user_id, id_oeuvre])
   @@index([user_id, next_review_at, last_presented_daily_at], map: "idx_user_progress_review")
+  @@schema("public")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model user_favorites {
+  user_id    String   @db.Uuid
+  id_oeuvre  Int
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  oeuvres    oeuvres  @relation(fields: [id_oeuvre], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  users      users    @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([user_id, id_oeuvre])
+  @@index([user_id, created_at(sort: Desc)], map: "idx_user_favorites_created_desc")
+  @@schema("public")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model artistes {
+  id                   Int                    @id @default(autoincrement())
+  slug                 String                 @unique @db.VarChar(150)
+  created_at           DateTime               @default(now()) @db.Timestamptz(6)
+  oeuvres              oeuvres[]
+  artiste_translations artiste_translations[]
+
+  @@schema("public")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model artiste_translations {
+  id_artiste          Int
+  language_code       String   @db.VarChar(5)
+  nom                 String   @db.VarChar(150)
+  description_courte  String
+  verification_status String   @default("PENDING") @db.VarChar(20)
+  updated_at          DateTime @default(now()) @db.Timestamptz(6)
+  artistes            artistes @relation(fields: [id_artiste], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([id_artiste, language_code])
   @@schema("public")
 }
 

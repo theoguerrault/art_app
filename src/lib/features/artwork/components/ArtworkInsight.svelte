@@ -1,23 +1,70 @@
 <script lang="ts">
-	import { Sparkle, BookOpen } from 'phosphor-svelte';
 	import { parseMarkdown } from '$lib/utils/markdown';
+
+	interface Portion {
+		id?: string;
+		type?: string;
+		title?: string;
+		text: string;
+	}
 
 	interface Props {
 		artworkTitle?: string;
-		displayAnecdote: string;
+		introduction?: string | null;
+		portions?: Portion[];
+		articlePrincipal?: string;
 	}
 
-	let { artworkTitle, displayAnecdote }: Props = $props();
+	let { artworkTitle, introduction, portions = [], articlePrincipal }: Props = $props();
+
+	let articlePortions = $derived(portions.filter((p) => !p.type || p.type === 'article'));
+	let anecdotePortions = $derived(portions.filter((p) => p.type === 'anecdote'));
 </script>
 
 <div class="card-analysis">
-	<div class="analysis-section">
-		<div class="section-heading">
-			<Sparkle size={18} weight="fill" />
-			<span>{artworkTitle || "L'Article"}</span>
+	{#if introduction}
+		<div class="analysis-section introduction-section">
+			<h3 class="section-subtitle">INTRODUCTION</h3>
+			<div class="markdown-content">{@html parseMarkdown(introduction)}</div>
 		</div>
-		<div class="anecdote-text markdown-content">{@html parseMarkdown(displayAnecdote)}</div>
-	</div>
+	{/if}
+
+	{#if articlePortions.length > 0}
+		<div class="analysis-section article-section">
+			<h3 class="section-subtitle">ARTICLE</h3>
+			<div class="portions-list">
+				{#each articlePortions as portion, index}
+					<div class="portion-item">
+						{#if portion.title}
+							<h4 class="portion-title">{portion.title}</h4>
+						{/if}
+						<div class="markdown-content">{@html parseMarkdown(portion.text)}</div>
+					</div>
+				{/each}
+			</div>
+		</div>
+	{:else if articlePrincipal}
+		<div class="analysis-section article-section">
+			<h3 class="section-subtitle">ARTICLE</h3>
+			<div class="markdown-content">{@html parseMarkdown(articlePrincipal)}</div>
+		</div>
+	{/if}
+
+	{#if anecdotePortions.length > 0}
+		<div class="analysis-section anecdotes-section">
+			<h3 class="section-subtitle">ANECDOTES</h3>
+			<div class="portions-list">
+				{#each anecdotePortions as portion, index}
+					<div class="portion-item">
+						{#if portion.title}
+							<h4 class="portion-title">{portion.title}</h4>
+						{/if}
+						<div class="markdown-content">{@html parseMarkdown(portion.text)}</div>
+					</div>
+				{/each}
+			</div>
+		</div>
+	{/if}
 </div>
 
 <style>
@@ -25,35 +72,63 @@
 		padding: 1.75rem;
 		display: flex;
 		flex-direction: column;
-		gap: 1.5rem;
-		background: radial-gradient(circle at top right, var(--color-surface-elevated), var(--color-surface));
+		gap: 2rem;
+		background: transparent;
 	}
 
 	.analysis-section {
 		display: flex;
 		flex-direction: column;
-		gap: 0.4rem;
+		gap: 1rem;
+		padding-bottom: 1.5rem;
+		border-bottom: 1px solid var(--color-border-subtle);
 	}
 
-	.section-heading {
-		display: flex;
-		align-items: center;
-		gap: 0.45rem;
-		font-size: 0.85rem;
+	.analysis-section:last-child {
+		border-bottom: none;
+		padding-bottom: 0;
+	}
+
+	.section-subtitle {
+		font-family: var(--font-body);
+		font-size: 0.95rem;
 		font-weight: 700;
 		text-transform: uppercase;
-		letter-spacing: 0.06em;
-		color: var(--movement-color, var(--color-primary));
-		margin-bottom: 0.5rem;
-	}
-
-	.anecdote-text {
-		font-size: 0.98rem;
-		line-height: 1.6;
+		letter-spacing: 0.05em;
 		color: var(--color-text-secondary);
+		margin: 0;
 	}
 
-	/* Markdown styles scoped to this component */
+	.portions-list {
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+	}
+
+	.portion-item {
+		background: transparent;
+		border: none;
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+
+
+
+	.portion-title {
+		font-family: var(--font-body);
+		font-size: 1rem;
+		font-weight: 700;
+		color: var(--color-text-primary);
+		margin: 0.5rem 0 0.25rem 0;
+	}
+
+	.markdown-content {
+		font-size: 0.95rem;
+		line-height: 1.6;
+		color: var(--color-text-primary);
+	}
+
 	:global(.markdown-content p) {
 		margin-bottom: 0.85rem;
 	}
@@ -63,15 +138,12 @@
 	}
 
 	:global(.markdown-content h3) {
-		font-size: 1.15rem;
-		font-weight: 800;
+		font-size: 1rem;
+		font-weight: 700;
+		font-family: var(--font-body);
 		color: var(--color-text-primary);
 		margin-top: 1rem;
-		margin-bottom: 0.2rem;
-	}
-	
-	:global(.markdown-content h3:first-child) {
-		margin-top: 0;
+		margin-bottom: 0.3rem;
 	}
 
 	:global(.markdown-content ul) {

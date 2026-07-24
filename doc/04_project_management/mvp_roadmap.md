@@ -199,3 +199,37 @@ When the user instructs the agent to `"continue implementation"`, `"continue l'i
   - **Verification Criteria:**
     - Verify the UI displays portions with `VERIFIED`, `FALSE`, or `UNVERIFIED` tags based on the Wikipedia Source of Truth.
     - Verify the administrator can trigger AI auto-correction on `FALSE` paragraphs.
+
+---
+
+### Phase 10: App Experience & Content Refinements
+- [x] **Step 10.1: Refine "Today" Tab (Validated Artworks Only)**
+  - **Scope & Required Files:**
+    - Update the daily selection logic (`src/routes/+page.ts` or relevant service) to ensure the "Today" tab only presents artworks that have been explicitly validated in the admin panel.
+  - **Verification Criteria:**
+    - Verify that draft or unvalidated artworks are ignored by the daily lesson algorithm.
+
+- [x] **Step 10.2: Anti-Cheat Mechanism for Daily Quizzes**
+  - **Scope & Required Files:**
+    - Update the quiz logic and UI in the "Today" tab (e.g., `ArtworkCard.svelte`, `QuickMCQ.svelte`, or `+page.svelte`).
+    - Hide the artwork's description text as soon as the user launches the quiz to prevent cheating.
+    - Ensure the quiz questions and answers are generated exclusively based on the artwork content available in the database.
+  - **Verification Criteria:**
+    - Verify the description is visually hidden when the quiz starts.
+
+- [ ] **Step 10.3: Interactive Artist & Movement Definitions**
+  - **Scope & Required Files:**
+    - Add data models or schema columns to store short descriptions for Artists and Movements (if not already present).
+    - Create an admin UI workflow to generate and validate these short definitions using AI, similar to the artwork workflow but explicitly prompted to be short and informative for novices.
+    - Update the artwork detail view (`src/routes/catalogue/[slug]/+page.svelte`) to make the artist and movement names clickable, opening a modal or bottom sheet with their respective short descriptions.
+  - **Verification Criteria:**
+    - Verify the admin can generate, review, and validate short descriptions for artists and movements.
+    - Verify users can click an artist or movement in the app to read its definition.
+
+- [ ] **Step 10.4: Dynamic Portion & Anecdote Addition in Admin Panel**
+  - **Scope & Required Files:**
+    - Add UI forms and server endpoints to allow administrators to manually construct and append custom article portions and anecdotes to an artwork's content.
+  - **Verification Criteria:**
+    - Verify administrators can add custom portions and anecdotes with auto-generated UUIDs and default unverified status.
+
+

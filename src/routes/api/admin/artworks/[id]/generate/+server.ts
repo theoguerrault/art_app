@@ -10,20 +10,25 @@ export async function POST({ params }) {
 
   try {
     const artwork = await prisma.oeuvres.findUnique({
-      where: { id }
+      where: { id },
+      include: { 
+        artistes: { include: { artiste_translations: { where: { language_code: 'fr' } } } },
+        oeuvre_translations: { where: { language_code: 'fr' } }
+      }
     });
 
     if (!artwork) {
       return json({ error: 'Artwork not found' }, { status: 404 });
     }
 
-    const generatedContent = await generateArtworkContent(artwork.titre, artwork.artiste);
+    const titre = artwork.oeuvre_translations?.[0]?.titre || 'Inconnu';
+    const nomArtiste = artwork.artistes?.artiste_translations?.[0]?.nom || 'Inconnu';
+    const generatedContent = await generateArtworkContent(titre, nomArtiste);
 
     if (!generatedContent) {
       return json({ error: 'Failed to generate content' }, { status: 500 });
     }
 
-    // Update or create contenu_oeuvre
     const articlePortions = (generatedContent.portions || []).map((p: any, index: number) => ({
       id: `p-${Date.now()}-article-${index}`,
       type: 'article',
@@ -39,12 +44,10 @@ export async function POST({ params }) {
       status: 'PENDING'
     }));
 
-    const initialPortions = [...articlePortions, ...anecdotePortions];
-
     const updatePayload: any = {
       introduction: generatedContent.introduction || null,
       article_principal: (generatedContent.portions || []).map((p: any) => `### ${p.title}\n\n${p.content}`).join('\n\n') || "Contenu introuvable",
-      article_portions: initialPortions as any,
+      article_portions: [...articlePortions, ...anecdotePortions],
       anecdotes_secretes: generatedContent.anecdotes_secretes || [],
       verification_status: 'PENDING'
     };
@@ -54,11 +57,13 @@ export async function POST({ params }) {
     // Actually, setting it to undefined will not overwrite existing. To overwrite, use `{}` or `null` cast as any. Let's cast as any to bypass.
     (updatePayload as any).verification_report = null;
 
-    const updated = await prisma.contenus_oeuvres.upsert({
-      where: { id_oeuvre: id },
+    const updated = await prisma.oeuvre_translations.upsert({
+      where: { id_oeuvre_language_code: { id_oeuvre: id, language_code: 'fr' } },
       update: updatePayload,
       create: {
         id_oeuvre: id,
+        language_code: 'fr',
+        titre: titre,
         qcm: { question: '?', options: [], correctIndex: 0, explanation: '' }, // default if creating from scratch
         ...updatePayload
       }
@@ -67,12 +72,12 @@ export async function POST({ params }) {
     return json({ success: true, content: updated });
   } catch (error: any) {
     console.error('[API/admin/generate] Error:', error);
-    
+
     const errorMessage = error.message || String(error);
     if (errorMessage.includes('Quota exceeded') || errorMessage.includes('429')) {
       return json({ error: 'Le quota quotidien de génération Gemini a été atteint. Veuillez réessayer demain.' }, { status: 429 });
     }
-    
+
     return json({ error: errorMessage }, { status: 500 });
   }
 }

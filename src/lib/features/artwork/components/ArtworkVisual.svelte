@@ -9,9 +9,10 @@
 		displayMovementName: string;
 		displayOklchToken: string;
 		cardAspectRatio: string;
+		eager?: boolean;
 	}
 
-	let { artwork, displayMovementName, displayOklchToken, cardAspectRatio }: Props = $props();
+	let { artwork, displayMovementName, displayOklchToken, cardAspectRatio, eager = false }: Props = $props();
 	let showFullscreen = $state(false);
 </script>
 
@@ -19,8 +20,8 @@
 	<div class="image-wrapper">
 		<img
 			src={artwork.image_url_full || artwork.image_url_thumb}
-			alt="{artwork.titre} par {artwork.artiste}"
-			loading="eager"
+			alt="{artwork.titre} par {artwork.artistes?.nom || 'Inconnu'}"
+			loading={eager ? "eager" : "lazy"}
 			decoding="async"
 		/>
 	</div>
@@ -41,7 +42,7 @@
 		</button>
 		<img 
 			src={artwork.image_url_full || artwork.image_url_thumb} 
-			alt="{artwork.titre} par {artwork.artiste}" 
+			alt="{artwork.titre} par {artwork.artistes?.nom || 'Inconnu'}"
 			transition:scale={{ duration: 300, start: 0.95 }}
 		/>
 	</div>

@@ -1,13 +1,40 @@
 <script lang="ts">
 	import type { PageData } from './$types';
-	import { MagnifyingGlass, X, Check } from 'phosphor-svelte';
+	import { MagnifyingGlass, X, Check, Heart } from 'phosphor-svelte';
+	import LazySection from '$lib/components/LazySection.svelte';
+	import CatalogArtworkCard from '$lib/features/artwork/components/CatalogArtworkCard.svelte';
 
 	let { data }: { data: PageData } = $props();
 
 	let searchQuery = $state('');
+	let showFavoritesOnly = $state(false);
+	let selectedMovements = $state(new Set<number>());
+
+	let scrollY = $state(0);
+	let lastScrollY = $state(0);
+	let headerVisible = $state(true);
 
 	$effect(() => {
-		document.documentElement.style.setProperty('--artwork-hue', '220');
+		if (scrollY < lastScrollY || scrollY < 50) {
+			headerVisible = true;
+		} else if (scrollY > lastScrollY && scrollY > 50) {
+			headerVisible = false;
+		}
+		lastScrollY = scrollY;
+	});
+
+	function toggleMovement(id: number) {
+		const updated = new Set(selectedMovements);
+		if (updated.has(id)) {
+			updated.delete(id);
+		} else {
+			updated.add(id);
+		}
+		selectedMovements = updated;
+	}
+
+	$effect(() => {
+		// Removed hue override to keep the primary pink color
 	});
 
 	// Map progress by id_oeuvre
@@ -21,14 +48,19 @@
 		return set;
 	});
 
-	// Filter artworks using instant client-side derivation
+	let favoritesSet = $derived(() => {
+		return new Set<number>(data.favoritesList || []);
+	});
+
 	let filteredArtworks = $derived(
 		(data.artworks || []).filter((art) => {
+			if (showFavoritesOnly && (!art.id || !favoritesSet().has(art.id))) return false;
+			if (selectedMovements.size > 0 && art.id_courant && !selectedMovements.has(art.id_courant)) return false;
 			if (!searchQuery.trim()) return true;
 			const q = searchQuery.toLowerCase();
 			return (
 				(art.titre && art.titre.toLowerCase().includes(q)) ||
-				(art.artiste && art.artiste.toLowerCase().includes(q))
+				(art.artistes?.nom && art.artistes.nom.toLowerCase().includes(q))
 			);
 		})
 	);
@@ -60,16 +92,19 @@
 		}
 
 		// Return only movements that have matching items when searching, or all if no search query
-		return Array.from(groups.values()).filter((g) => g.items.length > 0 || !searchQuery.trim());
+		return Array.from(groups.values()).filter((g) => {
+			if (selectedMovements.size > 0 && !selectedMovements.has(g.movement.id)) return false;
+			return g.items.length > 0 || (!searchQuery.trim() && !showFavoritesOnly && selectedMovements.size === 0);
+		});
 	});
 </script>
+<svelte:window bind:scrollY={scrollY} />
 
 <div class="catalog-view">
-	<header class="catalog-header sticky-header">
-		<h1 class="page-title">Catalogue</h1>
+	<header class="catalog-header sticky-header" class:hidden={!headerVisible}>
 		<div class="search-bar">
 			<span class="search-icon" aria-hidden="true">
-				<MagnifyingGlass size={20} weight="bold" />
+				<MagnifyingGlass size={20} weight="regular" />
 			</span>
 			<input
 				type="search"
@@ -79,15 +114,33 @@
 			/>
 			{#if searchQuery}
 				<button type="button" class="clear-btn" onclick={() => (searchQuery = '')} aria-label="Effacer">
-					<X size={18} weight="bold" />
+					<X size={18} weight="regular" />
 				</button>
 			{/if}
 		</div>
+		<div class="filters-bar">
+			<button 
+				class="filter-pill favorite-pill {showFavoritesOnly ? 'active' : ''}" 
+				onclick={() => (showFavoritesOnly = !showFavoritesOnly)}
+			>
+				<Heart size={16} weight={showFavoritesOnly ? 'fill' : 'regular'} />
+				Favoris
+			</button>
+			<div class="divider"></div>
+			{#each data.movements || [] as movement}
+				<button 
+					class="filter-pill movement-pill {selectedMovements.has(movement.id) ? 'active' : ''}" 
+					onclick={() => toggleMovement(movement.id)}
+				>
+					{movement.nom}
+				</button>
+			{/each}
+		</div>
 	</header>
 
-	<div class="movements-list">
+	<div class="movements-list" class:header-hidden={!headerVisible}>
 		{#each groupedMovements() as group}
-			<section class="movement-section" style:--movement-color={group.movement.oklch_token || 'var(--color-primary)'}>
+			<section class="movement-section" style:--movement-color="var(--color-primary)">
 				<div class="movement-header sticky-subheader">
 					<div>
 						<h2 class="movement-title">{group.movement.nom}</h2>
@@ -99,24 +152,19 @@
 				</div>
 
 				{#if group.items.length > 0}
-					<div class="grid-catalog-minimal">
-						{#each group.items as art}
-							<a href="/catalogue/{art.slug || art.id}" class="artwork-card-minimal" aria-label="Voir {art.titre}">
-								<div class="thumb-wrapper">
-									<img src={art.image_url_thumb} alt={art.titre} loading="lazy" decoding="async" />
-									{#if progressSet().has(art.id)}
-										<span class="discovered-indicator" title="Découverte">
-											<Check size={14} weight="bold" />
-										</span>
-									{/if}
-								</div>
-								<div class="art-info">
-									<h3 class="art-title">{art.titre}</h3>
-									<p class="art-artist">{art.artiste}</p>
-								</div>
-							</a>
-						{/each}
-					</div>
+					<LazySection itemCount={group.items.length}>
+						{#snippet children()}
+							<div class="grid-catalog-minimal">
+								{#each group.items as art}
+									<CatalogArtworkCard 
+										{art} 
+										isFavorite={favoritesSet().has(art.id)} 
+										isDiscovered={progressSet().has(art.id)} 
+									/>
+								{/each}
+							</div>
+						{/snippet}
+					</LazySection>
 				{:else}
 					<p class="no-items-note">Aucune œuvre trouvée.</p>
 				{/if}
@@ -147,17 +195,14 @@
 		background: color-mix(in oklch, var(--color-bg) 85%, transparent);
 		backdrop-filter: blur(12px);
 		-webkit-backdrop-filter: blur(12px);
-		padding: 1rem 0 1.5rem;
-		margin: -1rem 0 0;
+		padding: 1rem 0 1.25rem;
+		margin: -1rem -1.25rem 0;
 		border-bottom: 1px solid var(--color-border-subtle);
+		transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 	}
 
-	.page-title {
-		font-size: 2rem;
-		font-weight: 800;
-		color: var(--color-text-primary);
-		margin-bottom: 1rem;
-		padding: 0 1.25rem;
+	.sticky-header.hidden {
+		transform: translateY(-100%);
 	}
 
 	.search-bar {
@@ -202,13 +247,13 @@
 
 	.clear-btn {
 		position: absolute;
-		right: 0.5rem;
+		right: 0.25rem;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		color: var(--color-text-muted);
-		width: 2rem;
-		height: 2rem;
+		width: 44px;
+		height: 44px;
 		border-radius: 50%;
 	}
 
@@ -221,7 +266,7 @@
 		display: flex;
 		flex-direction: column;
 		gap: 2rem;
-		padding: 0 1.25rem;
+		padding: 0;
 	}
 
 	.movement-section {
@@ -232,13 +277,18 @@
 
 	.sticky-subheader {
 		position: sticky;
-		top: 110px; /* Offset to sit below the sticky header */
+		top: 100px;
 		z-index: 10;
 		background: color-mix(in oklch, var(--color-bg) 92%, transparent);
 		backdrop-filter: blur(8px);
 		-webkit-backdrop-filter: blur(8px);
 		padding: 0.75rem 0;
 		margin: 0;
+		transition: top 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+	}
+
+	.movements-list.header-hidden .sticky-subheader {
+		top: 0;
 	}
 
 	.movement-header {
@@ -278,94 +328,15 @@
 		display: grid;
 		grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
 		gap: 1rem 0.85rem;
+		/* padding already handled by parent */
 	}
 
-	.artwork-card-minimal {
-		display: flex;
-		flex-direction: column;
-		text-decoration: none;
-		color: inherit;
-		gap: 0.5rem;
-		border-radius: 8px;
-		transition: opacity 0.2s ease;
-	}
-
-	.artwork-card-minimal:active {
-		opacity: 0.6;
-	}
-
-	.thumb-wrapper {
-		position: relative;
-		width: 100%;
-		aspect-ratio: 1 / 1;
-		border-radius: 12px;
-		overflow: hidden;
-		background-color: var(--color-border-subtle);
-		box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-	}
-
-	.thumb-wrapper img {
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-		transition: transform 0.4s cubic-bezier(0.2, 0, 0, 1);
-	}
-
-	/* Micro-interaction on desktop */
-	@media (hover: hover) {
-		.artwork-card-minimal:hover .thumb-wrapper img {
-			transform: scale(1.05);
+	@media (min-width: 768px) {
+		.grid-catalog-minimal {
+			grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
 		}
 	}
 
-	.discovered-indicator {
-		position: absolute;
-		top: 0.5rem;
-		right: 0.5rem;
-		background: rgba(255, 255, 255, 0.9);
-		color: var(--color-success);
-		backdrop-filter: blur(4px);
-		-webkit-backdrop-filter: blur(4px);
-		width: 1.5rem;
-		height: 1.5rem;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		border-radius: 50%;
-		box-shadow: 0 2px 5px rgba(0,0,0,0.15);
-	}
-
-	:global([data-theme="dark"]) .discovered-indicator {
-		background: rgba(0, 0, 0, 0.6);
-	}
-
-	.art-info {
-		display: flex;
-		flex-direction: column;
-		padding: 0 0.15rem;
-	}
-
-	.art-title {
-		font-size: 0.9rem;
-		font-weight: 600;
-		line-height: 1.25;
-		color: var(--color-text-primary);
-		display: -webkit-box;
-		-webkit-line-clamp: 2;
-		line-clamp: 2;
-		-webkit-box-orient: vertical;
-		overflow: hidden;
-	}
-
-	.art-artist {
-		font-size: 0.8rem;
-		font-weight: 400;
-		color: var(--color-text-secondary);
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		margin-top: 0.15rem;
-	}
 
 	.no-items-note {
 		color: var(--color-text-muted);
@@ -390,5 +361,57 @@
 		border-radius: 20px;
 		font-weight: 600;
 		box-shadow: inset 0 0 0 1px var(--color-border);
+		min-height: 44px;
+	}
+
+	.filters-bar {
+		margin: 1rem 1.25rem 0;
+		display: flex;
+		gap: 0.5rem;
+		overflow-x: auto;
+		padding-bottom: 0.5rem;
+		-webkit-overflow-scrolling: touch;
+		scrollbar-width: none;
+	}
+
+	.filters-bar::-webkit-scrollbar {
+		display: none;
+	}
+
+	.divider {
+		width: 1px;
+		background: var(--color-border);
+		margin: 0 0.25rem;
+		flex-shrink: 0;
+	}
+
+	.filter-pill {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.4rem;
+		padding: 0 1rem;
+		min-height: 40px; /* Better touch target */
+		border-radius: 20px;
+		background-color: var(--color-surface);
+		color: var(--color-text-secondary);
+		font-size: 0.85rem;
+		font-weight: 600;
+		box-shadow: inset 0 0 0 1px var(--color-border);
+		transition: all 0.2s ease;
+		white-space: nowrap;
+		flex-shrink: 0;
+	}
+
+	.filter-pill.favorite-pill.active {
+		background-color: color-mix(in oklch, #ff3b30 15%, transparent);
+		color: #ff3b30;
+		box-shadow: inset 0 0 0 1px #ff3b30;
+	}
+
+	.filter-pill.movement-pill.active {
+		background-color: var(--color-text-primary);
+		color: var(--color-bg);
+		box-shadow: inset 0 0 0 1px var(--color-text-primary);
 	}
 </style>

@@ -26,7 +26,7 @@
 	<title>Artichaut</title>
 </svelte:head>
 
-<main class="app-shell-main">
+<main class={$page.url.pathname.startsWith('/admin') ? 'app-shell-admin' : 'app-shell-main'}>
 	{@render children()}
 </main>
 

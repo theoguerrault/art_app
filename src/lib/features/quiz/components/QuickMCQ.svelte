@@ -8,13 +8,15 @@
 		qcm?: QCMSynthese | MCQ | null;
 		disabled?: boolean;
 		onAnswer?: (result: { score: number; isCorrect: boolean; selectedIndex: number }) => void;
+		onStart?: () => void;
 	}
 
 	let {
 		qcm_synthese,
 		qcm,
 		disabled = false,
-		onAnswer
+		onAnswer,
+		onStart
 	}: QuickMCQProps = $props();
 
 	// Initialize state machine
@@ -34,6 +36,11 @@
 			session.selectOption(index);
 		}
 	}
+
+	function handleStart() {
+		session.startQuiz();
+		onStart?.();
+	}
 </script>
 
 <div class="mcq-wrapper container-mcq">
@@ -41,10 +48,20 @@
 		<div class="mcq-card">
 			<div class="question-header">
 				<span class="mcq-badge">Test de connaissances</span>
-				<h3 class="question-text">{session.qcm.question}</h3>
+				{#if session.isStarted}
+					<h3 class="question-text">{session.qcm.question}</h3>
+				{/if}
 			</div>
 
-			<div class="options-container responsive-options-grid" role="group" aria-label="Options à choix multiples">
+			{#if !session.isStarted}
+				<div class="quiz-start-container">
+					<p class="quiz-start-text">Testez vos connaissances sur cette œuvre. Attention : la description sera masquée !</p>
+					<button class="start-quiz-btn" onclick={handleStart}>
+						Démarrer le quiz
+					</button>
+				</div>
+			{:else}
+				<div class="options-container responsive-options-grid" role="group" aria-label="Options à choix multiples">
 				{#each session.qcm.options as option, idx}
 					{@const isSelected = session.selectedIndex === idx}
 					{@const isCorrectOption = idx === session.qcm.correctIndex}
@@ -98,6 +115,7 @@
 					<p class="explanation-text">{session.qcm.explanation}</p>
 				</div>
 			{/if}
+			{/if}
 		</div>
 	{:else}
 		<div class="mcq-empty">
@@ -107,6 +125,36 @@
 </div>
 
 <style>
+	.quiz-start-container {
+		text-align: center;
+		padding: 2rem 1rem;
+		background: var(--color-surface-hover);
+		border-radius: var(--radius-md);
+		border: 1px dashed var(--color-border);
+	}
+
+	.quiz-start-text {
+		color: var(--color-text-secondary);
+		margin-bottom: 1.5rem;
+		font-size: 0.95rem;
+	}
+
+	.start-quiz-btn {
+		background: var(--color-primary);
+		color: oklch(0.99 0 0);
+		border: none;
+		padding: 0.75rem 1.5rem;
+		border-radius: var(--radius-pill);
+		font-weight: 700;
+		cursor: pointer;
+		transition: transform 0.15s ease, box-shadow 0.15s ease;
+	}
+
+	.start-quiz-btn:hover {
+		transform: translateY(-2px);
+		box-shadow: var(--shadow-sm);
+	}
+
 	.mcq-wrapper {
 		width: 100%;
 		max-width: 100%;
@@ -160,7 +208,7 @@
 		text-align: left;
 		background-color: var(--color-bg);
 		border: 1.5px solid var(--color-border);
-		border-radius: var(--radius-md);
+		border-radius: var(--radius-pill);
 		color: var(--color-text-primary);
 		font-weight: 500;
 		transition: border-color 0.15s ease, background-color 0.15s ease, transform 0.1s ease;
@@ -187,7 +235,7 @@
 		justify-content: center;
 		width: 1.85rem;
 		height: 1.85rem;
-		border-radius: 0.4rem;
+		border-radius: 50%; /* Perfect circle inside pill */
 		background-color: var(--color-border-subtle);
 		color: var(--color-text-secondary);
 		font-weight: 700;

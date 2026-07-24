@@ -77,44 +77,41 @@
 
   /* Variants */
   .variant-primary {
-    background: var(--color-primary, #007bff);
-    color: white;
+    background: var(--color-primary, #FA47FF);
+    color: #FFFFFF;
+    border: 1px solid rgba(255, 255, 255, 0.1);
   }
   .variant-primary:hover:not(:disabled) {
-    filter: brightness(1.1);
+    background: color-mix(in srgb, var(--color-primary, #FA47FF) 85%, black);
   }
 
-  .variant-secondary {
-    background: var(--color-surface-elevated, #f0f0f0);
-    color: var(--color-text-primary, #333);
+  .variant-secondary,
+  .variant-outline {
+    background: #27272A;
+    color: #FFFFFF;
+    border: 1px solid rgba(255, 255, 255, 0.12);
   }
-  .variant-secondary:hover:not(:disabled) {
-    background: var(--color-border, #e0e0e0);
+  .variant-secondary:hover:not(:disabled),
+  .variant-outline:hover:not(:disabled) {
+    background: #3F3F46;
+    border-color: rgba(255, 255, 255, 0.2);
   }
 
   .variant-danger {
-    background: var(--color-danger, #ef4444);
-    color: white;
+    background: #EF4444;
+    color: #FFFFFF;
+    border: 1px solid rgba(255, 255, 255, 0.1);
   }
   .variant-danger:hover:not(:disabled) {
-    filter: brightness(1.1);
-  }
-
-  .variant-outline {
-    background: transparent;
-    border: 1px solid var(--color-border, #ccc);
-    color: var(--color-text-primary, #333);
-  }
-  .variant-outline:hover:not(:disabled) {
-    background: var(--color-surface-elevated, #f9f9f9);
+    background: #DC2626;
   }
 
   .variant-ghost {
     background: transparent;
-    color: var(--color-text-primary, #333);
+    color: #FFFFFF;
   }
   .variant-ghost:hover:not(:disabled) {
-    background: var(--color-surface-elevated, #f0f0f0);
+    background: #27272A;
   }
 
   /* Loader */

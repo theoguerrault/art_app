@@ -1,5 +1,6 @@
 import { json } from '@sveltejs/kit';
 import { prisma } from '$lib/server/prisma';
+import { calculateGlobalScore } from '$lib/server/utils/score';
 
 export async function POST({ params, request }) {
   const id = parseInt(params.id, 10);
@@ -17,57 +18,41 @@ export async function POST({ params, request }) {
 
     const artwork = await prisma.oeuvres.findUnique({
       where: { id },
-      include: { contenus_oeuvres: true }
+      include: { oeuvre_translations: { where: { language_code: 'fr' } } }
     });
 
-    if (!artwork || !artwork.contenus_oeuvres) {
+    if (!artwork || !artwork.oeuvre_translations[0]) {
       return json({ error: 'Artwork not found' }, { status: 404 });
     }
 
-    let updatedPortions = artwork.contenus_oeuvres.article_portions as any[] || [];
-    let report = artwork.contenus_oeuvres.verification_report as any;
+    let report = (artwork.oeuvre_translations[0].verification_report || {}) as any;
+    const articlePortions = (artwork.oeuvre_translations[0].article_portions || []) as any[];
 
-    if (portionId) {
-      // Validate specific portion
-      updatedPortions = updatedPortions.map(p => {
-        if (p.id === portionId) {
-          return { ...p, status: 'VERIFIED' };
-        }
-        return p;
-      });
-
-      if (report && report.statements) {
+    if (report && report.statements) {
+      if (portionId) {
         report.statements = report.statements.map((s: any) => {
           if (s.id === portionId) {
             return { ...s, status: 'VERIFIED' };
           }
           return s;
         });
+      } else {
+        report.statements = report.statements.map((s: any) => ({ ...s, status: 'VERIFIED' }));
       }
-    } else {
-      // Fallback: Validate all unverified
-      updatedPortions = updatedPortions.map(p => ({ ...p, status: 'VERIFIED' }));
     }
 
-    // Determine global status
-    const hasFalse = updatedPortions.some(p => p.status === 'FALSE');
-    const hasUnverified = updatedPortions.some(p => p.status === 'UNVERIFIED' || p.status === 'PENDING');
+    report.global_score = calculateGlobalScore(report, articlePortions, artwork.oeuvre_translations[0].introduction);
+
+    const hasFalse = report?.statements?.some((s: any) => s.status === 'FALSE') || false;
+    const hasUnverified = report?.statements?.some((s: any) => s.status === 'UNVERIFIED' || s.status === 'PENDING') || false;
+    
     let globalStatus = 'VERIFIED';
     if (hasFalse) globalStatus = 'FALSE';
     else if (hasUnverified) globalStatus = 'PENDING_VALIDATION';
 
-    if (report && report.statements) {
-      const validCount = updatedPortions.filter(p => p.status === 'VERIFIED').length;
-      const totalCount = updatedPortions.length;
-      if (totalCount > 0) {
-        report.global_score = Math.round((validCount / totalCount) * 100);
-      }
-    }
-
-    const updated = await prisma.contenus_oeuvres.update({
-      where: { id_oeuvre: id },
+    const updated = await prisma.oeuvre_translations.update({
+      where: { id_oeuvre_language_code: { id_oeuvre: id, language_code: 'fr' } },
       data: {
-        article_portions: updatedPortions,
         verification_report: report,
         verification_status: globalStatus
       }

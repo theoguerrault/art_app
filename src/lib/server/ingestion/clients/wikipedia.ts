@@ -2,6 +2,8 @@ export interface WikipediaArtExtract {
   summary: string | null;
   text: string | null;
   lang: string;
+  thumbnailUrl?: string | null;
+  originalImageUrl?: string | null;
 }
 
 const USER_AGENT = 'ArtCoachApp/1.0 (mailto:contact@artcoach.app)';
@@ -28,13 +30,15 @@ export async function scrapeWikipediaArticle(
   title: string,
   artist: string | null,
   lang: string = 'fr',
-  exactWikiTitle?: string | null
+  exactWikiTitle?: string | null,
+  titre_international?: string | null
 ): Promise<WikipediaArtExtract | null> {
   // First try the requested lang, then fallback to 'en'
   const langsToTry = lang === 'en' ? ['en'] : [lang, 'en'];
   
   for (const targetLang of langsToTry) {
-    const result = await fetchArticleForLang(title, artist, targetLang, exactWikiTitle);
+    const searchTitle = (targetLang === 'en' && titre_international) ? titre_international : title;
+    const result = await fetchArticleForLang(searchTitle, artist, targetLang, exactWikiTitle);
     if (result && result.text && result.text.length >= 200) {
       return result;
     }
@@ -56,9 +60,14 @@ async function fetchArticleForLang(
     let summaryRes = await fetch(summaryUrl, { headers: { 'User-Agent': USER_AGENT } });
     
     let summary: string | null = null;
+    let thumbnailUrl: string | null = null;
+    let originalImageUrl: string | null = null;
+
     if (summaryRes.ok) {
       const summaryData = await summaryRes.json();
       summary = summaryData?.extract || null;
+      thumbnailUrl = summaryData?.thumbnail?.source || null;
+      originalImageUrl = summaryData?.originalimage?.source || null;
     }
 
     // Attempt 2: If 404 or disambiguation AND no exact title was provided, search with artist name for precision
@@ -81,6 +90,8 @@ async function fetchArticleForLang(
           if (summaryRes.ok) {
             const summaryData = await summaryRes.json();
             summary = summaryData?.extract || null;
+            thumbnailUrl = summaryData?.thumbnail?.source || null;
+            originalImageUrl = summaryData?.originalimage?.source || null;
           }
         }
       }
@@ -98,7 +109,7 @@ async function fetchArticleForLang(
       text = pageObj?.extract || null;
     }
 
-    return { summary, text, lang };
+    return { summary, text, lang, thumbnailUrl, originalImageUrl };
   } catch (err) {
     console.warn(`[WikipediaClient] Failed to fetch article for "${title}" (${lang}):`, err);
     return null;

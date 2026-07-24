@@ -23,94 +23,59 @@ export function _getLeitnerReviewDate(boxLevel: number, fromDate: Date = new Dat
 	return target.toISOString();
 }
 
-export const load: PageLoad = async () => {
+export const load: PageLoad = async ({ fetch }) => {
 	const isOnline = typeof window !== 'undefined' ? navigator.onLine : true;
-	const now = new Date();
-	const sevenDaysAgo = new Date(now.getTime() - 7 * 86400000);
 
-	let artworks: Artwork[] = [];
-	let movements: Movement[] = [];
-	let progressList: UserProgress[] = [];
-	let contentsMap: Record<number, ContentArtwork> = {};
-
-	if (!isOnline) {
-		// Offline data retrieval
-		artworks = sanitizeArtworks(await readFromLocalCache('cached_artworks'));
-		const cachedMcqs: ContentArtwork[] = (await readFromLocalCache('cached_mcqs')) || [];
-		progressList = (await readFromLocalCache('user_progress_cache')) || [];
-
-		for (const mcq of cachedMcqs) {
-			if (mcq && mcq.id_oeuvre) contentsMap[mcq.id_oeuvre] = mcq;
-		}
-	} else {
+	if (isOnline) {
 		try {
-			// Online data retrieval from Supabase
-			const [artworksRes, movementsRes, progressRes, contentsRes] = await Promise.all([
-				supabase.from('oeuvres').select('*').eq('is_active', true),
-				supabase.from('courants').select('*'),
-				supabase.from('user_artwork_progress').select('*'),
-				supabase.from('contenus_oeuvres').select('*')
-			]);
-
-			if (artworksRes.data && artworksRes.data.length > 0) {
-				artworks = sanitizeArtworks(artworksRes.data);
-				await saveToLocalCache('cached_artworks', artworks);
-			} else {
-				// Fallback if DB query returned empty or unseeded
-				artworks = sanitizeArtworks(await readFromLocalCache('cached_artworks'));
-			}
-
-			if (movementsRes.data) {
-				movements = movementsRes.data;
-			}
-
-			if (progressRes.data) {
-				progressList = progressRes.data;
-				await saveToLocalCache('user_progress_cache', progressList);
-			} else {
-				progressList = (await readFromLocalCache('user_progress_cache')) || [];
-			}
-
-			if (contentsRes.data) {
-				const fetchedContents = contentsRes.data as unknown as ContentArtwork[];
-				for (const c of fetchedContents) {
-					contentsMap[c.id_oeuvre] = c;
+			// Trigger background caching of all verified artworks
+			fetch('/api/verified-artworks').then(async (res) => {
+				if (res.ok) {
+					const { artworks, mcqs } = await res.json();
+					if (artworks && mcqs) {
+						await saveToLocalCache('cached_artworks', artworks);
+						await saveToLocalCache('cached_mcqs', mcqs);
+					}
 				}
-				await saveToLocalCache('cached_mcqs', fetchedContents);
-			} else {
-				const cachedMcqs: ContentArtwork[] = (await readFromLocalCache('cached_mcqs')) || [];
-				for (const mcq of cachedMcqs) {
-					if (mcq && mcq.id_oeuvre) contentsMap[mcq.id_oeuvre] = mcq;
-				}
+			}).catch(err => console.warn('Background cache failed:', err));
+
+			// Fetch daily lesson from server
+			const res = await fetch('/api/daily-artwork');
+			if (res.ok) {
+				const { lesson } = await res.json();
+				return { lesson, isOffline: false };
 			}
 		} catch (err) {
-			console.warn('[TodayLoad] Error fetching from Supabase, falling back to cache:', err);
-			artworks = sanitizeArtworks(await readFromLocalCache('cached_artworks'));
-			const cachedMcqs: ContentArtwork[] = (await readFromLocalCache('cached_mcqs')) || [];
-			progressList = (await readFromLocalCache('user_progress_cache')) || [];
-			for (const mcq of cachedMcqs) {
-				if (mcq && mcq.id_oeuvre) contentsMap[mcq.id_oeuvre] = mcq;
-			}
+			console.warn('[TodayLoad] Error fetching online daily artwork, falling back to cache:', err);
 		}
 	}
 
-	// Create lookup maps
+	// Offline Fallback Logic (run Leitner client-side)
+	const now = new Date();
+	const sevenDaysAgo = new Date(now.getTime() - 7 * 86400000);
+	
+	const artworks: Artwork[] = (await readFromLocalCache('cached_artworks')) || [];
+	const cachedMcqs: ContentArtwork[] = (await readFromLocalCache('cached_mcqs')) || [];
+	const progressList: UserProgress[] = (await readFromLocalCache('user_progress_cache')) || [];
+
 	const progressMap = new Map<number, UserProgress>();
 	for (const p of progressList) {
 		progressMap.set(p.id_oeuvre, p);
 	}
 
-	const movementsMap = new Map<number, Movement>();
-	for (const m of movements) {
-		movementsMap.set(m.id, m);
+	const contentsMap: Record<number, ContentArtwork> = {};
+	for (const mcq of cachedMcqs) {
+		if (mcq && mcq.id_oeuvre) contentsMap[mcq.id_oeuvre] = mcq;
 	}
 
-	// Daily Selection Algorithm ("Snack Learning")
 	let selectedArtwork: Artwork | null = null;
+	const validatedArtworks = artworks.filter(art => {
+		const content = contentsMap[art.id];
+		return content && content.verification_status === 'VERIFIED';
+	});
 
-	if (artworks.length > 0) {
-		// Priority 1: Check Leitner items due outside 7-day cooldown
-		const dueItems = artworks.filter((art) => {
+	if (validatedArtworks.length > 0) {
+		const dueItems = validatedArtworks.filter((art) => {
 			const p = progressMap.get(art.id);
 			if (!p) return false;
 			const isDue = new Date(p.next_review_at) <= now;
@@ -119,7 +84,6 @@ export const load: PageLoad = async () => {
 		});
 
 		if (dueItems.length > 0) {
-			// Select oldest due review
 			dueItems.sort((a, b) => {
 				const pa = progressMap.get(a.id);
 				const pb = progressMap.get(b.id);
@@ -130,20 +94,13 @@ export const load: PageLoad = async () => {
 			selectedArtwork = dueItems[0];
 		}
 
-		// Priority 2: Undiscovered artwork (`last_presented_daily_at IS NULL` or not in progressMap)
 		if (!selectedArtwork) {
-			const undiscovered = artworks.filter((art) => {
-				const p = progressMap.get(art.id);
-				return !p || !p.last_presented_daily_at;
-			});
-			if (undiscovered.length > 0) {
-				selectedArtwork = undiscovered[0];
-			}
+			const undiscovered = validatedArtworks.filter((art) => !progressMap.get(art.id) || !progressMap.get(art.id)!.last_presented_daily_at);
+			if (undiscovered.length > 0) selectedArtwork = undiscovered[0];
 		}
 
-		// Priority 3: Fallback to lowest `box_level` item with oldest `last_presented_daily_at`
 		if (!selectedArtwork) {
-			const sortedFallback = [...artworks].sort((a, b) => {
+			const sortedFallback = [...validatedArtworks].sort((a, b) => {
 				const pa = progressMap.get(a.id);
 				const pb = progressMap.get(b.id);
 				const levelA = pa?.box_level ?? 1;
@@ -157,28 +114,24 @@ export const load: PageLoad = async () => {
 		}
 	}
 
-	// Prepare result lesson payload
 	let lesson: ActiveLessonView | null = null;
 	if (selectedArtwork) {
-		const movement = movementsMap.get(selectedArtwork.id_courant);
 		const content = contentsMap[selectedArtwork.id];
-
 		lesson = {
 			...selectedArtwork,
-			nom_courant: movement?.nom || 'Mouvement Artistique',
-			oklch_token: movement?.oklch_token || 'var(--movement-theme)',
+			nom_courant: (selectedArtwork as any).courants?.nom || 'Mouvement Artistique',
+			oklch_token: (selectedArtwork as any).courants?.oklch_token || 'var(--movement-theme)',
 			article_principal: content?.article_principal || 'Explorez l\'histoire remarquable et la composition de ce chef-d\'œuvre intemporel.',
-			anecdotes_secretes: content?.anecdotes_secretes || ['Découvrez le symbolisme caché et les mystères historiques préservés à travers les siècles.'],
 			qcm: content?.qcm || {
 				question: `Quel mouvement artistique ou période est le mieux représenté par "${selectedArtwork.titre}" ?`,
 				options: [
-					movement?.nom || 'Impressionnisme',
+					(selectedArtwork as any).courants?.nom || 'Impressionnisme',
 					'Expressionnisme abstrait',
 					'Néoclassicisme',
 					'Surréalisme'
 				],
 				correctIndex: 0,
-				explanation: `"${selectedArtwork.titre}" créé par ${selectedArtwork.artiste} est un exemple fondamental de ${movement?.nom || 'Impressionnisme'}.`
+				explanation: `"${selectedArtwork.titre}" créé par ${selectedArtwork.artistes?.nom || 'Inconnu'} est un exemple fondamental de ${(selectedArtwork as any).courants?.nom || 'Impressionnisme'}.`
 			}
 		};
 	}

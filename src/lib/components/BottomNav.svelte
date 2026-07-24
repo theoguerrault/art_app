@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { goto } from '$app/navigation';
-	import { PaintBrush, Books, ChartLineUp, Gear, ShieldStar } from 'phosphor-svelte';
+	import { PaintBrush, Books, Gear, ShieldStar } from 'phosphor-svelte';
 
 	interface TabItem {
 		href: string;
@@ -12,7 +12,6 @@
 	const tabs: TabItem[] = [
 		{ href: '/', label: 'Aujourd\'hui', icon: PaintBrush },
 		{ href: '/catalogue', label: 'Catalogue', icon: Books },
-		{ href: '/progression', label: 'Progression', icon: ChartLineUp },
 		{ href: '/admin/oeuvres', label: 'Admin', icon: ShieldStar },
 		{ href: '/settings', label: 'Paramètres', icon: Gear }
 	];
@@ -27,13 +26,11 @@
 	}
 
 	async function handleTabClick(event: MouseEvent, href: string) {
-		// Prevent reload if already on the active tab
 		if (currentPath === href) {
 			event.preventDefault();
 			return;
 		}
 
-		// Use View Transitions API if supported
 		if (
 			typeof document !== 'undefined' &&
 			'startViewTransition' in document &&
@@ -45,9 +42,59 @@
 			});
 		}
 	}
+
+	let keyboardOpen = $state(false);
+
+	$effect(() => {
+		const handleFocusIn = (e: FocusEvent) => {
+			const target = e.target as HTMLElement;
+			if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
+				keyboardOpen = true;
+			}
+		};
+
+		const handleFocusOut = () => {
+			keyboardOpen = false;
+		};
+
+		document.addEventListener('focusin', handleFocusIn);
+		document.addEventListener('focusout', handleFocusOut);
+
+		return () => {
+			document.removeEventListener('focusin', handleFocusIn);
+			document.removeEventListener('focusout', handleFocusOut);
+		};
+	});
 </script>
 
-<nav class="bottom-nav" aria-label="Navigation principale">
+<!-- SVG filter for the liquid glass refraction distortion effect -->
+<svg class="liquid-glass-filters" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+	<defs>
+		<filter id="liquid-glass-distort" x="-10%" y="-50%" width="120%" height="200%">
+			<feTurbulence
+				type="fractalNoise"
+				baseFrequency="0.018 0.025"
+				numOctaves="3"
+				seed="7"
+				result="noise"
+			/>
+			<feDisplacementMap
+				in="SourceGraphic"
+				in2="noise"
+				scale="3"
+				xChannelSelector="R"
+				yChannelSelector="G"
+				result="distorted"
+			/>
+			<feComposite in="distorted" in2="SourceGraphic" operator="in" />
+		</filter>
+	</defs>
+</svg>
+
+<nav class="bottom-nav" class:keyboard-open={keyboardOpen} aria-label="Navigation principale">
+	<!-- Specular highlight rim (top edge) -->
+	<div class="glass-rim" aria-hidden="true"></div>
+
 	<ul class="nav-list" role="list">
 		{#each tabs as tab}
 			{@const active = isActive(tab.href)}
@@ -60,10 +107,14 @@
 					aria-current={active ? 'page' : undefined}
 					onclick={(e) => handleTabClick(e, tab.href)}
 				>
+					<!-- Active background pill -->
+					{#if active}
+						<span class="active-pill" aria-hidden="true"></span>
+					{/if}
+
 					<span class="nav-icon" aria-hidden="true">
 						<IconComponent size={24} weight={active ? 'fill' : 'regular'} />
 					</span>
-					<span class="nav-label">{tab.label}</span>
 				</a>
 			</li>
 		{/each}
@@ -71,32 +122,89 @@
 </nav>
 
 <style>
+	/* ── Hidden SVG filter ── */
+	.liquid-glass-filters {
+		position: absolute;
+		width: 0;
+		height: 0;
+		overflow: hidden;
+		pointer-events: none;
+	}
+
+	/* ══════════════════════════════════════════════════════════════════
+	   LIQUID GLASS NAV CONTAINER
+	   ══════════════════════════════════════════════════════════════════ */
 	.bottom-nav {
 		position: fixed;
-		bottom: 0;
-		left: 0;
-		right: 0;
-		height: var(--bottom-nav-height);
-		padding-bottom: var(--safe-area-bottom);
-		background: oklch(from var(--color-surface) l c h / 0.92);
-		backdrop-filter: blur(12px);
-		-webkit-backdrop-filter: blur(12px);
-		border-top: 1px solid var(--color-border);
-		box-shadow: 0 -4px 16px oklch(0 0 0 / 0.05);
+		bottom: calc(var(--safe-area-bottom, 0px) + 0.6rem);
+		left: 50%;
+		transform: translateX(-50%);
+		width: calc(100% - 3rem);
+		max-width: var(--container-max-width, 450px);
+		padding: 0.35rem 0.5rem;
+		border-radius: 2.5rem;
 		z-index: 1000;
+		transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
+
+		/* ── Liquid glass background (Gris anthracite) ── */
+		background: rgba(18, 18, 20, 0.75);
+		backdrop-filter: blur(28px) saturate(1.8);
+		-webkit-backdrop-filter: blur(28px) saturate(1.8);
+
+		/* ── Layered border: bright top + subtle shadow ── */
+		border: 1px solid rgba(255, 255, 255, 0.12);
+		border-top: 1px solid rgba(255, 255, 255, 0.25);
+
+		/* ── Depth shadow ── */
+		box-shadow:
+			0 12px 36px rgba(0, 0, 0, 0.4),
+			inset 0 1px 0 rgba(255, 255, 255, 0.1);
+
 		display: flex;
 		align-items: center;
 		justify-content: center;
+
+		/* Liquid glass refraction — applied on the element itself */
+		filter: url(#liquid-glass-distort);
+
+		/* Prevent the filter from bleeding on content below */
+		isolation: isolate;
 	}
 
+	.bottom-nav.keyboard-open {
+		transform: translate(-50%, 150%);
+		opacity: 0;
+		pointer-events: none;
+	}
+
+	/* ── Top specular highlight rim ── */
+	.glass-rim {
+		position: absolute;
+		top: 0;
+		left: 10%;
+		right: 10%;
+		height: 1px;
+		background: linear-gradient(
+			90deg,
+			transparent 0%,
+			rgba(255, 255, 255, 0.2) 30%,
+			rgba(255, 255, 255, 0.4) 50%,
+			rgba(255, 255, 255, 0.2) 70%,
+			transparent 100%
+		);
+		pointer-events: none;
+		border-radius: 100%;
+	}
+
+	/* ══════════════════════════════════════════════════════════════════
+	   NAV LIST & ITEMS
+	   ══════════════════════════════════════════════════════════════════ */
 	.nav-list {
 		display: flex;
 		width: 100%;
-		max-width: var(--container-max-width);
-		height: 100%;
 		list-style: none;
-		margin: 0 auto;
-		padding: 0 0.5rem;
+		margin: 0;
+		padding: 0;
 		justify-content: space-around;
 		align-items: center;
 	}
@@ -105,66 +213,87 @@
 		flex: 1;
 		display: flex;
 		justify-content: center;
-		height: 100%;
 	}
 
+	/* ══════════════════════════════════════════════════════════════════
+	   NAV LINK
+	   ══════════════════════════════════════════════════════════════════ */
 	.nav-link {
+		position: relative;
 		display: flex;
-		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-		gap: 0.2rem;
 		width: 100%;
-		max-width: 6rem;
+		max-width: 4.5rem;
 		min-height: 44px;
 		min-width: 44px;
-		padding: 0.35rem 0.5rem;
-		border-radius: var(--radius-md);
+		padding: 0.5rem;
+		border-radius: 2rem;
 		text-decoration: none;
-		color: var(--color-text-secondary);
-		transition: color 0.15s ease, background-color 0.15s ease, transform 0.1s ease;
+		color: #FFFFFF;
+		transition:
+			color 0.2s ease,
+			transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+		/* Remove individual distortion so only the container is distorted */
+		filter: none;
 	}
 
 	.nav-link:hover {
-		color: var(--color-text-primary);
-		background-color: var(--color-surface-hover);
+		color: #FFFFFF;
+		transform: translateY(-1px);
 	}
 
 	.nav-link:focus-visible {
-		outline: 2px solid var(--color-primary);
-		outline-offset: -2px;
+		outline: 2px solid rgba(255, 255, 255, 0.5);
+		outline-offset: 2px;
 	}
 
+	/* Active state */
 	.nav-link.active {
-		color: var(--color-primary);
-		font-weight: 700;
+		color: oklch(1 0 0 / 1);
+		font-weight: 600;
 	}
 
+	/* ── Active pill (glass button inset) ── */
+	.active-pill {
+		position: absolute;
+		inset: 0;
+		border-radius: 2rem;
+		background: rgba(255, 255, 255, 0.25);
+		border: 0.5px solid rgba(255, 255, 255, 0.3);
+		box-shadow:
+			inset 0 1px 0 rgba(255, 255, 255, 0.3),
+			inset 0 -1px 0 rgba(0, 0, 0, 0.1),
+			0 2px 8px rgba(0, 0, 0, 0.25);
+		backdrop-filter: blur(8px) brightness(1.15);
+		-webkit-backdrop-filter: blur(8px) brightness(1.15);
+		animation: pill-pop 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+		pointer-events: none;
+	}
+
+	@keyframes pill-pop {
+		from {
+			transform: scale(0.7);
+			opacity: 0;
+		}
+		to {
+			transform: scale(1);
+			opacity: 1;
+		}
+	}
+
+	/* ── Icon ── */
 	.nav-icon {
+		position: relative;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		font-size: 1.35rem;
 		line-height: 1;
 		transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+		z-index: 1;
 	}
 
 	.nav-link.active .nav-icon {
-		transform: scale(1.15);
-	}
-
-	.nav-label {
-		font-size: 0.725rem;
-		letter-spacing: 0.02em;
-	}
-
-	:global([data-theme="dark"]) .bottom-nav {
-		box-shadow: 0 -4px 16px oklch(0 0 0 / 0.25);
-	}
-
-	@media (prefers-color-scheme: dark) {
-		:global([data-theme="system"]) .bottom-nav {
-			box-shadow: 0 -4px 16px oklch(0 0 0 / 0.25);
-		}
+		transform: scale(1.12) translateY(-1px);
 	}
 </style>

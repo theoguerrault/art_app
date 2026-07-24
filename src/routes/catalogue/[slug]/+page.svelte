@@ -2,7 +2,7 @@
 	import { onMount } from "svelte";
 	import type { PageData } from "./$types";
 	import ArtworkCard from "$lib/features/artwork/components/ArtworkCard.svelte";
-	import QuickMCQ from "$lib/features/quiz/components/QuickMCQ.svelte";
+	import GlossaryBottomSheet from "$lib/components/ui/GlossaryBottomSheet.svelte";
 	import {
 		ArrowLeft,
 		Lightbulb,
@@ -19,6 +19,8 @@
 		BookOpen,
 		Eye,
 		Article,
+		Heart,
+		SealCheck
 	} from "phosphor-svelte";
 	import { supabase } from "$lib/supabase/client";
 	import {
@@ -34,11 +36,67 @@
 
 	let lesson = $derived(data.lesson);
 	let progress = $derived(data.progress);
-	let showQuiz = $state(false);
-	let answered = $state(false);
+
+	let glossaryOpen = $state(false);
+	let glossaryTitle = $state('');
+	let glossarySubtitle = $state('');
+	let glossaryContent = $state('');
+
+	let isFavorite = $state(false);
+
+	onMount(async () => {
+		if (lesson && typeof window !== 'undefined') {
+			const cacheKey = 'user_favorites_cache';
+			const favCache = await readFromLocalCache(cacheKey, 'favorites');
+			const cached = favCache ? favCache.data : [];
+			if (cached.includes(lesson.id)) {
+				isFavorite = true;
+			} else if (navigator.onLine) {
+				const res = await fetch('/api/favorites');
+				if (res.ok) {
+					const data = await res.json();
+					isFavorite = data.favorites.includes(lesson.id);
+					await saveToLocalCache(cacheKey, { id: 'favorites', data: data.favorites });
+				}
+			}
+		}
+	});
+
+	async function toggleFavorite() {
+		isFavorite = !isFavorite; // Optimistic
+		const res = await fetch('/api/favorites', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ id_oeuvre: lesson.id })
+		});
+		if (!res.ok) {
+			isFavorite = !isFavorite; // Revert
+		} else {
+			const cacheKey = 'user_favorites_cache';
+			const favCache = await readFromLocalCache(cacheKey, 'favorites');
+			let cached = favCache ? favCache.data : [];
+			if (isFavorite && !cached.includes(lesson.id)) cached.push(lesson.id);
+			if (!isFavorite) cached = cached.filter((id: number) => id !== lesson.id);
+			await saveToLocalCache(cacheKey, { id: 'favorites', data: cached });
+		}
+	}
+
+	function openGlossary(type: 'artiste' | 'courant') {
+		const lessonData = lesson as any;
+		if (type === 'artiste' && lessonData.glossary?.artiste_description) {
+			glossaryTitle = lesson.artistes?.nom || 'Artiste';
+			glossarySubtitle = 'Artiste';
+			glossaryContent = lessonData.glossary.artiste_description;
+			glossaryOpen = true;
+		} else if (type === 'courant' && lessonData.glossary?.courant_description) {
+			glossaryTitle = lesson.nom_courant;
+			glossarySubtitle = 'Mouvement Artistique';
+			glossaryContent = lessonData.glossary.courant_description;
+			glossaryOpen = true;
+		}
+	}
 
 	let dynamicArticlePrincipal = $state<string | null>(null);
-	let dynamicAnecdotesSecretes = $state<string[] | null>(null);
 	
 	let isContentEmpty = $derived(isMissingOrPlaceholder(dynamicArticlePrincipal || lesson.article_principal));
 
@@ -47,13 +105,12 @@
 	let lastInitializedSlug = '';
 
 	function isMissingOrPlaceholder(str: string | null | undefined): boolean {
+		if (lesson && (lesson as any).article_portions && (lesson as any).article_portions.length > 0) return false;
 		if (!str || str.trim() === '') return true;
 		const placeholders = [
 			'Explorez l\'histoire profonde',
 			'Analysez la maîtrise technique',
 			'Découvrez les détails cachés',
-			'Période historique',
-			'Mouvement Artistique',
 			'Contenu en cours de rédaction',
 		];
 		return placeholders.some((p) => str.includes(p));
@@ -91,7 +148,6 @@
 				document.documentElement.style.setProperty("--artwork-hue", hue.toString());
 
 				dynamicArticlePrincipal = !isMissingOrPlaceholder(lesson.article_principal) ? lesson.article_principal : null;
-				dynamicAnecdotesSecretes = !isMissingOrPlaceholderArray(lesson.anecdotes_secretes) ? lesson.anecdotes_secretes : null;
 				
 				// 2. Handle Description Fetch
 				if (dynamicArticlePrincipal === null && navigator.onLine) {
@@ -100,7 +156,6 @@
 						.then((res) => res.json())
 						.then((data) => {
 							if (data?.article_principal) dynamicArticlePrincipal = data.article_principal;
-							if (data?.anecdotes_secretes) dynamicAnecdotesSecretes = data.anecdotes_secretes;
 						})
 						.catch((err) => console.warn('[DetailPage] Failed to fetch descriptions:', err))
 						.finally(() => {
@@ -111,90 +166,45 @@
 		});
 	});
 
-	async function handleAnswer({
-		score,
-		isCorrect,
-		selectedIndex,
-	}: {
-		score: number;
-		isCorrect: boolean;
-		selectedIndex: number;
-	}) {
-		if (!lesson || answered) return;
-		answered = true;
 
-		const isOnline =
-			typeof window !== "undefined" ? navigator.onLine : true;
-		const userId = "anonymous-user-001";
-		const nowStr = new Date().toISOString();
-
-		const currentLevel = progress?.box_level ?? 1;
-		const newBoxLevel = isCorrect ? Math.min(5, currentLevel + 1) : 1;
-		const consecutive = isCorrect
-			? (progress?.consecutive_correct ?? 0) + 1
-			: 0;
-
-		const answerPayload = {
-			user_id: userId,
-			id_oeuvre: lesson.id,
-			id_courant: lesson.id_courant,
-			is_correct: isCorrect,
-			reponse_choisie: selectedIndex,
-			score,
-			encounter_type: "CATALOG" as const,
-			answered_at: nowStr,
-			box_level: newBoxLevel,
-			consecutive_correct: consecutive,
-		};
-
-		if (isOnline) {
-			try {
-				await Promise.all([
-					(supabase.from("historique_reponses") as any).insert({
-						user_id: userId,
-						id_oeuvre: lesson.id,
-						id_courant: lesson.id_courant,
-						is_correct: isCorrect,
-						reponse_choisie: selectedIndex,
-						score,
-						encounter_type: "CATALOG",
-						answered_at: nowStr,
-					}),
-					(supabase.from("user_artwork_progress") as any).upsert(
-						{
-							user_id: userId,
-							id_oeuvre: lesson.id,
-							box_level: newBoxLevel,
-							consecutive_correct: consecutive,
-							last_score: score,
-							updated_at: nowStr,
-						},
-						{ onConflict: "user_id, id_oeuvre" },
-					),
-				]);
-			} catch (err) {
-				await queueOfflineAnswer(answerPayload);
-			}
-		} else {
-			await queueOfflineAnswer(answerPayload);
-		}
-	}
 </script>
 
 <div class="detail-view">
 	<nav class="back-nav">
 		<a href="/catalogue" class="back-link">
-			<ArrowLeft size={18} weight="bold" />
 			<span>Retour au catalogue</span>
 		</a>
 	</nav>
 
 	<header class="detail-header">
-		<span class="movement-tag" style:background-color={lesson.oklch_token}>
-			{lesson.nom_courant}
-		</span>
+		{#if (lesson as any).glossary?.courant_description}
+			<button type="button" class="movement-tag clickable" style:background-color={lesson.oklch_token} onclick={() => openGlossary('courant')}>
+				{lesson.nom_courant}
+			</button>
+		{:else}
+			<span class="movement-tag" style:background-color={lesson.oklch_token}>
+				{lesson.nom_courant}
+			</span>
+		{/if}
+		<div class="actions-row">
+			{#if (lesson as any).verification_status === 'VERIFIED'}
+				<span class="verified-pill" title="Contenu vérifié à 100%">
+					<SealCheck size={22} weight="fill" />
+				</span>
+			{/if}
+			<button class="favorite-btn" onclick={toggleFavorite} aria-label="Toggle Favorite">
+				<Heart size={24} weight={isFavorite ? 'fill' : 'bold'} color={isFavorite ? '#ff3b30' : 'currentColor'} />
+			</button>
+		</div>
 		<h1 class="artwork-title">{lesson.titre}</h1>
-		<p class="artwork-meta">{lesson.artiste} ({lesson.date_creation})</p>
+		<p class="artwork-meta">
+			{#if (lesson as any).glossary?.artiste_description}
+				<button type="button" class="artist-link" onclick={() => openGlossary('artiste')}>{lesson.artistes?.nom}</button>
+			{:else}
+				{lesson.artistes?.nom}
+			{/if}
+			({lesson.date_creation})
+		</p>
 	</header>
 
 	<section class="card-display">
@@ -207,55 +217,22 @@
 		/>
 	</section>
 
-
-
-	{#if !isContentEmpty}
-		{#if (dynamicAnecdotesSecretes && dynamicAnecdotesSecretes.length > 0) || (lesson.anecdotes_secretes && lesson.anecdotes_secretes.length > 0)}
-			<section class="deep-dive-section" style:--movement-color={lesson.oklch_token}>
-				<div class="secret-heading">
-					<Lightbulb size={20} weight="fill" />
-					<span>Le savais-tu ?</span>
-				</div>
-				<ul class="secret-list">
-					{#each (dynamicAnecdotesSecretes || lesson.anecdotes_secretes) as anecdote}
-						<li class="secret-text">{@html parseMarkdown(anecdote)}</li>
-					{/each}
-				</ul>
-			</section>
-		{/if}
-
-		<section class="quiz-toggle-section">
-			{#if !showQuiz}
-				<button
-					type="button"
-					class="test-knowledge-btn"
-					onclick={() => (showQuiz = true)}
-				>
-					<Brain size={22} weight="fill" />
-					<span>Testez vos connaissances sur cette œuvre →</span>
-				</button>
-			{:else}
-				<div class="quiz-container">
-					<div class="quiz-top">
-						<h3>Test de connaissances à la demande</h3>
-						<button
-							type="button"
-							class="close-quiz-btn"
-							onclick={() => (showQuiz = false)}
-						>
-							<span>Fermer le quiz</span>
-							<X size={16} weight="bold" />
-						</button>
-					</div>
-					<QuickMCQ
-						qcm={lesson.qcm}
-						disabled={answered}
-						onAnswer={handleAnswer}
-					/>
-				</div>
-			{/if}
-		</section>
+	{#if isContentEmpty || (lesson as any).verification_status !== 'VERIFIED'}
+		<div class="admin-quick-action">
+			<p>{isContentEmpty ? "Ce contenu n'est pas encore généré." : "Ce contenu est en attente de validation."}</p>
+			<a href={`/admin/oeuvres/${lesson.id}`} class="admin-text-link">
+				Éditer dans l'Admin →
+			</a>
+		</div>
 	{/if}
+
+
+	<GlossaryBottomSheet 
+		bind:isOpen={glossaryOpen}
+		title={glossaryTitle}
+		subtitle={glossarySubtitle}
+		content={glossaryContent}
+	/>
 </div>
 
 <style>
@@ -290,104 +267,98 @@
 
 	.movement-tag {
 		display: inline-block;
+		padding: 0.35rem 0.85rem;
+		border-radius: 20px;
 		font-size: 0.75rem;
 		font-weight: 700;
 		text-transform: uppercase;
-		letter-spacing: 0.08em;
-		padding: 0.35rem 0.85rem;
-		border-radius: 9999px;
-		color: oklch(0.99 0 0);
-		margin-bottom: 0.65rem;
-		box-shadow: var(--shadow-sm);
+		letter-spacing: 0.05em;
+		color: var(--color-bg);
+		margin-bottom: 0.75rem;
+		border: none;
+	}
+
+	.movement-tag.clickable {
+		cursor: pointer;
+		position: relative;
+		transition: transform 0.2s ease, opacity 0.2s ease;
+	}
+
+	.movement-tag.clickable:hover {
+		transform: scale(1.05);
+		opacity: 0.9;
 	}
 
 	.artwork-title {
-		font-size: 2.25rem;
-		font-weight: 800;
-		line-height: 1.15;
+		font-family: "Instrument Serif", serif;
+		font-size: 2.5rem;
+		font-weight: 400;
+		margin: 0 0 0.5rem 0;
 		color: var(--color-text-primary);
-		margin-bottom: 0.35rem;
+		line-height: 1.1;
+	}
+
+	.actions-row {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.75rem;
+		margin-bottom: 0.5rem;
+	}
+
+	/* Remove the orphan rule — artwork-title is now standalone */
+
+	.verified-pill {
+		color: var(--color-success);
+		display: flex;
+		align-items: center;
+		flex-shrink: 0;
+	}
+
+	.favorite-btn {
+		background: none;
+		border: none;
+		padding: 0;
+		color: var(--color-text-muted);
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		transition: transform 0.2s ease, color 0.2s ease;
+		flex-shrink: 0;
+	}
+
+	.favorite-btn:hover {
+		transform: scale(1.1);
+	}
+	.favorite-btn:active {
+		transform: scale(0.95);
 	}
 
 	.artwork-meta {
-		font-size: 1.1rem;
-		font-weight: 500;
-		color: var(--color-text-secondary);
-	}
-
-
-	.deep-dive-section {
-		display: flex;
-		flex-direction: column;
-		gap: 1rem;
-		background: var(--color-surface);
-		padding: 1.75rem;
-		border-radius: var(--radius-lg);
-		border: 1px solid var(--color-border);
-		border-left: 4px solid var(--movement-color, var(--color-accent));
-		box-shadow: var(--shadow-sm);
-	}
-
-	.secret-heading {
-		display: flex;
-		align-items: center;
-		gap: 0.45rem;
-		font-size: 0.95rem;
-		font-weight: 700;
-		color: var(--color-text-primary);
-		margin-bottom: 0.4rem;
-	}
-
-	.secret-text {
-		font-size: 0.95rem;
-		line-height: 1.5;
-		color: var(--color-text-secondary);
-	}
-
-	:global(.secret-text strong) {
-		font-weight: 700;
-		color: var(--color-text-primary);
-	}
-
-	.secret-list {
+		font-size: 1rem;
+		color: var(--color-text-muted);
 		margin: 0;
-		padding-left: 1.2rem;
-		display: flex;
-		flex-direction: column;
-		gap: 0.6rem;
 	}
 
-	.secret-list li {
-		padding-left: 0.2rem;
+	.artist-link {
+		background: none;
+		border: none;
+		padding: 0;
+		font: inherit;
+		color: var(--color-text-primary);
+		font-weight: 600;
+		cursor: pointer;
+		text-decoration: underline;
+		text-decoration-style: dotted;
+		text-underline-offset: 4px;
+		transition: color 0.2s ease;
 	}
 
-	.quiz-toggle-section {
-		text-align: center;
+	.artist-link:hover {
+		color: var(--color-primary);
 	}
 
-	.test-knowledge-btn {
-		width: 100%;
-		max-width: 500px;
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		gap: 0.6rem;
-		padding: 1rem 1.5rem;
-		font-size: 1.05rem;
-		font-weight: 700;
-		border-radius: var(--radius-lg);
-		background: var(--color-primary);
-		color: oklch(0.99 0 0);
-		box-shadow: var(--shadow-md);
-		transition:
-			transform 0.15s ease,
-			box-shadow 0.15s ease;
-	}
 
-	.test-knowledge-btn:hover {
-		transform: translateY(-2px);
-		box-shadow: var(--shadow-lg);
-	}
 
 	.quiz-container {
 		text-align: left;
@@ -406,19 +377,6 @@
 		margin-bottom: 1rem;
 	}
 
-	.close-quiz-btn {
-		display: flex;
-		align-items: center;
-		gap: 0.35rem;
-		font-size: 0.85rem;
-		font-weight: 700;
-		color: var(--color-text-muted);
-	}
-
-	.close-quiz-btn:hover {
-		color: var(--color-error);
-	}
-
 	@keyframes fadeIn {
 		from {
 			opacity: 0;
@@ -435,5 +393,49 @@
 		to { transform: rotate(360deg); }
 	}
 
+	@media (max-width: 600px) {
+		.detail-view {
+			margin-left: -1.25rem;
+			margin-right: -1.25rem;
+		}
+		
+		.back-nav, .detail-header, .quiz-container, :global(.glossary-content) {
+			padding-left: 1.25rem;
+			padding-right: 1.25rem;
+		}
 
+		:global(.artwork-card) {
+			border-radius: 0 !important;
+			border-left: none !important;
+			border-right: none !important;
+		}
+	}
+
+	.admin-quick-action {
+		text-align: center;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.5rem;
+		margin: 1rem auto 2rem;
+	}
+
+	.admin-quick-action p {
+		font-size: 0.95rem;
+		color: var(--color-text-secondary);
+		margin: 0;
+	}
+
+	.admin-text-link {
+		color: var(--color-primary);
+		font-weight: 700;
+		font-size: 0.9rem;
+		text-decoration: none;
+		transition: opacity 0.2s ease;
+	}
+
+	.admin-text-link:hover {
+		opacity: 0.8;
+		text-decoration: underline;
+	}
 </style>

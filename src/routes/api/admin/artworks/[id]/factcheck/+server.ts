@@ -2,6 +2,7 @@ import { json } from '@sveltejs/kit';
 import { prisma } from '$lib/server/prisma';
 import { factCheckArtworkContent } from '$lib/server/ingestion/services/description';
 import { scrapeWikipediaArticle } from '$lib/server/ingestion/clients/wikipedia';
+import { calculateGlobalScore } from '$lib/server/utils/score';
 
 export async function POST({ params }) {
   const id = parseInt(params.id, 10);
@@ -12,46 +13,40 @@ export async function POST({ params }) {
   try {
     const artwork = await prisma.oeuvres.findUnique({
       where: { id },
-      include: { contenus_oeuvres: true }
+      include: { 
+        oeuvre_translations: { where: { language_code: 'fr' } }, 
+        artistes: { include: { artiste_translations: { where: { language_code: 'fr' } } } } 
+      }
     });
 
-    if (!artwork || !artwork.contenus_oeuvres) {
+    if (!artwork || !artwork.oeuvre_translations[0]) {
       return json({ error: 'Artwork or content not found' }, { status: 404 });
     }
 
-    // Extract portions from the DB
-    let articlePortions = (artwork.contenus_oeuvres.article_portions || []) as any[];
+    // Extract text from the DB
+    const dbPortions = (artwork.oeuvre_translations[0].article_portions || []) as any[];
+    let articlePortions = [...dbPortions];
     
-    // Fallback if no article_portions exist yet (e.g. old data)
-    if (articlePortions.length === 0 && artwork.contenus_oeuvres.article_principal) {
-      articlePortions.push({
-        id: `p-${Date.now()}-fallback`,
+    // Fallback if no portions exist (shouldn't happen with new generation logic)
+    if (articlePortions.length === 0 && artwork.oeuvre_translations[0].article_principal) {
+      articlePortions = [{
+        id: `p-${Date.now()}-article`,
         type: 'article',
-        text: artwork.contenus_oeuvres.article_principal,
+        text: artwork.oeuvre_translations[0].article_principal,
         status: 'PENDING'
-      });
-    }
-
-    // Fallback to include anecdotes if they are missing from articlePortions
-    const hasAnecdotePortions = articlePortions.some(p => p.type === 'anecdote');
-    if (!hasAnecdotePortions && artwork.contenus_oeuvres.anecdotes_secretes && artwork.contenus_oeuvres.anecdotes_secretes.length > 0) {
-      const anecdotePortions = artwork.contenus_oeuvres.anecdotes_secretes.map((text, index) => ({
-        id: `p-${Date.now()}-legacy-anecdote-${index}`,
-        type: 'anecdote',
-        text,
-        status: 'PENDING'
-      }));
-      articlePortions = [...articlePortions, ...anecdotePortions];
+      }];
     }
 
     // Scrape wikipedia
-    const wikiExtract = await scrapeWikipediaArticle(artwork.titre, artwork.artiste, 'fr', artwork.wikipedia_title);
+    const titre = artwork.oeuvre_translations[0].titre;
+    const nomArtiste = artwork.artistes?.artiste_translations?.[0]?.nom || 'Inconnu';
+    const wikiExtract = await scrapeWikipediaArticle(titre, nomArtiste, 'fr');
 
     if (!wikiExtract || !wikiExtract.text) {
       return json({ error: 'Wikipedia article not found for fact checking' }, { status: 404 });
     }
 
-    const report = await factCheckArtworkContent(artwork.titre, articlePortions, wikiExtract.text, wikiExtract.lang);
+    const report = await factCheckArtworkContent(titre, articlePortions, wikiExtract.text, wikiExtract.lang);
 
     if (!report) {
       return json({ error: 'Failed to generate fact check report' }, { status: 500 });
@@ -81,12 +76,23 @@ export async function POST({ params }) {
       return portion;
     });
 
-    const updated = await prisma.contenus_oeuvres.update({
-      where: { id_oeuvre: id },
+    const existingTranslation = await prisma.oeuvre_translations.findUnique({
+      where: { id_oeuvre_language_code: { id_oeuvre: id, language_code: 'fr' } }
+    });
+    const existingReport = (existingTranslation?.verification_report || {}) as any;
+
+    const mergedReport = {
+      ...report,                           // statements + global_score du factcheck actuel
+      introduction: existingReport.introduction // on préserve le factcheck intro s'il existe
+    };
+    mergedReport.global_score = calculateGlobalScore(mergedReport, updatedPortions, artwork.oeuvre_translations[0].introduction);
+
+    const updated = await prisma.oeuvre_translations.update({
+      where: { id_oeuvre_language_code: { id_oeuvre: id, language_code: 'fr' } },
       data: {
-        article_portions: updatedPortions as any,
-        verification_report: report as any,
-        verification_status: status
+        verification_report: mergedReport as any,
+        verification_status: status,
+        article_portions: updatedPortions as any
       }
     });
 

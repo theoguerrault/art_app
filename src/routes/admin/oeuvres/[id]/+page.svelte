@@ -2,43 +2,36 @@
   import { untrack } from 'svelte';
   import { invalidateAll } from '$app/navigation';
   import { parseMarkdown } from '$lib/utils/markdown';
-  import { Sparkle, ShieldCheck, ArrowLeft, Warning } from 'phosphor-svelte';
+  import { Sparkle, ShieldCheck, ArrowLeft, Warning, PencilSimple, ArrowsClockwise, Trash, Check, X } from 'phosphor-svelte';
   import Button from '$lib/components/ui/Button.svelte';
+  import AdminImagePanel from './components/AdminImagePanel.svelte';
+  import AdminIntroPanel from './components/AdminIntroPanel.svelte';
+  import AdminPortionsPanel from './components/AdminPortionsPanel.svelte';
 
   let { data } = $props();
   let oeuvre = $derived(data.oeuvre);
-  let content = $state(untrack(() => data.oeuvre.contenus_oeuvres));
+  let content = $state(untrack(() => data.oeuvre.oeuvre_translations[0]));
+  let report = $derived(content?.verification_report as any);
   
   $effect(() => {
-    content = data.oeuvre.contenus_oeuvres;
+    content = data.oeuvre.oeuvre_translations[0];
   });
   
   let generating = $state(false);
   let checking = $state(false);
-  let validating = $state(false);
-  let correcting = $state(false);
-  let validatingPortions: Record<string, boolean> = $state({});
-  let correctingPortions: Record<string, boolean> = $state({});
-  let deletingPortions: Record<string, boolean> = $state({});
+  let unvalidatingContent = $state(false);
 
-  async function deletePortion(portionId: string) {
-    if (!confirm('Supprimer définitivement ce paragraphe ?')) return;
-    deletingPortions[portionId] = true;
+  async function unvalidateContent() {
+    unvalidatingContent = true;
     try {
-      const res = await fetch(`/api/admin/artworks/${oeuvre.id}/delete-portion`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ portionId })
-      });
+      const res = await fetch(`/api/admin/artworks/${oeuvre.id}/unvalidate`, { method: 'POST' });
       if (res.ok) {
-        const json = await res.json();
-        if (json.content) content = json.content;
         await invalidateAll();
       } else {
-        alert('Erreur lors de la suppression');
+        alert("Erreur lors de l'invalidation du contenu");
       }
     } finally {
-      deletingPortions[portionId] = false;
+      unvalidatingContent = false;
     }
   }
 
@@ -76,52 +69,6 @@
       checking = false;
     }
   }
-
-  async function validateManual(portionId?: string) {
-    if (portionId) validatingPortions[portionId] = true;
-    else validating = true;
-    
-    try {
-      const res = await fetch(`/api/admin/artworks/${oeuvre.id}/validate`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ portionId })
-      });
-      if (res.ok) {
-        const json = await res.json();
-        if (json.content) content = json.content;
-        await invalidateAll();
-      } else {
-        alert('Erreur lors de la validation');
-      }
-    } finally {
-      if (portionId) validatingPortions[portionId] = false;
-      else validating = false;
-    }
-  }
-
-  async function correctManual(portionId: string) {
-    correctingPortions[portionId] = true;
-    try {
-      const res = await fetch(`/api/admin/artworks/${oeuvre.id}/correct`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ portionId })
-      });
-      if (res.ok) {
-        const json = await res.json();
-        if (json.content) content = json.content;
-        await invalidateAll();
-      } else {
-        alert('Erreur lors de la correction');
-      }
-    } finally {
-      correctingPortions[portionId] = false;
-    }
-  }
-
-  let report = $derived(content?.verification_report as any);
-  let portions = $derived((content?.article_portions || []) as any[]);
 </script>
 
 <div class="admin-detail-view">
@@ -133,8 +80,8 @@
     
     <div class="title-row">
       <div class="title-info">
-        <h1 class="page-title">{oeuvre.titre}</h1>
-        <p class="page-subtitle">{oeuvre.artiste}</p>
+        <h1 class="page-title">{(oeuvre.oeuvre_translations?.[0]?.titre || '')}</h1>
+        <p class="page-subtitle">{oeuvre.artistes?.artiste_translations?.[0]?.nom}</p>
       </div>
       
       <div class="action-buttons">
@@ -143,7 +90,6 @@
           onclick={generateContent} 
           loading={generating || checking}
         >
-          {#if !(generating || checking)}<Sparkle size={18} weight="fill" />{/if}
           {generating ? 'Génération...' : checking ? 'Vérification...' : 'Générer'}
         </Button>
       </div>
@@ -151,147 +97,58 @@
   </div>
 
   <div class="content-container">
+    <AdminImagePanel {oeuvre} />
+
     <section class="panel">
       <div class="panel-header">
-        <h2 class="panel-title mb-0">Contenu & Fact-Checking</h2>
-        {#if content?.verification_status}
-          <div class="status-badge {content.verification_status.toLowerCase()}">
-            {content.verification_status}
-          </div>
-        {/if}
-      </div>
-
-      {#if content?.introduction}
-        <div class="introduction-section" style="margin-bottom: 2rem;">
-          <h3 class="section-subtitle">Introduction</h3>
-          <div class="rich-text">
-            {@html parseMarkdown(content.introduction)}
-          </div>
-        </div>
-      {/if}
-
-      {#if portions.length > 0}
-        {#if report}
-          <div class="score-card {report.global_score >= 80 ? 'good' : report.global_score >= 50 ? 'average' : 'bad'}">
-            <span class="score-label">Fiabilité globale</span>
-            <span class="score-value">{report.global_score}%</span>
-          </div>
-        {/if}
-
-        <div class="statements-list">
-          <h3 class="section-subtitle" style="margin-top: 1.5rem;">Article</h3>
-          {#each portions.filter((p: any) => p.type === 'article') as portion, index}
-            <div class="statement-card {portion.status.toLowerCase()}">
-              <div class="statement-header">
-                <span class="portion-index">Partie {index + 1}</span>
-                <span class="statement-status {portion.status.toLowerCase()}">{portion.status}</span>
-              </div>
-              
-              {#if portion.title}
-                <h4 class="statement-title">{portion.title}</h4>
-              {/if}
-              <div class="rich-text statement-text">
-                {@html parseMarkdown(portion.text)}
-              </div>
-              
-              {#if portion.explanation || portion.source_quote || portion.status?.toUpperCase() !== 'VERIFIED'}
-                <div class="statement-feedback">
-                  {#if portion.explanation}
-                    <p class="statement-explanation">{portion.explanation}</p>
-                  {/if}
-                  
-                  {#if portion.source_quote}
-                    <div class="statement-source">
-                      <span class="source-label">Source Wikipédia</span>
-                      <p>"{portion.source_quote}"</p>
-                    </div>
-                  {/if}
-
-                  <div class="statement-actions">
-                    {#if portion.status?.toUpperCase() === 'FALSE'}
-                      <Button variant="danger" size="sm" onclick={() => correctManual(portion.id)} loading={correctingPortions[portion.id]}>
-                        Corriger via l'IA
-                      </Button>
-                    {:else if portion.status?.toUpperCase() === 'UNVERIFIED' || portion.status?.toUpperCase() === 'PENDING'}
-                      <Button variant="primary" size="sm" onclick={() => validateManual(portion.id)} loading={validatingPortions[portion.id]} disabled={deletingPortions[portion.id]}>
-                        Valider
-                      </Button>
-                      <Button variant="danger" size="sm" onclick={() => deletePortion(portion.id)} loading={deletingPortions[portion.id]} disabled={validatingPortions[portion.id]}>
-                        Supprimer
-                      </Button>
-                    {/if}
-                  </div>
-                </div>
-              {/if}
+        <h2 class="panel-title mb-0">CONTENU & FACT-CHECKING</h2>
+        <div class="header-badges">
+          {#if report?.global_score !== undefined && report?.global_score !== null}
+            {@const score = report.global_score}
+            <div class="score-pill {score >= 80 ? 'good' : score >= 50 ? 'average' : 'bad'}" title="Score global de fiabilité">
+              <ShieldCheck size={16} weight="regular" />
+              <span>Fiabilité : <strong>{score}%</strong></span>
             </div>
-          {/each}
-
-          {#if portions.some((p: any) => p.type === 'anecdote')}
-            <div class="anecdotes-section" style="margin-top: 2rem;">
-              <h3 class="section-subtitle">Anecdotes</h3>
-              <div class="statements-list">
-              {#each portions.filter((p: any) => p.type === 'anecdote') as portion, index}
-                <div class="statement-card {portion.status.toLowerCase()}">
-                  <div class="statement-header">
-                    <span class="portion-index">Anecdote {index + 1}</span>
-                    <span class="statement-status {portion.status.toLowerCase()}">{portion.status}</span>
-                  </div>
-                  
-                  <div class="rich-text statement-text">
-                    {@html parseMarkdown(portion.text)}
-                  </div>
-                  
-                  {#if portion.explanation || portion.source_quote || portion.status?.toUpperCase() !== 'VERIFIED'}
-                    <div class="statement-feedback">
-                      {#if portion.explanation}
-                        <p class="statement-explanation">{portion.explanation}</p>
-                      {/if}
-                      
-                      {#if portion.source_quote}
-                        <div class="statement-source">
-                          <span class="source-label">Source Wikipédia</span>
-                          <p>"{portion.source_quote}"</p>
-                        </div>
-                      {/if}
-
-                      <div class="statement-actions">
-                        {#if portion.status?.toUpperCase() === 'FALSE'}
-                          <Button variant="danger" size="sm" onclick={() => correctManual(portion.id)} loading={correctingPortions[portion.id]}>
-                            Corriger via l'IA
-                          </Button>
-                        {:else if portion.status?.toUpperCase() === 'UNVERIFIED' || portion.status?.toUpperCase() === 'PENDING'}
-                          <Button variant="primary" size="sm" onclick={() => validateManual(portion.id)} loading={validatingPortions[portion.id]} disabled={deletingPortions[portion.id]}>
-                            Valider
-                          </Button>
-                          <Button variant="danger" size="sm" onclick={() => deletePortion(portion.id)} loading={deletingPortions[portion.id]} disabled={validatingPortions[portion.id]}>
-                            Supprimer
-                          </Button>
-                        {/if}
-                      </div>
-                    </div>
-                  {/if}
-                </div>
-              {/each}
+          {/if}
+          {#if content?.verification_status}
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <div class="status-pill {content.verification_status.toLowerCase()}">
+                {content.verification_status}
               </div>
+              {#if content.verification_status === 'VERIFIED'}
+                <Button variant="outline" size="sm" onclick={unvalidateContent} loading={unvalidatingContent}>
+                  Invalider
+                </Button>
+              {/if}
             </div>
           {/if}
         </div>
-      {:else if !content?.article_principal}
-        <div class="empty-state">
-          <Warning size={32} weight="duotone" class="empty-icon" />
-          <p>Aucune description générée pour le moment.<br/>Cliquez sur "Générer".</p>
-        </div>
-      {:else}
-        <div class="empty-state">
-          <ShieldCheck size={32} weight="duotone" class="empty-icon" />
-          <p>Aucun rapport disponible.<br/>{checking ? 'Fact-checking en cours...' : 'Veuillez regénérer le contenu.'}</p>
-        </div>
-      {/if}
+      </div>
+
+      <AdminIntroPanel {oeuvre} {content} />
+
+      <AdminPortionsPanel {oeuvre} {content} {checking} />
     </section>
   </div>
 </div>
 
 <style>
+  .edit-textarea, .edit-input {
+    width: 100%;
+    background-color: var(--color-surface);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    padding: 0.75rem;
+    font-family: inherit;
+    font-size: 0.9rem;
+    resize: vertical;
+    margin-bottom: 0.5rem;
+  }
+  .edit-textarea:focus, .edit-input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+  }
   .admin-detail-view {
     display: flex;
     flex-direction: column;
@@ -306,9 +163,15 @@
     background: color-mix(in oklch, var(--color-bg) 85%, transparent);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    padding: 1rem 1.25rem 1.5rem;
-    margin: -1rem 0 0;
+    padding: 1rem 1.25rem 1.25rem;
+    margin: -1rem -1.25rem 0;
     border-bottom: 1px solid var(--color-border-subtle);
+  }
+
+  @media (max-width: 600px) {
+    .sticky-header {
+      padding: 1rem 1.25rem;
+    }
   }
 
   .back-link {
@@ -341,8 +204,11 @@
   }
 
   .page-title {
-    font-size: 1.75rem;
+    font-family: var(--font-body);
+    font-size: 1.6rem;
     font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
     color: var(--color-text-primary);
     margin: 0 0 0.25rem 0;
     line-height: 1.2;
@@ -369,38 +235,86 @@
     }
   }
 
-
-
   .content-container {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
-    padding: 0 1.25rem;
+    gap: 2.5rem;
+    padding: 0;
     max-width: 900px;
     margin: 0 auto;
     width: 100%;
   }
 
   .panel {
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: 16px;
-    padding: 1.5rem;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.02);
+    background: transparent;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  @media (max-width: 600px) {
+    .content-container {
+      gap: 1.5rem;
+    }
   }
 
   .panel-header {
     display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 0.5rem;
+    gap: 0.75rem;
+  }
+
+  .header-badges {
+    display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1.25rem;
+    width: 100%;
+    gap: 0.75rem;
+  }
+
+  .score-pill, .status-pill, .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.85rem;
+    border-radius: var(--radius-pill);
+    font-size: 0.75rem;
+    font-weight: 700;
+    font-family: var(--font-body);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .score-pill.good, .status-pill.verified, .status-badge.verified {
+    background: color-mix(in oklch, var(--color-success) 15%, transparent);
+    color: var(--color-success);
+    border: 1px solid color-mix(in oklch, var(--color-success) 30%, transparent);
+  }
+  .score-pill.average, .status-pill.pending_validation, .status-badge.pending_validation {
+    background: color-mix(in oklch, var(--color-warning) 15%, transparent);
+    color: var(--color-warning);
+    border: 1px solid color-mix(in oklch, var(--color-warning) 30%, transparent);
+  }
+  .score-pill.bad, .status-pill.false, .status-badge.false {
+    background: color-mix(in oklch, var(--color-error) 15%, transparent);
+    color: var(--color-error);
+    border: 1px solid color-mix(in oklch, var(--color-error) 30%, transparent);
+  }
+  .status-pill.pending, .status-badge.pending {
+    background: color-mix(in oklch, var(--color-text-secondary) 15%, transparent);
+    color: var(--color-text-secondary);
+    border: 1px solid color-mix(in oklch, var(--color-text-secondary) 30%, transparent);
   }
 
   .panel-title {
-    font-size: 1.25rem;
-    font-weight: 700;
+    font-family: var(--font-body);
+    font-size: 1.15rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
     color: var(--color-text-primary);
-    margin: 0 0 1.25rem 0;
+    margin: 0 0 0.5rem 0;
   }
 
   .mb-0 {
@@ -412,14 +326,18 @@
     line-height: 1.6;
     color: var(--color-text-primary);
     font-size: 0.95rem;
+    font-family: var(--font-body);
   }
 
-  .rich-text :global(h2), .rich-text :global(h3) {
+  .rich-text :global(h2), .rich-text :global(h3), .rich-text :global(h4) {
+    font-family: var(--font-body);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
     color: var(--color-text-primary);
     font-weight: 700;
     margin-top: 1.5rem;
     margin-bottom: 0.75rem;
-    font-size: 1.15rem;
+    font-size: 1.05rem;
   }
 
   .rich-text :global(p) {
@@ -437,9 +355,12 @@
   }
 
   .section-subtitle {
-    font-size: 1.1rem;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
     font-weight: 700;
-    color: var(--color-text-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-secondary);
     margin-bottom: 1rem;
   }
 
@@ -449,14 +370,10 @@
     font-size: 0.95rem;
   }
 
-  .anecdotes-list li {
-    margin-bottom: 0.75rem;
-    line-height: 1.5;
-  }
 
   .status-badge {
-    padding: 0.25rem 0.75rem;
-    border-radius: 2rem;
+    padding: 0.35rem 0.85rem;
+    border-radius: var(--radius-pill);
     font-size: 0.75rem;
     font-weight: 700;
     text-transform: uppercase;
@@ -517,9 +434,6 @@
     font-weight: 800;
   }
 
-  .score-card.good .score-value { color: var(--color-success); }
-  .score-card.average .score-value { color: var(--color-warning); }
-  .score-card.bad .score-value { color: var(--color-danger); }
 
   .statements-list {
     display: flex;
@@ -623,12 +537,6 @@
     letter-spacing: 0.05em;
     margin-bottom: 0.5rem;
     font-weight: 700;
-  }
-
-  .statement-source p {
-    margin: 0;
-    font-style: italic;
-    line-height: 1.5;
   }
 
   .empty-state {

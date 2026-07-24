@@ -23,9 +23,9 @@ export const load: PageLoad = async () => {
 	} else {
 		try {
 			const [movementsRes, progressRes, historyRes, oeuvresRes] = await Promise.all([
-				supabase.from('courants').select('*').order('ordre_chronologique', { ascending: true }),
-				supabase.from('user_artwork_progress').select('*'),
-				supabase.from('historique_reponses').select('*').order('answered_at', { ascending: false }),
+				supabase.from('courants').select('id, nom, oklch_token').order('ordre_chronologique', { ascending: true }),
+				supabase.from('user_artwork_progress').select('id_oeuvre, box_level'),
+				supabase.from('historique_reponses').select('id, is_correct').order('answered_at', { ascending: false }),
 				supabase.from('oeuvres').select('id, id_courant').eq('is_active', true)
 			]);
 

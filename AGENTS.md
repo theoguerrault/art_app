@@ -26,3 +26,4 @@ When I correct you or you learn something new, update the list below:
 - All AI prompts, system instructions, source code, comments, and project documentation (`/doc/*.md`) must be written strictly in English
 - Always respect conventional commits
 - Whenever modifying schemas, APIs, or architecture, verify and update the corresponding documentation in `/doc/`
+- Always consult `/doc/01_product/ui_design_system.md` before making any UI, layout or CSS changes

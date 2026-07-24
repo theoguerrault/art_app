@@ -19,10 +19,13 @@ For users studying beyond the daily recommendation:
 ## 2. UI & Accessibility Specifications
 The application applies standard browser CSS specifications and accessibility criteria:
 
+> [!IMPORTANT]
+> Pour toute implémentation UI/CSS (couleurs, bordures, boutons), référez-vous au document complet : [`ui_design_system.md`](file:///Users/theoguerrault/Documents/Projets/art_app/doc/01_product/ui_design_system.md).
+
 ### 2.1 Perceptual Color System & Theme Configuration
 - The interface defines colors using a perceptual OKLCH color model to maintain uniform visual weight and exact WCAG AA contrast compliance across light and dark modes.
-- **Default Theme:** By default, the application displays in Light Mode (`data-theme="light"`). Users can explicitly switch between Light Mode and Dark Mode via the `/settings` tab, with state persisted locally in `localStorage`.
-- Each artistic movement assigns thematic color variables to adapt card borders, badges, and interactive indicators to the respective historical era.
+- **Default Theme:** By default, the application displays in **Dark Mode** (`data-theme="dark"` ou fond `#121212`) pour une expérience immersive Content-First. L'UI s'efface au profit des oeuvres.
+- **Dynamic Backgrounds :** Au lieu de couleurs de mouvements statiques, l'application privilégie des effets d'extraction de couleurs (halo/glow) obtenus via l'ombre portée de l'image (CSS Blur Trick).
 
 ### 2.2 Animated Transitions & Layout Stability
 - **Animated Transitions:** Navigating across views (`/`, `/catalogue`, `/progression`, `/settings`) applies seamless visual transitions using the View Transitions API between interface states.

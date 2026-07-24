@@ -4,6 +4,7 @@ export function createQuizSession(initialQcm: QCMSynthese | MCQ | null, onAnswer
 	let qcm = $state(initialQcm);
 	let selectedIndex = $state<number | null>(null);
 	let disabled = $state(false);
+	let isStarted = $state(false);
 
 	let isAnswered = $derived(selectedIndex !== null);
 	let isCorrect = $derived(
@@ -13,10 +14,15 @@ export function createQuizSession(initialQcm: QCMSynthese | MCQ | null, onAnswer
 	function setQcm(newQcm: QCMSynthese | MCQ | null) {
 		qcm = newQcm;
 		selectedIndex = null; // Reset answer on new question
+		isStarted = false;
 	}
 
 	function setDisabled(val: boolean) {
 		disabled = val;
+	}
+
+	function startQuiz() {
+		isStarted = true;
 	}
 
 	function selectOption(index: number) {
@@ -37,8 +43,10 @@ export function createQuizSession(initialQcm: QCMSynthese | MCQ | null, onAnswer
 		get isAnswered() { return isAnswered; },
 		get isCorrect() { return isCorrect; },
 		get disabled() { return disabled; },
+		get isStarted() { return isStarted; },
 		setQcm,
 		setDisabled,
+		startQuiz,
 		selectOption
 	};
 }

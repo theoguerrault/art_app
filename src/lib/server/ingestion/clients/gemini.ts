@@ -1,21 +1,18 @@
 import { GoogleGenAI, Type } from '@google/genai';
 import { env } from '$env/dynamic/private';
 
+// Ordre de priorité basé sur test live du 2026-07-23 :
+// gemini-3.1-flash-lite = OK | gemini-2.5-* = 404 | gemini-2.0-* = quota 429
 export const GEMINI_DEFAULT_MODELS = [
-  'gemini-flash-lite-latest',
-  'gemini-2.5-flash-lite',
-  'gemini-2.0-flash-lite',
-  'gemini-flash-latest',
+  'gemini-3.1-flash-lite',
   'gemini-3.5-flash',
-  'gemini-2.0-flash',
-  'gemini-pro-latest'
+  'gemini-3.6-flash'
 ];
 
 export const GEMINI_PRO_MODELS = [
-  'gemini-2.5-pro',
-  'gemini-pro-latest',
-  'gemini-2.0-pro-exp',
-  'gemini-1.5-pro'
+  'gemini-3.1-pro-preview',
+  'gemini-3-flash-preview',
+  'gemini-3.1-flash-lite'
 ];
 
 export interface GeminiRequestOptions {

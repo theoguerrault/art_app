@@ -1,20 +1,15 @@
 <script lang="ts">
 	import { themeStore, type ThemeMode } from '$lib/core/theme.svelte';
-	import { Sun, Moon, Check, Sparkle, Target, Database, CloudCheck, Trash } from 'phosphor-svelte';
+	import { Sun, Moon, Check, Sparkle, Database, CloudCheck, Trash } from 'phosphor-svelte';
 	import { saveToLocalCache } from '$lib/offline/storage';
 	import { authStore } from '$lib/core/auth.svelte';
 
-	let dailyGoal = $state<number>(1);
 	let cacheCleared = $state<boolean>(false);
 	let isOnline = $state<boolean>(typeof window !== 'undefined' ? navigator.onLine : true);
 
 	$effect(() => {
 		document.documentElement.style.setProperty('--artwork-hue', '45');
 		if (typeof window !== 'undefined') {
-			const savedGoal = localStorage.getItem('daily_goal');
-			if (savedGoal) {
-				dailyGoal = parseInt(savedGoal, 10) || 1;
-			}
 			const handleOnline = () => (isOnline = true);
 			const handleOffline = () => (isOnline = false);
 			window.addEventListener('online', handleOnline);
@@ -28,13 +23,6 @@
 
 	function handleThemeChange(mode: ThemeMode) {
 		themeStore.set(mode);
-	}
-
-	function handleGoalChange(goal: number) {
-		dailyGoal = goal;
-		if (typeof window !== 'undefined') {
-			localStorage.setItem('daily_goal', goal.toString());
-		}
 	}
 
 	async function handleClearCache() {
@@ -61,7 +49,7 @@
 		</div>
 		<h1 class="page-title">Paramètres</h1>
 		<p class="page-subtitle">
-			Personnalisez votre environnement d'apprentissage, la présentation visuelle et le comportement de synchronisation hors ligne.
+			Personnalisez la présentation visuelle et le comportement de synchronisation hors ligne.
 		</p>
 	</header>
 
@@ -187,42 +175,6 @@
 		</div>
 	</section>
 
-	<section class="settings-section" aria-labelledby="goal-title">
-		<div class="section-header">
-			<div class="title-with-icon">
-				<Target size={22} weight="bold" />
-				<h2 id="goal-title" class="section-title">Objectif d'Étude Quotidien</h2>
-			</div>
-			<p class="section-desc">Ajustez votre cadence de répétition espacée Leitner.</p>
-		</div>
-
-		<div class="goal-selector">
-			<button
-				type="button"
-				class="goal-btn"
-				class:selected={dailyGoal === 1}
-				onclick={() => handleGoalChange(1)}
-			>
-				<span class="goal-num">1</span>
-				<div class="goal-text">
-					<strong>Apprentissage Rapide</strong>
-					<span>1 œuvre / jour (5 min)</span>
-				</div>
-			</button>
-			<button
-				type="button"
-				class="goal-btn"
-				class:selected={dailyGoal === 3}
-				onclick={() => handleGoalChange(3)}
-			>
-				<span class="goal-num">3</span>
-				<div class="goal-text">
-					<strong>Immersion Profonde</strong>
-					<span>3 œuvres / jour (15 min)</span>
-				</div>
-			</button>
-		</div>
-	</section>
 
 	<section class="settings-section" aria-labelledby="storage-title">
 		<div class="section-header">
@@ -230,7 +182,7 @@
 				<Database size={22} weight="bold" />
 				<h2 id="storage-title" class="section-title">Cache Hors Ligne & Sync</h2>
 			</div>
-			<p class="section-desc">Gérez le stockage IndexedDB local et les données de secours hors ligne.</p>
+			<p class="section-desc">Gérez le stockage IndexedDB local et les données de synchronisation hors ligne.</p>
 		</div>
 
 		<div class="storage-card">
@@ -247,8 +199,8 @@
 
 			<div class="action-row">
 				<div class="action-info">
-					<strong>Cache de Répétition Espacée Local</strong>
-					<span>Effacer le cache supprime les réponses enregistrées hors ligne.</span>
+					<strong>Cache Local</strong>
+					<span>Effacer le cache supprime les données enregistrées hors ligne.</span>
 				</div>
 				<button type="button" class="btn-clear" onclick={handleClearCache} disabled={cacheCleared}>
 					<Trash size={18} />

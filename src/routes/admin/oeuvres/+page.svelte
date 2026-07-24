@@ -1,55 +1,49 @@
 <script lang="ts">
   import { MagnifyingGlass, Funnel, PenNib, CheckCircle, Clock } from 'phosphor-svelte';
+  import AdminPagination from '../components/AdminPagination.svelte';
   let { data } = $props();
-
-  let searchQuery = $state('');
-
-  let filteredOeuvres = $derived(
-    data.oeuvres.filter((oeuvre) => 
-      oeuvre.titre.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      oeuvre.artiste.toLowerCase().includes(searchQuery.toLowerCase())
-    )
-  );
 </script>
 
 <div class="admin-view">
   <header class="admin-header sticky-header">
     <h1 class="page-title">Administration des Œuvres</h1>
     
-    <div class="search-bar">
+    <form class="search-bar" action="/admin/oeuvres" method="GET" data-sveltekit-keepfocus data-sveltekit-replacestate>
       <span class="search-icon" aria-hidden="true">
         <MagnifyingGlass size={20} weight="bold" />
       </span>
       <input 
         type="search" 
-        bind:value={searchQuery}
+        name="q"
+        value={data.pagination?.q || ''}
         placeholder="Rechercher une œuvre..." 
         aria-label="Rechercher une œuvre"
       />
-    </div>
+      <input type="hidden" name="page" value="1" />
+    </form>
   </header>
 
   <div class="grid-catalog-minimal">
-    {#each filteredOeuvres as oeuvre}
+    {#each data.oeuvres as oeuvre}
       <a href={`/admin/oeuvres/${oeuvre.id}`} class="artwork-card-minimal">
         <div class="thumb-wrapper">
-          <img src={oeuvre.image_url_thumb} alt={oeuvre.titre} loading="lazy" decoding="async" />
+          <img src={oeuvre.image_url_thumb} alt={(oeuvre.oeuvre_translations?.[0]?.titre || '')} loading="lazy" decoding="async" />
           
           <div class="status-indicator">
-            {#if oeuvre.contenus_oeuvres}
-              {#if oeuvre.contenus_oeuvres.verification_status === 'VERIFIED'}
+            {#if oeuvre.oeuvre_translations[0]}
+              {#if oeuvre.oeuvre_translations[0].verification_status === 'VERIFIED'}
                 <div class="badge verified" title="Vérifié">
                   <CheckCircle size={14} weight="fill" />
                   <span>Vérifié</span>
                 </div>
-              {:else if oeuvre.contenus_oeuvres.verification_status === 'PENDING'}
+              {:else if oeuvre.oeuvre_translations[0].verification_status === 'PENDING' || oeuvre.oeuvre_translations[0].verification_status === 'PENDING_VALIDATION'}
                 <div class="badge pending" title="En attente">
                   <Clock size={14} weight="fill" />
                   <span>En attente</span>
                 </div>
               {:else}
                 <div class="badge unknown">
-                  <span>{oeuvre.contenus_oeuvres.verification_status}</span>
+                  <span>{oeuvre.oeuvre_translations[0].verification_status}</span>
                 </div>
               {/if}
             {:else}
@@ -61,10 +55,10 @@
         </div>
 
         <div class="art-info">
-          <h3 class="art-title">{oeuvre.titre}</h3>
-          <p class="art-artist">{oeuvre.artiste}</p>
+          <h3 class="art-title">{(oeuvre.oeuvre_translations?.[0]?.titre || '')}</h3>
+          <p class="art-artist">{oeuvre.artistes?.artiste_translations?.[0]?.nom}</p>
           
-          {#if !oeuvre.contenus_oeuvres || oeuvre.contenus_oeuvres.verification_status !== 'VERIFIED'}
+          {#if !oeuvre.oeuvre_translations[0] || oeuvre.oeuvre_translations[0].verification_status !== 'VERIFIED'}
             <div class="action-verify">
               <PenNib size={14} weight="bold" /> Vérifier le contenu
             </div>
@@ -77,12 +71,14 @@
       </a>
     {/each}
 
-    {#if filteredOeuvres.length === 0}
+    {#if data.oeuvres.length === 0}
       <div class="empty-search">
-        <p>Aucun résultat pour "{searchQuery}".</p>
+        <p>Aucun résultat pour "{data.pagination?.q || ''}".</p>
       </div>
     {/if}
   </div>
+
+  <AdminPagination pagination={data.pagination} />
 </div>
 
 <style>
@@ -100,8 +96,8 @@
     background: color-mix(in oklch, var(--color-bg) 85%, transparent);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    padding: 1rem 0 1.5rem;
-    margin: -1rem 0 0;
+    padding: 1rem 1.25rem 1.25rem;
+    margin: -1rem -1.25rem 0;
     border-bottom: 1px solid var(--color-border-subtle);
   }
 
@@ -110,12 +106,12 @@
     font-weight: 800;
     color: var(--color-text-primary);
     margin-bottom: 1rem;
-    padding: 0 1.25rem;
+    padding: 0;
   }
 
   .search-bar {
     position: relative;
-    margin: 0 1.25rem;
+    margin: 0;
     display: flex;
     align-items: center;
   }
@@ -157,7 +153,7 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
     gap: 1rem 0.85rem;
-    padding: 0 1.25rem;
+    padding: 0;
   }
 
   @media (min-width: 768px) {
