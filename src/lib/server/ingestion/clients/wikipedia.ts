@@ -8,18 +8,6 @@ export interface WikipediaArtExtract {
 
 const USER_AGENT = 'ArtCoachApp/1.0 (mailto:contact@artcoach.app)';
 
-/**
- * Resolves target data language based on browser environment (navigator.language).
- */
-export function getPreferredLanguage(_preferred?: string): string {
-  if (typeof window !== 'undefined' && window.navigator && window.navigator.language) {
-    const navLang = window.navigator.language.split('-')[0].toLowerCase();
-    if (navLang && /^[a-z]{2}$/.test(navLang)) {
-      return navLang;
-    }
-  }
-  return 'fr';
-}
 
 /**
  * Scrapes the full plain-text content of a Wikipedia article.
@@ -62,16 +50,20 @@ async function fetchArticleForLang(
     let summary: string | null = null;
     let thumbnailUrl: string | null = null;
     let originalImageUrl: string | null = null;
+    let isDisambiguation = false;
 
     if (summaryRes.ok) {
       const summaryData = await summaryRes.json();
       summary = summaryData?.extract || null;
       thumbnailUrl = summaryData?.thumbnail?.source || null;
       originalImageUrl = summaryData?.originalimage?.source || null;
+      if (summaryData?.type === 'disambiguation') {
+        isDisambiguation = true;
+      }
     }
 
     // Attempt 2: If 404 or disambiguation AND no exact title was provided, search with artist name for precision
-    if (!exactWikiTitle && (!summaryRes.ok || (summary && (summary.includes('peut faire référence à') || summary.includes('homonymie') || summary.includes('may refer to'))))) {
+    if (!exactWikiTitle && (!summaryRes.ok || isDisambiguation || (summary && (summary.includes('peut faire référence à') || summary.includes('homonymie') || summary.includes('may refer to'))))) {
       const queryTerm = artist
         ? `${title.replace(/\([^)]*\)/g, '').trim()} ${artist}`
         : title.replace(/\([^)]*\)/g, '').trim();

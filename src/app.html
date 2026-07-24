@@ -8,6 +8,9 @@
 			html, body {
 				/* overscroll-behavior-y: none; removed to allow elastic scroll */
 			}
+			.sveltekit-body-wrapper {
+				display: contents;
+			}
 		</style>
 		<script>
 			(function() {
@@ -46,6 +49,6 @@
 		%sveltekit.head%
 	</head>
 	<body data-sveltekit-preload-data="hover">
-		<div style="display: contents">%sveltekit.body%</div>
+		<div class="sveltekit-body-wrapper">%sveltekit.body%</div>
 	</body>
 </html>

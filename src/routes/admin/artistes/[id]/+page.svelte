@@ -108,9 +108,9 @@
 
       {#if content?.description_courte}
         <div class="description-section">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+          <div class="section-header">
             <h3 class="section-subtitle mb-0">Description courte (Affichée à l'utilisateur)</h3>
-            <div style="display: flex; gap: 0.5rem;">
+            <div class="action-buttons">
               {#if editing}
                 <Button variant="primary" size="sm" onclick={saveEdit} title="Sauvegarder"><Check size={18} /></Button>
                 <Button variant="outline" size="sm" onclick={() => editing = false} title="Annuler"><X size={18} /></Button>
@@ -129,7 +129,7 @@
           {/if}
           
           {#if content.verification_status !== 'VERIFIED'}
-            <div class="statement-actions" style="margin-top: 1rem;">
+            <div class="statement-actions mt-1">
               <Button variant="primary" size="sm" onclick={validateManual} loading={validating}>
                 Valider ce texte
               </Button>
@@ -321,5 +321,21 @@
 
   .mb-0 {
     margin-bottom: 0 !important;
+  }
+
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  .action-buttons {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .mt-1 {
+    margin-top: 1rem;
   }
 </style>

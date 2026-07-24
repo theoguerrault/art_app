@@ -86,20 +86,3 @@ export async function flushOfflineQueue(): Promise<{ successCount: number; failC
 	return { successCount, failCount };
 }
 
-/**
- * Initializes global network listeners (`online` / `offline`) to automatically trigger
- * `flushOfflineQueue()` whenever network connectivity returns.
- */
-export function initSyncListeners(): void {
-	if (typeof window === 'undefined') return;
-
-	window.addEventListener('online', () => {
-		console.info('[OfflineSync] Network connectivity restored. Flushing offline queue...');
-		flushOfflineQueue();
-	});
-
-	// Attempt initial flush on startup if online
-	if (navigator.onLine) {
-		flushOfflineQueue();
-	}
-}

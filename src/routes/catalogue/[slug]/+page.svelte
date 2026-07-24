@@ -360,23 +360,6 @@
 
 
 
-	.quiz-container {
-		text-align: left;
-		background: var(--color-surface);
-		padding: 1.5rem;
-		border-radius: var(--radius-lg);
-		border: 1px solid var(--color-border);
-		box-shadow: var(--shadow-sm);
-		animation: fadeIn 0.25s ease;
-	}
-
-	.quiz-top {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		margin-bottom: 1rem;
-	}
-
 	@keyframes fadeIn {
 		from {
 			opacity: 0;
@@ -399,7 +382,7 @@
 			margin-right: -1.25rem;
 		}
 		
-		.back-nav, .detail-header, .quiz-container, :global(.glossary-content) {
+		.back-nav, .detail-header, :global(.glossary-content) {
 			padding-left: 1.25rem;
 			padding-right: 1.25rem;
 		}

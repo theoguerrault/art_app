@@ -1,10 +1,16 @@
 <script lang="ts">
 	import type { PageData } from './$types';
+	import { supabase } from '$lib/supabase/client';
+	import { readFromLocalCache } from '$lib/offline/storage';
+	import { sanitizeArtworks } from '$lib/utils/artworks';
+	import type { Artwork } from '$lib/types/database';
 	import { MagnifyingGlass, X, Check, Heart } from 'phosphor-svelte';
 	import LazySection from '$lib/components/LazySection.svelte';
 	import CatalogArtworkCard from '$lib/features/artwork/components/CatalogArtworkCard.svelte';
 
 	let { data }: { data: PageData } = $props();
+
+	let isOnline = $state(typeof window !== 'undefined' ? navigator.onLine : true);
 
 	let searchQuery = $state('');
 	let showFavoritesOnly = $state(false);
@@ -52,20 +58,19 @@
 		return new Set<number>(data.favoritesList || []);
 	});
 
-	let filteredArtworks = $derived(
-		(data.artworks || []).filter((art) => {
-			if (showFavoritesOnly && (!art.id || !favoritesSet().has(art.id))) return false;
-			if (selectedMovements.size > 0 && art.id_courant && !selectedMovements.has(art.id_courant)) return false;
-			if (!searchQuery.trim()) return true;
-			const q = searchQuery.toLowerCase();
-			return (
-				(art.titre && art.titre.toLowerCase().includes(q)) ||
-				(art.artistes?.nom && art.artistes.nom.toLowerCase().includes(q))
-			);
-		})
-	);
+	$effect(() => {
+		const handleOnline = () => (isOnline = true);
+		const handleOffline = () => (isOnline = false);
+		window.addEventListener('online', handleOnline);
+		window.addEventListener('offline', handleOffline);
 
-	// Group filtered artworks by movement
+		return () => {
+			window.removeEventListener('online', handleOnline);
+			window.removeEventListener('offline', handleOffline);
+		};
+	});
+
+	// Group loaded artworks by movement
 	let groupedMovements = $derived(() => {
 		const groups = new Map<number, { movement: any; items: any[]; discoveredCount: number; totalCount: number }>();
 		const pSet = progressSet();
@@ -74,20 +79,33 @@
 			groups.set(m.id, { movement: m, items: [], discoveredCount: 0, totalCount: 0 });
 		}
 
-		// Calculate total inside each movement (before filtering or including filtered)
-		for (const art of data.artworks || []) {
+		let filtered = data.artworks || [];
+
+		if (showFavoritesOnly) {
+			const favSet = favoritesSet();
+			filtered = filtered.filter(a => a.id && favSet.has(a.id));
+		}
+		if (selectedMovements.size > 0) {
+			filtered = filtered.filter(a => a.id_courant && selectedMovements.has(a.id_courant));
+		}
+		if (searchQuery.trim()) {
+			const qLower = searchQuery.trim().toLowerCase();
+			filtered = filtered.filter(
+				(a) =>
+					(a.titre && a.titre.toLowerCase().includes(qLower)) ||
+					(a.artistes?.nom && a.artistes.nom.toLowerCase().includes(qLower))
+			);
+		}
+
+		// Calculate counts based on filtered artworks
+		for (const art of filtered) {
 			if (art.id_courant && groups.has(art.id_courant)) {
 				const grp = groups.get(art.id_courant)!;
 				grp.totalCount++;
 				if (art.id && pSet.has(art.id)) {
 					grp.discoveredCount++;
 				}
-			}
-		}
-
-		for (const art of filteredArtworks) {
-			if (art.id_courant && groups.has(art.id_courant)) {
-				groups.get(art.id_courant)!.items.push(art);
+				grp.items.push(art);
 			}
 		}
 
@@ -139,7 +157,7 @@
 	</header>
 
 	<div class="movements-list" class:header-hidden={!headerVisible}>
-		{#each groupedMovements() as group}
+		{#each groupedMovements() as group (group.movement.id)}
 			<section class="movement-section" style:--movement-color="var(--color-primary)">
 				<div class="movement-header sticky-subheader">
 					<div>
@@ -155,7 +173,7 @@
 					<LazySection itemCount={group.items.length}>
 						{#snippet children()}
 							<div class="grid-catalog-minimal">
-								{#each group.items as art}
+								{#each group.items as art (art.id)}
 									<CatalogArtworkCard 
 										{art} 
 										isFavorite={favoritesSet().has(art.id)} 
@@ -273,6 +291,8 @@
 		display: flex;
 		flex-direction: column;
 		gap: 1rem;
+		content-visibility: auto;
+		contain-intrinsic-size: 1000px;
 	}
 
 	.sticky-subheader {
@@ -414,4 +434,6 @@
 		color: var(--color-bg);
 		box-shadow: inset 0 0 0 1px var(--color-text-primary);
 	}
+
+
 </style>

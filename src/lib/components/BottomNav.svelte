@@ -1,6 +1,5 @@
 <script lang="ts">
-	import { page } from '$app/state';
-	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
 	import { PaintBrush, Books, Gear, ShieldStar } from 'phosphor-svelte';
 
 	interface TabItem {
@@ -16,31 +15,13 @@
 		{ href: '/settings', label: 'Paramètres', icon: Gear }
 	];
 
-	let currentPath = $derived(page.url?.pathname || '/');
+	let currentPath = $derived($page.url?.pathname || '/');
 
 	function isActive(href: string): boolean {
 		if (href === '/') {
 			return currentPath === '/';
 		}
 		return currentPath.startsWith(href);
-	}
-
-	async function handleTabClick(event: MouseEvent, href: string) {
-		if (currentPath === href) {
-			event.preventDefault();
-			return;
-		}
-
-		if (
-			typeof document !== 'undefined' &&
-			'startViewTransition' in document &&
-			!window.matchMedia('(prefers-reduced-motion: reduce)').matches
-		) {
-			event.preventDefault();
-			document.startViewTransition(async () => {
-				await goto(href);
-			});
-		}
 	}
 
 	let keyboardOpen = $state(false);
@@ -105,7 +86,6 @@
 					class="nav-link"
 					class:active
 					aria-current={active ? 'page' : undefined}
-					onclick={(e) => handleTabClick(e, tab.href)}
 				>
 					<!-- Active background pill -->
 					{#if active}

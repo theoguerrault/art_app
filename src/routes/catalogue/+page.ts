@@ -16,7 +16,11 @@ export const load: PageLoad = async () => {
 
 	if (!isOnline) {
 		const fullArtworks: Artwork[] = sanitizeArtworks((await readFromLocalCache('cached_artworks')) || []);
-		artworks = fullArtworks.map((a) => ({
+		const sortedArtworks = fullArtworks.sort((a, b) => {
+			if (a.id_courant !== b.id_courant) return (a.id_courant || 0) - (b.id_courant || 0);
+			return (a.date_creation || '') > (b.date_creation || '') ? 1 : -1;
+		});
+		artworks = sortedArtworks.map((a) => ({
 			id: a.id,
 			slug: a.slug,
 			id_courant: a.id_courant,
@@ -32,10 +36,12 @@ export const load: PageLoad = async () => {
 		favoritesList = favCache ? favCache.data : [];
 	} else {
 		try {
-			// Query specific lightweight fields under 10 KB to optimize network payloads
+			// Query specific lightweight fields under 10 KB to optimize network payloads, limit to 20
 			const [artworksRes, movementsRes, progressRes, favoritesRes] = await Promise.all([
 				supabase.from('oeuvres').select('id, slug, id_courant, id_artiste, date_creation, image_url_thumb, aspect_ratio, artistes(artiste_translations(nom)), oeuvre_translations(titre)')
-					.eq('is_active', true),
+					.eq('is_active', true)
+					.order('id_courant', { ascending: true })
+					.order('date_creation', { ascending: true }),
 				supabase.from('courants').select('*, courant_translations(nom)').order('ordre_chronologique', { ascending: true }),
 				supabase.from('user_artwork_progress').select('id_oeuvre, box_level, consecutive_correct'),
 				fetch('/api/favorites').then((res) => (res.ok ? res.json() : { favorites: [] }))
@@ -45,7 +51,11 @@ export const load: PageLoad = async () => {
 				artworks = sanitizeArtworks(artworksRes.data.map((a: any) => ({ ...a, titre: a.oeuvre_translations?.[0]?.titre || 'Inconnu', artistes: { nom: a.artistes?.artiste_translations?.[0]?.nom || 'Inconnu' } })) as unknown as Partial<Artwork>[]);
 			} else {
 				const fullArtworks: Artwork[] = sanitizeArtworks((await readFromLocalCache('cached_artworks')) || []);
-				artworks = fullArtworks.map((a) => ({
+				const sortedArtworks = fullArtworks.sort((a, b) => {
+					if (a.id_courant !== b.id_courant) return (a.id_courant || 0) - (b.id_courant || 0);
+					return (a.date_creation || '') > (b.date_creation || '') ? 1 : -1;
+				});
+				artworks = sortedArtworks.map((a) => ({
 					...a,
 					artistes: a.artistes || ({ nom: 'Inconnu' } as any)
 				}));
@@ -72,7 +82,11 @@ export const load: PageLoad = async () => {
 		} catch (err) {
 			console.warn('[CatalogLoad] Supabase query error, falling back to cache:', err);
 			const fullArtworks: Artwork[] = sanitizeArtworks((await readFromLocalCache('cached_artworks')) || []);
-			artworks = fullArtworks.map((a) => ({
+			const sortedArtworks = fullArtworks.sort((a, b) => {
+				if (a.id_courant !== b.id_courant) return (a.id_courant || 0) - (b.id_courant || 0);
+				return (a.date_creation || '') > (b.date_creation || '') ? 1 : -1;
+			});
+			artworks = sortedArtworks.map((a) => ({
 				...a,
 				artistes: a.artistes || ({ nom: 'Inconnu' } as any),
 				courants: (a as any).courants || { nom: 'Inconnu' }

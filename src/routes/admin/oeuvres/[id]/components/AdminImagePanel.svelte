@@ -50,7 +50,7 @@
 <section class="panel">
   <div class="panel-header">
     <h2 class="panel-title mb-0">IMAGE DE L'ŒUVRE</h2>
-    <div style="display: flex; gap: 0.5rem;">
+    <div class="action-buttons">
       {#if editingImage}
         <Button variant="primary" size="sm" onclick={saveImageEdit} loading={savingImage}>Sauvegarder</Button>
         <Button variant="outline" size="sm" onclick={() => { editingImage = false; newImageFile = null; newImageUrl = ''; }}>Annuler</Button>
@@ -61,24 +61,23 @@
   </div>
   
   <div class="image-section">
-    <div class="current-image" style="margin-bottom: 1rem; display: flex; justify-content: center; align-items: center; background: transparent; padding: 0;">
+    <div class="current-image">
       {#if oeuvre.image_url_full}
-        <img src={oeuvre.image_url_full} alt={(oeuvre.oeuvre_translations?.[0]?.titre || '')} style="max-height: 300px; max-width: 100%; object-fit: contain; border-radius: 4px; margin: 0 auto;" />
+        <img src={oeuvre.image_url_full} alt={(oeuvre.oeuvre_translations?.[0]?.titre || '')} class="preview-image" />
       {:else}
-        <p style="color: var(--color-text-secondary); padding: 2rem;">Aucune image disponible</p>
+        <p class="no-image-text">Aucune image disponible</p>
       {/if}
     </div>
     
     {#if editingImage}
-      <div class="edit-image-form" style="display: flex; flex-direction: column; gap: 1rem; background: color-mix(in oklch, var(--color-surface) 95%, black); padding: 1rem; border-radius: 8px; border: 1px solid var(--color-border-subtle);">
+      <div class="edit-image-form-container">
         <div>
-          <label for="image-upload" style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem;">Uploader un fichier :</label>
+          <label for="image-upload" class="form-label">Uploader un fichier :</label>
           <input 
             id="image-upload" 
             type="file" 
             accept="image/*" 
-            class="edit-input" 
-            style="width: 100%; padding: 0.5rem; background: var(--color-bg);"
+            class="edit-input image-upload-input" 
             onchange={(e) => {
               const target = e.target as HTMLInputElement;
               if (target.files && target.files.length > 0) {
@@ -91,10 +90,10 @@
           />
         </div>
         
-        <div style="text-align: center; color: var(--color-text-secondary); font-size: 0.85rem; font-weight: 600;">OU</div>
+        <div class="form-separator">OU</div>
         
         <div>
-          <label for="image-url" style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem;">Utiliser une URL externe :</label>
+          <label for="image-url" class="form-label">Utiliser une URL externe :</label>
           <input 
             id="image-url" 
             type="url" 
@@ -147,5 +146,60 @@
     border-radius: 8px;
     background: var(--color-bg);
     color: var(--color-text-primary);
+  }
+
+  .action-buttons {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .current-image {
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: transparent;
+    padding: 0;
+  }
+
+  .preview-image {
+    max-height: 300px;
+    max-width: 100%;
+    object-fit: contain;
+    border-radius: 4px;
+    margin: 0 auto;
+  }
+
+  .no-image-text {
+    color: var(--color-text-secondary);
+    padding: 2rem;
+  }
+
+  .edit-image-form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    background: color-mix(in oklch, var(--color-surface) 95%, black);
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid var(--color-border-subtle);
+  }
+
+  .form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+
+  .image-upload-input {
+    padding: 0.5rem;
+  }
+
+  .form-separator {
+    text-align: center;
+    color: var(--color-text-secondary);
+    font-size: 0.85rem;
+    font-weight: 600;
   }
 </style>

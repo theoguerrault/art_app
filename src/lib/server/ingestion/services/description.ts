@@ -1,7 +1,7 @@
 import { generateContentWithRetry, GEMINI_DEFAULT_MODELS } from '../clients/gemini';
 import { Type } from '@google/genai';
 
-export function trimWikipediaText(text: string): string {
+function trimWikipediaText(text: string): string {
   return text.length > 150000
     ? text.substring(0, 150000) + '\n\n[... article tronqué pour concision]'
     : text;
@@ -46,7 +46,7 @@ export async function generateArtworkContent(
   const systemInstruction = `
 RÈGLES ABSOLUES :
 1. N'INTERPELLE JAMAIS le lecteur (interdit d'utiliser "vous", "tu", "Savez-vous que", etc.).
-2. Ne répète pas les informations de base de l'"introduction" dans la description principale ("portions").`;
+2. NON-RÉPÉTITION STRICTE : Aucune information de l'"introduction" ne doit être répétée dans les "portions" de l'article. De plus, chaque "portion" doit être exclusive : ne répète jamais dans une portion ce qui a déjà été dit dans une autre.`;
 
   const userPrompt = `Pourquoi l'oeuvre "${title}"${artist ? ` par ${artist}` : ''} est-elle connue ?`;
 
@@ -242,77 +242,3 @@ export async function regenerateArtworkIntroduction(title: string, artist: strin
   }
 }
 
-export async function regenerateArtworkPortion(title: string, artist: string | null, portionTitle: string, portionContext: string): Promise<{title: string, content: string} | null> {
-  const systemInstruction = `Tu es un expert en histoire de l'art. Réécris cette partie spécifique de la description de l'œuvre tout en gardant son sens principal, mais en améliorant la fluidité ou en développant légèrement. N'utilise jamais de vouvoiement ou de tutoiement. Formate le contenu en Markdown.`;
-
-  const userPrompt = `Œuvre : "${title}"${artist ? ` par ${artist}` : ''}. 
-Titre de la partie : "${portionTitle}"
-Contenu actuel : "${portionContext}"
-
-Réécris cette partie en te concentrant sur ce même sujet.`;
-
-  const responseSchema = {
-    type: Type.OBJECT,
-    properties: {
-      title: { type: Type.STRING, description: "Titre de la partie (sans numéro)" },
-      content: { type: Type.STRING, description: "Le contenu de la partie au format Markdown." }
-    },
-    required: ['title', 'content']
-  };
-
-  try {
-    console.log(`[DescriptionService] Regenerating portion "${portionTitle}" for "${title}"...`);
-    const result = await generateContentWithRetry<{ title: string, content: string }>({
-      systemInstruction,
-      userPrompt,
-      responseSchema,
-      models: GEMINI_DEFAULT_MODELS,
-      temperature: 0.7
-    });
-    return result || null;
-  } catch (err) {
-    console.error(`[DescriptionService] Failed regenerating portion for "${title}":`, err);
-    return null;
-  }
-}
-
-export async function generateAdditionalArtworkPortion(title: string, artist: string | null, instruction: string, existingContentStr: string): Promise<{title: string, content: string} | null> {
-  const systemInstruction = `Tu es un expert en histoire de l'art. Tu dois ajouter une nouvelle partie à la description de l'œuvre en respectant l'instruction de l'utilisateur. 
-RÈGLES :
-1. N'utilise jamais de vouvoiement ou de tutoiement.
-2. NE RÉPÈTE AUCUNE INFORMATION DÉJÀ PRÉSENTE dans le contenu existant de l'œuvre. Formate le contenu en Markdown.`;
-
-  const userPrompt = `Œuvre : "${title}"${artist ? ` par ${artist}` : ''}.
-
-[CONTENU EXISTANT DE L'ŒUVRE (À ne pas répéter)]
-${existingContentStr}
-
-[INSTRUCTION POUR LA NOUVELLE PARTIE]
-${instruction}
-
-Rédige la nouvelle partie avec un titre pertinent en lien avec l'instruction fournie.`;
-
-  const responseSchema = {
-    type: Type.OBJECT,
-    properties: {
-      title: { type: Type.STRING, description: "Titre de la partie (sans numéro)" },
-      content: { type: Type.STRING, description: "Le contenu de la partie au format Markdown." }
-    },
-    required: ['title', 'content']
-  };
-
-  try {
-    console.log(`[DescriptionService] Generating additional portion for "${title}"...`);
-    const result = await generateContentWithRetry<{ title: string, content: string }>({
-      systemInstruction,
-      userPrompt,
-      responseSchema,
-      models: GEMINI_DEFAULT_MODELS,
-      temperature: 0.7
-    });
-    return result || null;
-  } catch (err) {
-    console.error(`[DescriptionService] Failed generating additional portion for "${title}":`, err);
-    return null;
-  }
-}

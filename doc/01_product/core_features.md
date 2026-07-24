@@ -1,59 +1,62 @@
 # Core Features & Functional Behavior - AI Art Coach
 
 ## 1. General Description & Scope
-**AI Art Coach** is a mobile-first Progressive Web App (PWA) designed for daily micro-learning in Art History. 
-The application transforms open-data museum archives into interactive pedagogical modules by combining visual discovery with active recall testing (Multiple-Choice Questions / MCQs).
+**AI Art Coach** is a mobile-first Progressive Web App (PWA) designed for daily micro-learning and open exploration in Art History. The application transforms museum archives into an accessible pedagogical experience by combining high-resolution visual discovery with AI-curated historical context and interactive definitions.
 
-The application provides two complementary user engagement modes:
-- **Daily "Snack Learning" Session:** A 5-minute daily routine where the user discovers a curated featured artwork, reads an introductory analysis, and completes an associated pedagogical MCQ to reinforce memory retention (governed by the Leitner algorithm defined in [`learning_mechanics.md`](file:///Users/theoguerrault/Documents/Projets/art_app/doc/01_product/learning_mechanics.md)).
-- **"Binge Learning" Free Exploration Mode:** An open exploration mode allowing users to browse the chronological catalog of artistic movements, search for specific artworks or artists, and complete knowledge tests at their own pace.
+The application provides two complementary engagement modes:
+- **Daily Discovery Session ("Today"):** A daily routine where the user discovers a featured, 100% verified artwork, explores curated historical anecdotes, toggles favorites, and inspects interactive artist and movement definitions.
+- **Open Catalog Exploration ("Catalog"):** An exploration library allowing users to browse the catalog of artistic movements chronologically, search for specific artworks or artists, filter content, and inspect detailed artwork analyses.
 
 ---
 
-## 2. Navigation & Application Structure (3 Primary Tabs)
-The mobile interface relies on a bottom navigation bar divided into 3 tabs, structured for one-handed mobile ergonomics.
+## 2. Navigation & Application Structure (4 Primary Tabs)
+The mobile interface relies on a bottom navigation bar divided into 4 primary tabs, structured for one-handed mobile ergonomics:
 
 ```text
 +-----------------------------------------------------------------------------------+
 |                            MOBILE VIEWPORT (App Shell)                            |
 +-----------------------------------------------------------------------------------+
 |                                                                                   |
-|   [ Tab 1: Today / ]         [ Tab 2: Catalog /catalogue ]    [ Tab 3: Progress ] |
-|   Daily Card & Quick MCQ     Movement Grid & Search           Mastery & Stats     |
+|  [ Tab 1: Today / ]    [ Tab 2: Catalog ]    [ Tab 3: Admin ]   [ Tab 4: Settings ]|
+|  Daily Card            Movement Grid         Content Management Theme & Options   |
 |                                                                                   |
 +-----------------------------------------------------------------------------------+
-|        [ Today ]                  [ Catalog ]                [ Progress ]         |
+|      [ Today ]            [ Catalog ]           [ Admin ]         [ Settings ]    |
 +-----------------------------------------------------------------------------------+
 ```
 
 ### 2.1 "Today" Tab (`/`)
-The primary entry point of the application, focused on the daily micro-learning routine:
-- **Daily Artwork Card:** Displays the featured artwork selected by the daily recommendation algorithm.
-  - **Front Side:** High-resolution image of the artwork, title, artist name, creation date, and colored badge indicating the artistic movement.
-  - **Back Side (on tap/click):** A 3D flip animation reveals a concise description of the artwork along with one historical or cultural anecdote (`anecdote_accroche`).
-- **Quick MCQ:** Located directly beneath the artwork card (or unlocked after flipping).
-  - Presents 1 multiple-choice question covering the artwork, its creator, or the artistic movement, accompanied by 4 options.
-  - **Instant Validation & Feedback:** Client-side evaluation provides immediate interaction response, highlighting correct vs. incorrect options with distinct visual colors and displaying a pedagogical explanation (~60-70 words).
+The primary entry point of the application, focused on the daily discovery routine:
+- **Daily Artwork Card:** Displays the featured artwork selected by the recommendation algorithm (filtered strictly for verified content).
+  - **Front Side:** High-resolution image of the artwork, title, artist name, creation date, verification badge (`SealCheck`), and movement tag.
+  - **Back Side (on tap/click):** A 3D flip animation reveals structured editorial content (`anecdote_accroche`, `anecdote_technique`, `anecdote_secrete`).
+- **Interactive Glossary:** Tapping an artist name or movement tag opens a modal bottom sheet displaying a concise definition.
+- **Favorites System:** Users can bookmark artworks using the heart action button. Favorites persist in local storage and synchronize when authenticated.
 
 ### 2.2 "Catalog" Tab (`/catalogue`)
-The exploration library allowing users to navigate art history chronologically:
-- **Movement Overview:** A structured grid of artistic movements (`courants`), each displaying a dynamic progress indicator (e.g., "3/5 artworks discovered" and mastery badge).
-- **Search and Filters:** A reactive client-side search bar enabling filtering across artwork titles, artist names, or descriptive keywords.
-- **Movement Detail View (`/catalogue/[slug]`):** Displays the chronological list of artworks belonging to a movement, indicating the individual status of each piece:
-  - *Discovered:* Artwork viewed by the user.
-  - *MCQ Passed:* Associated quiz successfully completed.
-  - *To Discover:* Unvisited artwork available for exploration.
+The exploration library allowing users to navigate art history:
+- **Movement Overview:** A structured grid of artistic movements (`courants`), each displaying a visual card and chronological sequence.
+- **Search and Filters:** A reactive client-side search bar enabling instant filtering across artwork titles and artist names.
+- **Infinite Scroll & Virtualized Loading:** Dynamic loading of artwork items ensuring low initial payload and smooth scrolling.
+- **Artwork Detail View (`/catalogue/[slug]`):** Displays full high-resolution image, complete editorial analysis (`extended_analysis`, `historical_context`), and interactive artist/movement definition bottom sheets.
 
-### 2.3 "Progress" Tab (`/progression`)
-The user dashboard summarizing learning achievements and retention metrics:
-- **Movement Mastery Gauge:** Visual gauges displaying the distribution of learned concepts across Leitner retention boxes (`box_level` 1 to 5) for each artistic movement.
-- **Global Performance Statistics:** Displays overall MCQ success rates (`is_correct` ratio), total artworks discovered, and current streak statistics.
+### 2.3 "Admin" Tab (`/admin/oeuvres`)
+The content verification and management interface for administrators:
+- **Artwork Management:** Displays all ingested artworks along with their verification status (`VERIFIED`, `PENDING`, `FALSE`, `UNVERIFIED`).
+- **AI Content Generation:** Triggers automated Gemini AI synthesis of editorial text and anecdotes from raw Wikidata/Wikipedia metadata.
+- **Automated Wikipedia Fact-Checking:** Runs automated verification comparing generated text against Wikipedia source text, highlighting reliability scores and quotes.
+- **Auto-Correction & Manual Editing:** Allows administrators to execute single-paragraph AI rewrites or manually refine content.
+
+### 2.4 "Settings" Tab (`/settings`)
+The user options panel:
+- **Theme Configuration:** Toggle theme preferences (Dark Mode default).
+- **Data & Cache Management:** Clear local IndexedDB cache or manage offline availability.
 
 ---
 
-## 3. High-Level Data & Architecture Overview
-To guarantee instant visual rendering and full offline availability, the application separates data concerns across architectural layers:
-- **Pedagogical Progression & Spaced Repetition:** The Leitner 5-box intervals and daily selection logic are detailed in [`learning_mechanics.md`](file:///Users/theoguerrault/Documents/Projets/art_app/doc/01_product/learning_mechanics.md).
-- **Frontend Tech Stack & Performance:** The UI framework, styling specifications, and client architecture are detailed in [`02_system_architecture/frontend_stack.md`](file:///Users/theoguerrault/Documents/Projets/art_app/doc/02_system_architecture/frontend_stack.md).
-- **Database & Security:** Authoritative Supabase SQL DDL, views, and RLS policies are detailed in [`02_system_architecture/database_and_security.md`](file:///Users/theoguerrault/Documents/Projets/art_app/doc/02_system_architecture/database_and_security.md).
-- **Core Engine & Data Pipeline:** Data ingestion (`ArtworkData`), AI MCQ generation (`QcmSchema`), and offline synchronization queues are detailed inside [`03_core_engine/`](file:///Users/theoguerrault/Documents/Projets/art_app/doc/03_core_engine).
+## 3. Data & Architecture Overview
+To guarantee fast visual rendering and full offline availability:
+- **Content Selection & Recommendation:** Selection logic is documented in [`learning_mechanics.md`](file:///Users/theoguerrault/Documents/Projets/art_app/doc/01_product/learning_mechanics.md).
+- **Frontend Stack & Performance:** UI framework and CSS specifications are detailed in [`02_system_architecture/frontend_stack.md`](file:///Users/theoguerrault/Documents/Projets/art_app/doc/02_system_architecture/frontend_stack.md).
+- **Database & Security:** PostgreSQL schema, Prisma ORM integration, and Supabase RLS policies are detailed in [`02_system_architecture/database_and_security.md`](file:///Users/theoguerrault/Documents/Projets/art_app/doc/02_system_architecture/database_and_security.md).
+- **Core Engine & Pipeline:** Ingestion (`ArtworkData`), AI editorial generation, and Wikipedia fact-checking are detailed inside [`03_core_engine/`](file:///Users/theoguerrault/Documents/Projets/art_app/doc/03_core_engine).

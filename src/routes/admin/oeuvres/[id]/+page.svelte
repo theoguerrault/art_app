@@ -57,14 +57,29 @@
   async function factCheck() {
     checking = true;
     try {
-      const res = await fetch(`/api/admin/artworks/${oeuvre.id}/factcheck`, { method: 'POST' });
-      if (res.ok) {
-        const json = await res.json();
+      let hasError = false;
+      
+      const resPortions = await fetch(`/api/admin/artworks/${oeuvre.id}/factcheck`, { method: 'POST' });
+      if (resPortions.ok) {
+        const json = await resPortions.json();
         if (json.content) content = json.content;
-        await invalidateAll();
       } else {
-        alert('Erreur lors du fact-checking');
+        hasError = true;
       }
+
+      const resIntro = await fetch(`/api/admin/artworks/${oeuvre.id}/factcheck-intro`, { method: 'POST' });
+      if (resIntro.ok) {
+        const json = await resIntro.json();
+        if (json.content) content = json.content;
+      } else {
+        hasError = true;
+      }
+
+      if (hasError) {
+        alert('Erreur partielle lors du fact-checking global');
+      }
+
+      await invalidateAll();
     } finally {
       checking = false;
     }
@@ -111,7 +126,7 @@
             </div>
           {/if}
           {#if content?.verification_status}
-            <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <div class="verification-status-wrapper">
               <div class="status-pill {content.verification_status.toLowerCase()}">
                 {content.verification_status}
               </div>
@@ -581,5 +596,11 @@
     width: 100%;
     display: flex;
     justify-content: center;
+  }
+
+  .verification-status-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
   }
 </style>

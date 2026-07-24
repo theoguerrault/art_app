@@ -93,14 +93,7 @@
 </script>
 
 <div class="today-view">
-	{#if lesson && ((lesson as any).image_url_hd || lesson.image_url_thumb)}
-		<img
-			src={(lesson as any).image_url_hd || lesson.image_url_thumb}
-			alt=""
-			class="dynamic-bg-glow"
-			aria-hidden="true"
-		/>
-	{/if}
+
 	<header class="today-header">
 		<div class="date-badge">
 			<span>À la une aujourd'hui</span>

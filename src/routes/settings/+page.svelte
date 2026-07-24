@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { themeStore, type ThemeMode } from '$lib/core/theme.svelte';
-	import { Sun, Moon, Check, Sparkle, Database, CloudCheck, Trash } from 'phosphor-svelte';
+	import { Sun, Moon, Check, Sparkle, Database, CloudCheck, Trash, User } from 'phosphor-svelte';
 	import { saveToLocalCache } from '$lib/offline/storage';
 	import { authStore } from '$lib/core/auth.svelte';
 
@@ -64,8 +64,8 @@
 		<div class="storage-card">
 			<div class="status-row">
 				<div class="status-indicator">
-					<div class="theme-icon light-icon" style="border-radius: 50%; width: 2.5rem; height: 2.5rem;">
-						<Target size={22} weight="fill" />
+					<div class="theme-icon light-icon user-icon">
+						<User size={22} weight="fill" />
 					</div>
 					<div>
 						<span class="status-title">
@@ -96,7 +96,7 @@
 						<span>Se déconnecter</span>
 					</button>
 				{:else}
-					<a href="/auth" class="cta-btn primary" style="text-decoration: none; padding: 0.5rem 1rem; border-radius: var(--radius-md); font-weight: 600; background: var(--color-primary); color: white; display: inline-block;">
+					<a href="/auth" class="cta-btn primary cta-auth-btn">
 						Créer un compte
 					</a>
 				{/if}
@@ -456,75 +456,7 @@
 		background: oklch(0.18 0.015 45);
 	}
 
-	/* Daily Study Target Selector */
-	.goal-selector {
-		display: grid;
-		grid-template-columns: repeat(1, 1fr);
-		gap: 1rem;
-	}
 
-	@media (min-width: 520px) {
-		.goal-selector {
-			grid-template-columns: repeat(2, 1fr);
-		}
-	}
-
-	.goal-btn {
-		display: flex;
-		align-items: center;
-		gap: 1rem;
-		background: var(--color-surface);
-		border: 1px solid var(--color-border);
-		border-radius: var(--radius-lg);
-		padding: 1rem 1.25rem;
-		text-align: left;
-		transition: all 0.2s ease;
-	}
-
-	.goal-btn:hover {
-		background: var(--color-surface-hover);
-		border-color: oklch(from var(--color-border) l c h / 0.3);
-	}
-
-	.goal-btn.selected {
-		border: 2px solid var(--color-primary);
-		background: var(--color-primary-light);
-	}
-
-	.goal-num {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		width: 2.5rem;
-		height: 2.5rem;
-		border-radius: 50%;
-		background: var(--color-surface-elevated);
-		font-weight: 700;
-		font-size: 1.1rem;
-		color: var(--color-primary);
-		border: 1px solid var(--color-border);
-	}
-
-	.goal-btn.selected .goal-num {
-		background: var(--color-primary);
-		color: oklch(1 0 0);
-	}
-
-	.goal-text {
-		display: flex;
-		flex-direction: column;
-		gap: 0.1rem;
-	}
-
-	.goal-text strong {
-		font-size: 0.95rem;
-		color: var(--color-text-primary);
-	}
-
-	.goal-text span {
-		font-size: 0.8rem;
-		color: var(--color-text-secondary);
-	}
 
 	/* Storage Card */
 	.storage-card {
@@ -651,5 +583,21 @@
 
 	.footer-sub {
 		font-size: 0.75rem;
+	}
+
+	.user-icon {
+		border-radius: 50%;
+		width: 2.5rem;
+		height: 2.5rem;
+	}
+
+	.cta-auth-btn {
+		text-decoration: none;
+		padding: 0.5rem 1rem;
+		border-radius: var(--radius-md);
+		font-weight: 600;
+		background: var(--color-primary);
+		color: white;
+		display: inline-block;
 	}
 </style>

@@ -142,13 +142,6 @@
     box-shadow: inset 0 0 0 2px var(--color-primary);
   }
 
-  .grid-catalog-minimal {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 1rem 0.85rem;
-    padding: 0;
-  }
-
   .art-card {
     display: flex;
     flex-direction: column;

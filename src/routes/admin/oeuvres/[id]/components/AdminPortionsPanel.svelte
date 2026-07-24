@@ -161,7 +161,7 @@
           {#if editingPortionId === portion.id}
             <input type="text" bind:value={editPortionTitle} class="edit-input" placeholder="Titre de la partie (optionnel)" />
             <textarea bind:value={editPortionText} class="edit-textarea" rows="4"></textarea>
-            <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
+            <div class="edit-actions">
               <Button variant="primary" size="sm" onclick={saveEditPortion} loading={savingPortion}>Enregistrer</Button>
               <Button variant="outline" size="sm" onclick={() => correctManual(portion.id)} loading={correctingPortions[portion.id]}>Générer</Button>
               <Button variant="outline" size="sm" onclick={() => editingPortionId = null}>Annuler</Button>
@@ -235,7 +235,7 @@
           
           {#if editingPortionId === portion.id}
             <textarea bind:value={editPortionText} class="edit-textarea" rows="4"></textarea>
-            <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
+            <div class="edit-actions">
               <Button variant="primary" size="sm" onclick={saveEditPortion} loading={savingPortion}>Enregistrer</Button>
               <Button variant="outline" size="sm" onclick={() => correctManual(portion.id)} loading={correctingPortions[portion.id]}>Générer</Button>
               <Button variant="outline" size="sm" onclick={() => editingPortionId = null}>Annuler</Button>
@@ -519,5 +519,11 @@
 
   .empty-icon {
     color: var(--color-text-muted);
+  }
+
+  .edit-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
   }
 </style>
