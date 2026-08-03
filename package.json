@@ -30,5 +30,8 @@
 		"marked": "^18.0.7",
 		"phosphor-svelte": "^3.1.0",
 		"zod": "^4.4.3"
+	},
+	"overrides": {
+		"cookie": "^0.7.0"
 	}
 }
