@@ -1,51 +1,41 @@
 <script lang="ts">
 	import type { PageData } from './$types';
+	import type { ActiveLessonView } from '$lib/types/database';
 	import ArtworkCard from '$lib/features/artwork/components/ArtworkCard.svelte';
+	import ArtworkDetailHeader from '$lib/features/artwork/components/ArtworkDetailHeader.svelte';
 	import GlossaryBottomSheet from '$lib/components/ui/GlossaryBottomSheet.svelte';
-	import { Palette, Heart, SealCheck } from 'phosphor-svelte';
-	import { onMount } from 'svelte';
+	import { Palette } from 'phosphor-svelte';
 	import { readFromLocalCache, saveToLocalCache } from '$lib/offline/storage';
+	import { apiClient } from '$lib/utils/api';
 
 	let { data }: { data: PageData } = $props();
 
 	// Only show the artwork if it's 100% verified
-	let lesson = $derived(
-		data.lesson && (data.lesson as any).verification_status === 'VERIFIED' ? data.lesson : null
+	let lesson = $derived<ActiveLessonView | null>(
+		data.lesson && (data.lesson as ActiveLessonView).verification_status === 'VERIFIED'
+			? (data.lesson as ActiveLessonView)
+			: null
 	);
 
-	let isFavorite = $state(false);
+	let isFavorite = $state(data.isFavorite ?? false);
 
-	let glossaryOpen = $state(false);
-	let glossaryTitle = $state('');
-	let glossarySubtitle = $state('');
-	let glossaryContent = $state('');
-
-	onMount(async () => {
-		if (lesson && typeof window !== 'undefined') {
+	// Sync from local cache when offline (no server fetch in component)
+	$effect(() => {
+		(async () => {
+			if (!lesson || typeof window === 'undefined') return;
 			const cacheKey = 'user_favorites_cache';
 			const favCache = await readFromLocalCache(cacheKey, 'favorites');
 			const cached = favCache ? favCache.data : [];
 			if (cached.includes(lesson.id)) {
 				isFavorite = true;
-			} else if (navigator.onLine) {
-				const res = await fetch('/api/favorites');
-				if (res.ok) {
-					const resData = await res.json();
-					isFavorite = resData.favorites.includes(lesson.id);
-					await saveToLocalCache(cacheKey, { id: 'favorites', data: resData.favorites });
-				}
 			}
-		}
+		})();
 	});
 
 	async function toggleFavorite() {
 		if (!lesson) return;
 		isFavorite = !isFavorite;
-		const res = await fetch('/api/favorites', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ id_oeuvre: lesson.id })
-		});
+		const res = await apiClient.post('/api/favorites', { id_oeuvre: lesson.id });
 		if (!res.ok) {
 			isFavorite = !isFavorite;
 		} else {
@@ -57,20 +47,32 @@
 			await saveToLocalCache(cacheKey, { id: 'favorites', data: cached });
 		}
 	}
+	let glossaryOpen = $state(false);
+	let glossaryTitle = $state('');
+	let glossarySubtitle = $state('');
+	let glossaryContent = $state('');
 
 	function openGlossary(type: 'artiste' | 'courant') {
-		const lessonData = lesson as any;
-		if (type === 'artiste' && lessonData?.glossary?.artiste_description) {
-			glossaryTitle = lesson!.artistes?.nom || 'Artiste';
+		if (!lesson) return;
+		if (type === 'artiste' && lesson.glossary?.artiste_description) {
+			glossaryTitle = lesson.artistes?.nom || 'Artiste';
 			glossarySubtitle = 'Artiste';
-			glossaryContent = lessonData.glossary.artiste_description;
+			glossaryContent = lesson.glossary.artiste_description;
 			glossaryOpen = true;
-		} else if (type === 'courant' && lessonData?.glossary?.courant_description) {
-			glossaryTitle = (lesson as any).nom_courant;
+		} else if (type === 'courant' && lesson.glossary?.courant_description) {
+			glossaryTitle = lesson.nom_courant;
 			glossarySubtitle = 'Mouvement Artistique';
-			glossaryContent = lessonData.glossary.courant_description;
+			glossaryContent = lesson.glossary.courant_description;
 			glossaryOpen = true;
 		}
+	}
+
+	function handleOpenCourant() {
+		openGlossary('courant');
+	}
+
+	function handleOpenArtiste() {
+		openGlossary('artiste');
 	}
 
 	function extractHue(oklchToken: string | undefined): number {
@@ -84,7 +86,7 @@
 
 	$effect(() => {
 		if (lesson) {
-			const hue = extractHue((lesson as any).oklch_token);
+			const hue = extractHue(lesson.oklch_token);
 			document.documentElement.style.setProperty('--artwork-hue', hue.toString());
 		} else {
 			document.documentElement.style.setProperty('--artwork-hue', '45');
@@ -104,46 +106,18 @@
 
 	{#if lesson}
 		<section class="card-section">
-			<div class="detail-header">
-				{#if (lesson as any).glossary?.courant_description}
-					<button
-						type="button"
-						class="movement-tag clickable"
-						style:background-color={(lesson as any).oklch_token}
-						onclick={() => openGlossary('courant')}
-					>
-						{(lesson as any).nom_courant}
-					</button>
-				{:else}
-					<span class="movement-tag" style:background-color={(lesson as any).oklch_token}>
-						{(lesson as any).nom_courant}
-					</span>
-				{/if}
-				<div class="actions-row">
-					{#if (lesson as any).verification_status === 'VERIFIED'}
-						<span class="verified-pill" title="Contenu vérifié à 100%">
-							<SealCheck size={22} weight="fill" />
-						</span>
-					{/if}
-					<button class="favorite-btn" onclick={toggleFavorite} aria-label="Toggle Favorite">
-						<Heart size={24} weight={isFavorite ? 'fill' : 'bold'} color={isFavorite ? '#ff3b30' : 'currentColor'} />
-					</button>
-				</div>
-				<h2 class="artwork-title">{lesson.titre}</h2>
-				<p class="artwork-meta">
-					{#if (lesson as any).glossary?.artiste_description}
-						<button type="button" class="artist-link" onclick={() => openGlossary('artiste')}>{lesson.artistes?.nom}</button>
-					{:else}
-						{lesson.artistes?.nom}
-					{/if}
-					({lesson.date_creation})
-				</p>
-			</div>
+			<ArtworkDetailHeader
+				artwork={lesson}
+				{isFavorite}
+				onToggleFavorite={toggleFavorite}
+				onOpenCourant={handleOpenCourant}
+				onOpenArtiste={handleOpenArtiste}
+			/>
 			<ArtworkCard
 				artwork={lesson}
-				movementName={(lesson as any).nom_courant}
-				oklchToken={(lesson as any).oklch_token}
-				article={(lesson as any).article_principal}
+				movementName={lesson.nom_courant}
+				oklchToken={lesson.oklch_token}
+				article={lesson.article_principal}
 			/>
 		</section>
 	{:else}
@@ -151,7 +125,7 @@
 			<span class="empty-icon"><Palette size={48} weight="fill" /></span>
 			<h3>Tout est à jour !</h3>
 			<p>Aucune œuvre disponible pour le moment. Visitez le catalogue pour explorer les mouvements artistiques.</p>
-			<a href="/catalogue" class="cta-link">Explorer le catalogue →</a>
+			<a data-sveltekit-preload-data="hover" href="/catalogue" data-sveltekit-prefetch class="cta-link">Explorer le catalogue →</a>
 		</div>
 	{/if}
 
@@ -208,103 +182,6 @@
 		display: flex;
 		flex-direction: column;
 		gap: 0;
-	}
-
-	/* ── Detail-style header (matches [slug]/+page.svelte) ── */
-	.detail-header {
-		text-align: center;
-		margin-bottom: 1.5rem;
-	}
-
-	.movement-tag {
-		display: inline-block;
-		padding: 0.35rem 0.85rem;
-		border-radius: 20px;
-		font-size: 0.75rem;
-		font-weight: 700;
-		text-transform: uppercase;
-		letter-spacing: 0.05em;
-		color: var(--color-bg);
-		margin-bottom: 0.75rem;
-		border: none;
-	}
-
-	.movement-tag.clickable {
-		cursor: pointer;
-		transition: transform 0.2s ease, opacity 0.2s ease;
-	}
-
-	.movement-tag.clickable:hover {
-		transform: scale(1.05);
-		opacity: 0.9;
-	}
-
-	.artwork-title {
-		font-family: 'Instrument Serif', serif;
-		font-size: 2.5rem;
-		font-weight: 400;
-		margin: 0 0 0.5rem 0;
-		color: var(--color-text-primary);
-		line-height: 1.1;
-	}
-
-	.actions-row {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		gap: 0.75rem;
-		margin-bottom: 0.5rem;
-	}
-
-	.verified-pill {
-		color: var(--color-success);
-		display: flex;
-		align-items: center;
-		flex-shrink: 0;
-	}
-
-	.favorite-btn {
-		background: none;
-		border: none;
-		padding: 0;
-		color: var(--color-text-muted);
-		cursor: pointer;
-		display: flex;
-		align-items: center;
-		transition: transform 0.2s ease, color 0.2s ease;
-		flex-shrink: 0;
-	}
-
-	.favorite-btn:hover {
-		transform: scale(1.1);
-	}
-
-	.favorite-btn:active {
-		transform: scale(0.95);
-	}
-
-	.artwork-meta {
-		font-size: 1rem;
-		color: var(--color-text-muted);
-		margin: 0;
-	}
-
-	.artist-link {
-		background: none;
-		border: none;
-		padding: 0;
-		font: inherit;
-		color: var(--color-text-primary);
-		font-weight: 600;
-		cursor: pointer;
-		text-decoration: underline;
-		text-decoration-style: dotted;
-		text-underline-offset: 4px;
-		transition: color 0.2s ease;
-	}
-
-	.artist-link:hover {
-		color: var(--color-primary);
 	}
 
 	/* ── Empty state ── */

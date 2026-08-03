@@ -19,6 +19,7 @@ export async function POST({ params, request }) {
       return json({ error: 'Artwork or content not found' }, { status: 404 });
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const articlePortions = (artwork.oeuvre_translations[0].article_portions || []) as any[];
     const updatedPortions = articlePortions.map(p => {
       if (p.id === portionId) {
@@ -32,8 +33,10 @@ export async function POST({ params, request }) {
       return p;
     });
     
-    let report = (artwork.oeuvre_translations[0].verification_report || {}) as any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const report = (artwork.oeuvre_translations[0].verification_report || {}) as any;
     if (report && report.statements) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       report.statements = report.statements.map((s: any) => {
         if (s.id === portionId) {
           return { ...s, status: 'PENDING_VALIDATION', explanation: 'Invalidé manuellement', source_quote: '' };
@@ -47,6 +50,7 @@ export async function POST({ params, request }) {
     const updated = await prisma.oeuvre_translations.update({
       where: { id_oeuvre_language_code: { id_oeuvre: id, language_code: 'fr' } },
       data: {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         article_portions: updatedPortions as any,
         verification_report: report,
         verification_status: globalStatus
@@ -54,8 +58,8 @@ export async function POST({ params, request }) {
     });
 
     return json({ success: true, content: updated });
-  } catch (error: any) {
-    console.error('[API/admin/unvalidate-portion] Error:', error);
-    return json({ error: error.message || String(error) }, { status: 500 });
+  } catch (error: unknown) {
+    void('[API/admin/unvalidate-portion] Error:', error);
+    return json({ error: error instanceof Error ? error.message : String(error) }, { status: 500 });
   }
 }

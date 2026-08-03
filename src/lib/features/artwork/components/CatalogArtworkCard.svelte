@@ -2,6 +2,7 @@
 	import { Heart, Check } from 'phosphor-svelte';
 
 	interface Props {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		art: any;
 		isFavorite: boolean;
 		isDiscovered: boolean;
@@ -10,16 +11,20 @@
 	let { art, isFavorite, isDiscovered }: Props = $props();
 	
 	let loaded = $state(false);
+	
+	function handleLoad() {
+		loaded = true;
+	}
 </script>
 
-<a href="/catalogue/{art.slug || art.id}" class="artwork-card-minimal" aria-label="Voir {art.titre}">
+<a href="/catalogue/{art.slug || art.id}" data-sveltekit-prefetch data-sveltekit-preload-data="hover" class="artwork-card-minimal" aria-label="Voir {art.titre}">
 	<div class="thumb-wrapper" class:loading={!loaded}>
 		<img 
 			src={art.image_url_thumb} 
 			alt={art.titre} 
 			loading="lazy" 
 			decoding="async"
-			onload={() => loaded = true}
+			onload={handleLoad}
 			class:loaded
 		/>
 		<div class="indicators">

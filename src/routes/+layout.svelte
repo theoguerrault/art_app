@@ -3,11 +3,11 @@
 	import BottomNav from '$lib/components/BottomNav.svelte';
 	import OfflineBanner from '$lib/components/OfflineBanner.svelte';
 	import { onNavigate } from '$app/navigation';
-	import { themeStore } from '$lib/core/theme.svelte';
-	import { authStore } from '$lib/core/auth.svelte';
-	import { page } from '$app/stores';
 
-	let { children } = $props();
+	import { page } from '$app/state';
+	import type { Snippet } from 'svelte';
+
+	let { children }: { children: Snippet } = $props();
 
 	onNavigate((navigation) => {
 		if (!document.startViewTransition || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -26,12 +26,12 @@
 	<title>Artichaut</title>
 </svelte:head>
 
-<main class={$page.url.pathname.startsWith('/admin') ? 'app-shell-admin' : 'app-shell-main'}>
+<main class={page.url.pathname.startsWith('/admin') ? 'app-shell-admin' : 'app-shell-main'}>
 	{@render children()}
 </main>
 
 <OfflineBanner />
 
-{#if $page.url.pathname !== '/auth'}
+{#if page.url.pathname !== '/auth'}
 	<BottomNav />
 {/if}

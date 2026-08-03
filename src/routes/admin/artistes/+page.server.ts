@@ -43,7 +43,7 @@ export const load: PageServerLoad = async ({ url }) => {
       }
     };
   } catch (err) {
-    console.error('[Admin Artistes Load Error]:', err);
+    void('[Admin Artistes Load Error]:', err);
     throw err;
   }
 };

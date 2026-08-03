@@ -1,4 +1,4 @@
-export interface MCQ {
+interface MCQ {
 	sourceQuote?: string;
 	sourceField?: string;
 	conceptTag?: string;
@@ -9,7 +9,7 @@ export interface MCQ {
 	explanation: string;
 }
 
-export interface QCMSynthese {
+interface QCMSynthese {
 	question: string;
 	options: string[];
 	correctIndex: number;
@@ -26,7 +26,7 @@ export interface Movement {
 	created_at: string;
 }
 
-export interface ContentMovement {
+interface ContentMovement {
 	id_courant: number;
 	description_courte: string;
 	caracteristiques_cles: string[];
@@ -35,7 +35,7 @@ export interface ContentMovement {
 	updated_at: string;
 }
 
-export interface Artiste {
+interface Artiste {
 	id: number;
 	slug: string;
 	nom: string;
@@ -59,19 +59,42 @@ export interface Artwork {
 	dimensions?: string | null;
 	medium?: string | null;
 	created_at: string;
+	glossary?: {
+		artiste_description: string | null;
+		courant_description: string | null;
+	};
+}
+
+type SupabaseRow = Record<string, unknown>;
+
+export interface RawArtwork extends Artwork {
+	oeuvre_translations?: { titre: string }[];
+	artistes?: Artiste & {
+		artiste_translations?: { nom: string }[];
+	};
+}
+
+export interface RawCourant extends Movement {
+	courant_translations?: { nom: string }[];
 }
 
 export interface ContentArtwork {
 	id_oeuvre: number;
 	article_principal: string;
 	introduction?: string;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	article_portions?: any[];
 	qcm: MCQ;
 	mots_cles: string[];
 	generated_by_model: string;
 	updated_at: string;
 	verification_status?: string;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	verification_report?: any;
+}
+
+export interface RawContentArtwork extends ContentArtwork {
+	article_portions?: { title?: string; text: string; type?: string }[];
 }
 
 export interface UserProgress {
@@ -102,8 +125,15 @@ export interface ActiveLessonView extends Artwork {
 	nom_courant: string;
 	oklch_token: string;
 	article_principal: string;
+	introduction?: string | null;
+	article_portions?: { title?: string; text: string; type?: string }[];
+	verification_status?: string | null;
 	qcm: MCQ;
 	mots_cles?: string[];
+	glossary?: {
+		artiste_description: string | null;
+		courant_description: string | null;
+	};
 }
 
 export interface Database {

@@ -25,7 +25,7 @@
 
   <div class="art-grid">
     {#each data.artistes as artiste (artiste.id)}
-      <a href={`/admin/artistes/${artiste.id}`} class="art-card">
+      <a data-sveltekit-preload-data="hover" href={`/admin/artistes/${artiste.id}`} class="art-card">
         <div class="art-status-wrapper">
           <div class="art-status">
             {#if artiste.artiste_translations[0]}

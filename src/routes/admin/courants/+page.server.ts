@@ -43,7 +43,7 @@ export const load: PageServerLoad = async ({ url }) => {
       }
     };
   } catch (err) {
-    console.error('[Admin Courants Load Error]:', err);
+    void('[Admin Courants Load Error]:', err);
     throw err;
   }
 };

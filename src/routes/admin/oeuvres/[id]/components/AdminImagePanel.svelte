@@ -1,7 +1,9 @@
 <script lang="ts">
   import { invalidateAll } from '$app/navigation';
   import Button from '$lib/components/ui/Button.svelte';
+  import { apiClient } from '$lib/utils/api';
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let { oeuvre }: { oeuvre: any } = $props();
 
   let editingImage = $state(false);
@@ -24,7 +26,7 @@
         formData.append('url', newImageUrl);
       }
 
-      const res = await fetch(`/api/admin/artworks/${oeuvre.id}/edit-image`, {
+      const res = await apiClient.request(`/api/admin/artworks/${oeuvre.id}/edit-image`, {
         method: 'POST',
         body: formData
       });
@@ -39,10 +41,37 @@
         alert('Erreur lors de la sauvegarde : ' + (json.error || 'Erreur inconnue'));
       }
     } catch (e) {
-      console.error(e);
+      void(e);
       alert('Erreur réseau lors de la sauvegarde');
     } finally {
       savingImage = false;
+      savingImage = false;
+    }
+  }
+
+  function handleCancelEdit() {
+    editingImage = false;
+    newImageFile = null;
+    newImageUrl = '';
+  }
+
+  function handleStartEdit() {
+    editingImage = true;
+  }
+
+  function handleFileChange(e: Event) {
+    const target = e.target as HTMLInputElement;
+    if (target.files && target.files.length > 0) {
+      newImageFile = target.files[0];
+      newImageUrl = ''; // Clear URL if file is selected
+    } else {
+      newImageFile = null;
+    }
+  }
+
+  function handleUrlInput() {
+    if (newImageUrl) {
+      newImageFile = null;
     }
   }
 </script>
@@ -53,9 +82,9 @@
     <div class="action-buttons">
       {#if editingImage}
         <Button variant="primary" size="sm" onclick={saveImageEdit} loading={savingImage}>Sauvegarder</Button>
-        <Button variant="outline" size="sm" onclick={() => { editingImage = false; newImageFile = null; newImageUrl = ''; }}>Annuler</Button>
+        <Button variant="outline" size="sm" onclick={handleCancelEdit}>Annuler</Button>
       {:else}
-        <Button variant="outline" size="sm" onclick={() => editingImage = true}>Modifier</Button>
+        <Button variant="outline" size="sm" onclick={handleStartEdit}>Modifier</Button>
       {/if}
     </div>
   </div>
@@ -78,15 +107,7 @@
             type="file" 
             accept="image/*" 
             class="edit-input image-upload-input" 
-            onchange={(e) => {
-              const target = e.target as HTMLInputElement;
-              if (target.files && target.files.length > 0) {
-                newImageFile = target.files[0];
-                newImageUrl = ''; // Clear URL if file is selected
-              } else {
-                newImageFile = null;
-              }
-            }} 
+            onchange={handleFileChange} 
           />
         </div>
         
@@ -100,7 +121,7 @@
             class="edit-input" 
             placeholder="https://exemple.com/image.jpg"
             bind:value={newImageUrl} 
-            oninput={() => { if (newImageUrl) newImageFile = null; }}
+            oninput={handleUrlInput}
             disabled={newImageFile !== null}
           />
         </div>

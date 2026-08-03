@@ -1,20 +1,20 @@
 <script lang="ts">
-	import { onMount, onDestroy } from 'svelte';
+	import type { Snippet } from 'svelte';
 
 	interface Props {
 		itemCount: number;
 		rootMargin?: string;
-		children: any;
+		children: Snippet;
 	}
 
 	let { itemCount, rootMargin = '200px', children }: Props = $props();
 
 	let sectionEl: HTMLElement;
 	let isVisible = $state(false);
-	let observer: IntersectionObserver;
 
-	onMount(() => {
-		observer = new IntersectionObserver(
+	$effect(() => {
+		if (!sectionEl) return;
+		const observer = new IntersectionObserver(
 			(entries) => {
 				if (entries[0].isIntersecting) {
 					isVisible = true;
@@ -24,10 +24,8 @@
 			{ rootMargin }
 		);
 		observer.observe(sectionEl);
-	});
-
-	onDestroy(() => {
-		observer?.disconnect();
+		
+		return () => observer.disconnect();
 	});
 </script>
 
@@ -36,7 +34,7 @@
 		{@render children()}
 	{:else}
 		<div class="skeleton-grid">
-			{#each { length: Math.min(itemCount, 12) } as _}
+			{#each { length: Math.min(itemCount, 12) } as _, i (i)}
 				<div class="skeleton-card">
 					<div class="skeleton-thumb"></div>
 					<div class="skeleton-line long"></div>

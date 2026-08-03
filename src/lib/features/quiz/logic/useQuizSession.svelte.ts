@@ -6,10 +6,6 @@ export function createQuizSession(initialQcm: QCMSynthese | MCQ | null, onAnswer
 	let disabled = $state(false);
 	let isStarted = $state(false);
 
-	let isAnswered = $derived(selectedIndex !== null);
-	let isCorrect = $derived(
-		qcm && selectedIndex !== null ? selectedIndex === qcm.correctIndex : false
-	);
 
 	function setQcm(newQcm: QCMSynthese | MCQ | null) {
 		qcm = newQcm;
@@ -26,7 +22,7 @@ export function createQuizSession(initialQcm: QCMSynthese | MCQ | null, onAnswer
 	}
 
 	function selectOption(index: number) {
-		if (isAnswered || disabled || !qcm) return;
+		if (selectedIndex !== null || disabled || !qcm) return;
 
 		selectedIndex = index;
 		const correct = index === qcm.correctIndex;
@@ -40,8 +36,8 @@ export function createQuizSession(initialQcm: QCMSynthese | MCQ | null, onAnswer
 	return {
 		get qcm() { return qcm; },
 		get selectedIndex() { return selectedIndex; },
-		get isAnswered() { return isAnswered; },
-		get isCorrect() { return isCorrect; },
+		get isAnswered() { return selectedIndex !== null; },
+		get isCorrect() { return qcm && selectedIndex !== null ? selectedIndex === qcm.correctIndex : false; },
 		get disabled() { return disabled; },
 		get isStarted() { return isStarted; },
 		setQcm,

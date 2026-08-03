@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { parseMarkdown } from '$lib/utils/markdown';
+	import { html } from '$lib/actions/html';
 
 	interface Portion {
 		id?: string;
@@ -15,17 +16,22 @@
 		articlePrincipal?: string;
 	}
 
-	let { artworkTitle, introduction, portions = [], articlePrincipal }: Props = $props();
+	let { introduction, portions = [], articlePrincipal }: Props = $props();
 
-	let articlePortions = $derived(portions.filter((p) => !p.type || p.type === 'article'));
-	let anecdotePortions = $derived(portions.filter((p) => p.type === 'anecdote'));
+	function filterPortions(pts: Portion[], typeStr: string | null) {
+		if (typeStr === null) return pts.filter(p => !p.type || p.type === 'article');
+		return pts.filter(p => p.type === typeStr);
+	}
+
+	let articlePortions = $derived(filterPortions(portions, null));
+	let anecdotePortions = $derived(filterPortions(portions, 'anecdote'));
 </script>
 
 <div class="card-analysis">
 	{#if introduction}
 		<div class="analysis-section introduction-section">
 			<h3 class="section-subtitle">INTRODUCTION</h3>
-			<div class="markdown-content">{@html parseMarkdown(introduction)}</div>
+			<div class="markdown-content" use:html={parseMarkdown(introduction)}></div>
 		</div>
 	{/if}
 
@@ -33,12 +39,12 @@
 		<div class="analysis-section article-section">
 			<h3 class="section-subtitle">ARTICLE</h3>
 			<div class="portions-list">
-				{#each articlePortions as portion, index}
+				{#each articlePortions as portion, index (portion.id || index)}
 					<div class="portion-item">
 						{#if portion.title}
 							<h4 class="portion-title">{portion.title}</h4>
 						{/if}
-						<div class="markdown-content">{@html parseMarkdown(portion.text)}</div>
+						<div class="markdown-content" use:html={parseMarkdown(portion.text)}></div>
 					</div>
 				{/each}
 			</div>
@@ -46,7 +52,7 @@
 	{:else if articlePrincipal}
 		<div class="analysis-section article-section">
 			<h3 class="section-subtitle">ARTICLE</h3>
-			<div class="markdown-content">{@html parseMarkdown(articlePrincipal)}</div>
+			<div class="markdown-content" use:html={parseMarkdown(articlePrincipal)}></div>
 		</div>
 	{/if}
 
@@ -54,12 +60,12 @@
 		<div class="analysis-section anecdotes-section">
 			<h3 class="section-subtitle">ANECDOTES</h3>
 			<div class="portions-list">
-				{#each anecdotePortions as portion, index}
+				{#each anecdotePortions as portion, index (portion.id || index)}
 					<div class="portion-item">
 						{#if portion.title}
 							<h4 class="portion-title">{portion.title}</h4>
 						{/if}
-						<div class="markdown-content">{@html parseMarkdown(portion.text)}</div>
+						<div class="markdown-content" use:html={parseMarkdown(portion.text)}></div>
 					</div>
 				{/each}
 			</div>

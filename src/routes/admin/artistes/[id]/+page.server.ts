@@ -1,7 +1,8 @@
 import { error } from '@sveltejs/kit';
 import { prisma } from '$lib/server/prisma';
+import type { PageServerLoad } from './$types';
 
-export async function load({ params }) {
+export const load: PageServerLoad = async ({ params }) => {
   const id = parseInt(params.id, 10);
   if (isNaN(id)) throw error(400, 'Invalid ID');
 

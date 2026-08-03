@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { MagnifyingGlass, Funnel, PenNib, CheckCircle, Clock } from 'phosphor-svelte';
+  import { MagnifyingGlass, PenNib, CheckCircle, Clock } from 'phosphor-svelte';
   import AdminPagination from '../components/AdminPagination.svelte';
   let { data } = $props();
 </script>
@@ -24,8 +24,8 @@
   </header>
 
   <div class="grid-catalog-minimal">
-    {#each data.oeuvres as oeuvre}
-      <a href={`/admin/oeuvres/${oeuvre.id}`} class="artwork-card-minimal">
+    {#each data.oeuvres as oeuvre (oeuvre.id || oeuvre)}
+      <a data-sveltekit-preload-data="hover" href={`/admin/oeuvres/${oeuvre.id}`} class="artwork-card-minimal">
         <div class="thumb-wrapper">
           <img src={oeuvre.image_url_thumb} alt={(oeuvre.oeuvre_translations?.[0]?.titre || '')} loading="lazy" decoding="async" />
           

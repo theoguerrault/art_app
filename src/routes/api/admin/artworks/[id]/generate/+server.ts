@@ -1,5 +1,6 @@
 import { json } from '@sveltejs/kit';
 import { prisma } from '$lib/server/prisma';
+import { Prisma } from '@prisma/client';
 import { generateArtworkContent } from '$lib/server/ingestion/services/description';
 
 export async function POST({ params }) {
@@ -29,6 +30,7 @@ export async function POST({ params }) {
       return json({ error: 'Failed to generate content' }, { status: 500 });
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const articlePortions = (generatedContent.portions || []).map((p: any, index: number) => ({
       id: `p-${Date.now()}-article-${index}`,
       type: 'article',
@@ -44,8 +46,10 @@ export async function POST({ params }) {
       status: 'PENDING'
     }));
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const updatePayload: any = {
       introduction: generatedContent.introduction || null,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       article_principal: (generatedContent.portions || []).map((p: any) => `### ${p.title}\n\n${p.content}`).join('\n\n') || "Contenu introuvable",
       article_portions: [...articlePortions, ...anecdotePortions],
       anecdotes_secretes: generatedContent.anecdotes_secretes || [],
@@ -55,7 +59,8 @@ export async function POST({ params }) {
     // To reset verification_report, set it to Prisma.JsonNull, but since we don't have Prisma object here easily, we can omit it or use undefined or an empty object.
     // Let's just pass undefined so Prisma ignores it, or if creating, it defaults to null.
     // Actually, setting it to undefined will not overwrite existing. To overwrite, use `{}` or `null` cast as any. Let's cast as any to bypass.
-    (updatePayload as any).verification_report = null;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (updatePayload as any).verification_report = Prisma.JsonNull;
 
     const updated = await prisma.oeuvre_translations.upsert({
       where: { id_oeuvre_language_code: { id_oeuvre: id, language_code: 'fr' } },
@@ -70,10 +75,10 @@ export async function POST({ params }) {
     });
 
     return json({ success: true, content: updated });
-  } catch (error: any) {
-    console.error('[API/admin/generate] Error:', error);
+  } catch (error: unknown) {
+    console.error('[API/admin/generate] Error:', String(error));
 
-    const errorMessage = error.message || String(error);
+    const errorMessage = error instanceof Error ? error.message : String(error);
     if (errorMessage.includes('Quota exceeded') || errorMessage.includes('429')) {
       return json({ error: 'Le quota quotidien de génération Gemini a été atteint. Veuillez réessayer demain.' }, { status: 429 });
     }

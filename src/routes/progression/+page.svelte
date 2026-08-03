@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { PageData } from './$types';
 	import { Target, Package, ChartLineUp } from 'phosphor-svelte';
+	import LeitnerDistribution from './components/LeitnerDistribution.svelte';
 
 	let { data }: { data: PageData } = $props();
 
@@ -10,25 +11,34 @@
 
 	// Calculate overall statistics
 	let totalAnswers = $derived(data.historyList.length);
-	let correctAnswers = $derived(data.historyList.filter((h) => h.is_correct).length);
+	
+	function computeCorrectAnswers(history: { is_correct: boolean }[]) {
+		return history.reduce((n, h) => n + (h.is_correct ? 1 : 0), 0);
+	}
+	let correctAnswers = $derived(computeCorrectAnswers(data.historyList));
 	let successPercentage = $derived(totalAnswers > 0 ? Math.round((correctAnswers / totalAnswers) * 100) : 0);
 
 	// Calculate box distribution
-	let boxDistribution = $derived(() => {
+	function computeBoxDistribution(progressList: { box_level?: number }[]) {
 		const counts = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
-		for (const p of data.progressList) {
+		for (const p of progressList) {
 			const level = Math.max(1, Math.min(5, p.box_level || 1)) as 1 | 2 | 3 | 4 | 5;
 			counts[level]++;
 		}
 		return counts;
-	});
+	}
+	let boxDistribution = $derived(computeBoxDistribution(data.progressList));
 
 	// Mastery by movement
-	let movementMastery = $derived(() => {
-		return (data.movements || []).map((m) => {
+	function computeMovementMastery(
+		movements: { id: number; nom: string; oklch_token?: string }[],
+		progressList: { id_oeuvre: number; box_level?: number }[],
+		artworkToMovement: Record<number, number>
+	) {
+		return (movements || []).map((m) => {
 			// Find progress for this movement
-			const itemsInMovement = data.progressList.filter((p) => {
-				return data.artworkToMovement[p.id_oeuvre] === m.id;
+			const itemsInMovement = progressList.filter((p) => {
+				return artworkToMovement[p.id_oeuvre] === m.id;
 			});
 			const avgBox =
 				itemsInMovement.length > 0
@@ -43,7 +53,8 @@
 				avgBox: avgBox.toFixed(1)
 			};
 		});
-	});
+	}
+	let movementMastery = $derived(computeMovementMastery(data.movements, data.progressList, data.artworkToMovement));
 </script>
 
 <div class="progress-view">
@@ -65,35 +76,18 @@
 			<div class="stat-card">
 				<span class="stat-icon"><Package size={38} weight="fill" /></span>
 				<div class="stat-content">
-					<span class="stat-value">{boxDistribution()[5]}</span>
+					<span class="stat-value">{boxDistribution[5]}</span>
 					<span class="stat-label">Concepts Maîtrisés (Boîte 5)</span>
 				</div>
 			</div>
 		</section>
 
-		<section class="leitner-section">
-			<h2 class="section-title">Distribution Leitner (5 boîtes)</h2>
-			<div class="leitner-grid">
-				{#each [1, 2, 3, 4, 5] as box}
-					<div class="leitner-box" class:mastered={box === 5}>
-						<span class="box-number">Boîte {box}</span>
-						<span class="box-count">{(boxDistribution() as any)[box] || 0}</span>
-						<span class="box-interval">
-							{#if box === 1}Révision Quot.
-							{:else if box === 2}+3 Jours
-							{:else if box === 3}+7 Jours
-							{:else if box === 4}+14 Jours
-							{:else}+30 Jours (Maîtrisé){/if}
-						</span>
-					</div>
-				{/each}
-			</div>
-		</section>
+		<LeitnerDistribution boxDistribution={boxDistribution as Record<number, number>} />
 
 		<section class="movements-section">
 			<h2 class="section-title">Maîtrise par Mouvement Artistique</h2>
 			<div class="movements-list">
-				{#each movementMastery() as m}
+				{#each movementMastery as m, i (i)}
 					<div class="movement-bar-item">
 						<div class="bar-top">
 							<span class="movement-name">{m.nom}</span>
@@ -116,8 +110,8 @@
 			<h3>Aucune donnée d'apprentissage</h3>
 			<p>Vous n'avez pas encore effectué de révisions quotidiennes ou de quiz du catalogue. Commencez à explorer pour développer votre maîtrise Leitner !</p>
 			<div class="cta-actions">
-				<a href="/" class="cta-btn primary">Essayer la révision du jour</a>
-				<a href="/catalogue" class="cta-btn secondary">Explorer le catalogue</a>
+				<a data-sveltekit-preload-data="hover" href="/" data-sveltekit-prefetch class="cta-btn primary">Essayer la révision du jour</a>
+				<a data-sveltekit-preload-data="hover" href="/catalogue" data-sveltekit-prefetch class="cta-btn secondary">Explorer le catalogue</a>
 			</div>
 		</div>
 	{/if}
@@ -193,50 +187,6 @@
 		font-weight: 800;
 		color: var(--color-text-primary);
 		margin-bottom: 1rem;
-	}
-
-	.leitner-grid {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-		gap: 1rem;
-	}
-
-	.leitner-box {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		padding: 1.25rem 0.75rem;
-		background: var(--color-surface);
-		border: 1.5px solid var(--color-border);
-		border-radius: var(--radius-md);
-		box-shadow: var(--shadow-sm);
-		text-align: center;
-		transition: transform 0.15s ease;
-	}
-
-	.leitner-box.mastered {
-		border-color: var(--color-success);
-		background: oklch(0.97 0.05 140 / 0.15);
-	}
-
-	.box-number {
-		font-size: 0.825rem;
-		font-weight: 700;
-		text-transform: uppercase;
-		color: var(--color-text-secondary);
-	}
-
-	.box-count {
-		font-size: 2.2rem;
-		font-weight: 800;
-		color: var(--color-text-primary);
-		margin: 0.35rem 0;
-	}
-
-	.box-interval {
-		font-size: 0.75rem;
-		color: var(--color-text-muted);
-		font-weight: 600;
 	}
 
 	.movements-section {

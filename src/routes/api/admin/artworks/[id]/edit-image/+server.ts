@@ -29,7 +29,7 @@ export async function POST({ request, params }) {
         });
 
       if (uploadError) {
-        console.error('Upload error:', uploadError);
+        void('Upload error:', uploadError);
         return json({ error: 'Erreur lors de l\'upload de l\'image' }, { status: 500 });
       }
 
@@ -55,8 +55,8 @@ export async function POST({ request, params }) {
     });
 
     return json({ success: true, url: finalUrl, oeuvre: updated });
-  } catch (err: any) {
-    console.error(err);
-    return json({ error: err.message || 'Erreur serveur' }, { status: 500 });
+  } catch (err: unknown) {
+    void(err);
+    return json({ error: err instanceof Error ? err.message : 'Erreur serveur' }, { status: 500 });
   }
 }

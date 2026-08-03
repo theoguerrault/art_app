@@ -1,8 +1,11 @@
 <script lang="ts">
   import { invalidateAll } from '$app/navigation';
   import { parseMarkdown } from '$lib/utils/markdown';
+  import { html } from '$lib/actions/html';
   import Button from '$lib/components/ui/Button.svelte';
+  import { apiClient } from '$lib/utils/api';
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let { oeuvre, content }: { oeuvre: any; content: any } = $props();
 
   let editingIntro = $state(false);
@@ -16,11 +19,7 @@
     if (!editIntroText.trim()) return;
     savingIntro = true;
     try {
-      const res = await fetch(`/api/admin/artworks/${oeuvre.id}/edit-intro`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ introduction: editIntroText })
-      });
+      const res = await apiClient.post(`/api/admin/artworks/${oeuvre.id}/edit-intro`, { introduction: editIntroText });
       if (res.ok) {
         await invalidateAll();
         editingIntro = false;
@@ -36,7 +35,7 @@
     if (content?.introduction && !confirm("Voulez-vous vraiment regénérer l'introduction ?")) return;
     regeneratingIntro = true;
     try {
-      const res = await fetch(`/api/admin/artworks/${oeuvre.id}/regenerate-intro`, { method: 'POST' });
+      const res = await apiClient.post(`/api/admin/artworks/${oeuvre.id}/regenerate-intro`);
       if (res.ok) {
         const json = await res.json();
         if (editingIntro && json.content) {
@@ -54,7 +53,7 @@
   async function factcheckIntro() {
     verifyingIntro = true;
     try {
-      const res = await fetch(`/api/admin/artworks/${oeuvre.id}/factcheck-intro`, { method: 'POST' });
+      const res = await apiClient.post(`/api/admin/artworks/${oeuvre.id}/factcheck-intro`);
       if (res.ok) {
         await invalidateAll();
       } else {
@@ -70,7 +69,7 @@
   async function unvalidateIntro() {
     unvalidatingIntro = true;
     try {
-      const res = await fetch(`/api/admin/artworks/${oeuvre.id}/unvalidate-intro`, { method: 'POST' });
+      const res = await apiClient.post(`/api/admin/artworks/${oeuvre.id}/unvalidate-intro`);
       if (res.ok) {
         await invalidateAll();
       } else {
@@ -84,7 +83,7 @@
   async function validateIntro() {
     validatingIntro = true;
     try {
-      const res = await fetch(`/api/admin/artworks/${oeuvre.id}/validate-intro`, { method: 'POST' });
+      const res = await apiClient.post(`/api/admin/artworks/${oeuvre.id}/validate-intro`);
       if (res.ok) {
         await invalidateAll();
       } else {
@@ -93,6 +92,15 @@
     } finally {
       validatingIntro = false;
     }
+  }
+
+  function handleCancelEdit() {
+    editingIntro = false;
+  }
+
+  function handleStartEdit() {
+    editingIntro = true;
+    editIntroText = content?.introduction || '';
   }
 </script>
 
@@ -114,11 +122,11 @@
       <Button variant="outline" size="sm" onclick={regenerateIntro} loading={regeneratingIntro}>
         Générer
       </Button>
-      <Button variant="outline" size="sm" onclick={() => editingIntro = false}>
+      <Button variant="outline" size="sm" onclick={handleCancelEdit}>
         Annuler
       </Button>
     {:else}
-      <Button variant="outline" size="sm" onclick={() => { editingIntro = true; editIntroText = content?.introduction || ''; }}>
+      <Button variant="outline" size="sm" onclick={handleStartEdit}>
         Modifier
       </Button>
       {#if content?.introduction}
@@ -141,9 +149,7 @@
   {#if editingIntro}
     <textarea bind:value={editIntroText} class="edit-textarea" rows="5"></textarea>
   {:else if content?.introduction}
-    <div class="rich-text">
-      {@html parseMarkdown(content.introduction)}
-    </div>
+    <div class="rich-text" use:html={parseMarkdown(content.introduction)}></div>
     {#if content?.verification_report?.introduction?.explanation}
       <div class="statement-feedback">
         <p class="statement-explanation">{content.verification_report.introduction.explanation}</p>

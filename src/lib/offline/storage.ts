@@ -1,4 +1,4 @@
-import type { Artwork, UserProgress } from '$lib/types/database';
+
 
 const DB_NAME = 'ai_art_coach_db';
 const DB_VERSION = 3;
@@ -24,7 +24,7 @@ export interface OfflineSyncQueueItem {
  * Initializes and returns the IndexedDB database connection.
  * Handles database creation and upgrade events cleanly without errors.
  */
-export function getDB(): Promise<IDBDatabase> {
+function getDB(): Promise<IDBDatabase> {
 	return new Promise((resolve, reject) => {
 		if (typeof window === 'undefined' || !('indexedDB' in window)) {
 			return reject(new Error('IndexedDB is not available in this environment.'));
@@ -80,6 +80,7 @@ export function getDB(): Promise<IDBDatabase> {
  */
 export async function saveToLocalCache(
 	storeName: CacheStoreName,
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	items: any | any[]
 ): Promise<void> {
 	if (typeof window === 'undefined') return;
@@ -106,6 +107,7 @@ export async function saveToLocalCache(
 export async function readFromLocalCache(
 	storeName: CacheStoreName,
 	key?: IDBValidKey
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): Promise<any> {
 	if (typeof window === 'undefined') return Array.isArray(key) || key === undefined ? [] : null;
 	const db = await getDB();
@@ -128,7 +130,7 @@ export async function readFromLocalCache(
 /**
  * Queues an offline answer into the offline_sync_queue object store.
  */
-export async function queueOfflineAnswer(
+async function queueOfflineAnswer(
 	answerPayload: Omit<OfflineSyncQueueItem, 'queue_id'>
 ): Promise<number> {
 	if (typeof window === 'undefined') return -1;

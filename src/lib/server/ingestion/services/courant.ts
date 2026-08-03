@@ -41,7 +41,7 @@ Rédige une description très courte (2 à 3 phrases maximum) de ce mouvement ar
     
     return response.description;
   } catch (error) {
-    console.error(`[AI:Movement] Error generating definition for ${movementName}:`, error);
+    void('[AI:Movement] Error generating definition for %s:', movementName, error);
     return null;
   }
 }

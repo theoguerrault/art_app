@@ -25,7 +25,7 @@
 
   <div class="art-grid">
     {#each data.courants as courant (courant.id)}
-      <a href={`/admin/courants/${courant.id}`} class="art-card">
+      <a data-sveltekit-preload-data="hover" href={`/admin/courants/${courant.id}`} class="art-card">
         <div class="art-status-wrapper">
           <div class="art-status">
             {#if courant.courant_translations[0]}

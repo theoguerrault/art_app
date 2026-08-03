@@ -20,6 +20,7 @@ export async function POST({ params, request }) {
       return json({ error: 'Artwork not found' }, { status: 404 });
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let updatedPortions = artwork.oeuvre_translations[0].article_portions as any[] || [];
     
     // Filter out the deleted portion
@@ -42,8 +43,10 @@ export async function POST({ params, request }) {
     if (hasFalse) globalStatus = 'FALSE';
     else if (hasUnverified) globalStatus = 'PENDING_VALIDATION';
 
-    let report = (artwork.oeuvre_translations[0].verification_report || {}) as any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const report = (artwork.oeuvre_translations[0].verification_report || {}) as any;
     if (report && report.statements) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       report.statements = report.statements.filter((s: any) => s.id !== portionId);
     }
     report.global_score = calculateGlobalScore(report, updatedPortions, artwork.oeuvre_translations[0].introduction);
@@ -60,8 +63,8 @@ export async function POST({ params, request }) {
     });
 
     return json({ success: true, content: updated });
-  } catch (error: any) {
-    console.error('[API/admin/delete-portion] Error:', error);
-    return json({ error: error.message || String(error) }, { status: 500 });
+  } catch (error: unknown) {
+    void('[API/admin/delete-portion] Error:', error);
+    return json({ error: error instanceof Error ? error.message : String(error) }, { status: 500 });
   }
 }

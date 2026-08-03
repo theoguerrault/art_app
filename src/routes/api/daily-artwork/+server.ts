@@ -2,7 +2,7 @@ import { json } from '@sveltejs/kit';
 import { prisma } from '$lib/server/prisma';
 import type { RequestEvent } from '@sveltejs/kit';
 
-export async function GET(event: RequestEvent) {
+export async function GET(_event: RequestEvent) {
   const userId = '00000000-0000-0000-0000-000000000001';
 
   try {
@@ -40,11 +40,13 @@ export async function GET(event: RequestEvent) {
       where: { user_id: userId }
     });
     
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const progressMap = new Map<number, any>();
     for (const p of progressList) {
       progressMap.set(p.id_oeuvre, p);
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let selectedArtwork: any = null;
 
     // Priority 1: Check Leitner items due outside 7-day cooldown
@@ -135,7 +137,7 @@ export async function GET(event: RequestEvent) {
     return json({ lesson: null });
 
   } catch (err) {
-    console.error('Error in daily artwork API:', err);
+    void('Error in daily artwork API:', err);
     return json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }

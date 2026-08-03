@@ -1,5 +1,6 @@
 <script lang="ts">
   import { parseMarkdown } from '$lib/utils/markdown';
+  import { html } from '$lib/actions/html';
 
   let {
     isOpen = $bindable(false),
@@ -53,10 +54,15 @@
       }
     }
   }
+	function handleKeydown(e: KeyboardEvent) {
+		if (e.key === 'Escape') {
+			close();
+		}
+	}
 </script>
 
 {#if isOpen}
-  <div class="backdrop" onclick={close} onkeydown={(e) => e.key === 'Escape' && close()} role="button" tabindex="0" aria-label="Fermer la définition"></div>
+  <div class="backdrop" onclick={close} onkeydown={handleKeydown} role="button" tabindex="0" aria-label="Fermer la définition"></div>
   <div class="bottom-sheet" role="dialog" aria-labelledby="glossary-title" bind:this={sheetRef}>
     <div 
       class="drag-handle" 
@@ -84,7 +90,7 @@
 
     <div class="sheet-content rich-text">
       {#if content}
-        {@html parseMarkdown(content)}
+        <div use:html={parseMarkdown(content)}></div>
       {:else}
         <p class="empty-content">Définition non disponible.</p>
       {/if}

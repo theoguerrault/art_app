@@ -1,149 +1,14 @@
 <script lang="ts">
-  import { invalidateAll } from '$app/navigation';
-  import { parseMarkdown } from '$lib/utils/markdown';
   import { Warning, ShieldCheck } from 'phosphor-svelte';
-  import Button from '$lib/components/ui/Button.svelte';
+  import AdminPortionItem from './AdminPortionItem.svelte';
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let { oeuvre, content, checking }: { oeuvre: any; content: any; checking: boolean } = $props();
 
-  let validatingPortions: Record<string, boolean> = $state({});
-  let correctingPortions: Record<string, boolean> = $state({});
-  let deletingPortions: Record<string, boolean> = $state({});
-  let verifyingPortions: Record<string, boolean> = $state({});
-
-  let editingPortionId = $state<string | null>(null);
-  let editPortionTitle = $state('');
-  let editPortionText = $state('');
-  let savingPortion = $state(false);
-
-  let report = $derived(content?.verification_report as any);
-  let portions = $derived((content?.article_portions || []) as any[]);
-
-  async function deletePortion(portionId: string) {
-    if (!confirm('Supprimer définitivement ce paragraphe ?')) return;
-    deletingPortions[portionId] = true;
-    try {
-      const res = await fetch(`/api/admin/artworks/${oeuvre.id}/delete-portion`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ portionId })
-      });
-      if (res.ok) {
-        await invalidateAll();
-      } else {
-        alert('Erreur lors de la suppression');
-      }
-    } finally {
-      deletingPortions[portionId] = false;
-    }
+  function getPortions(c: { article_portions?: { type?: string; id?: string; [key: string]: unknown }[] } | undefined | null) {
+    return c?.article_portions ?? [];
   }
-
-  async function correctManual(portionId: string) {
-    correctingPortions[portionId] = true;
-    try {
-      const res = await fetch(`/api/admin/artworks/${oeuvre.id}/correct`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ portionId })
-      });
-      if (res.ok) {
-        const json = await res.json();
-        if (editingPortionId === portionId && json.content) {
-          const updatedPortions = json.content.article_portions || [];
-          const updatedPortion = updatedPortions.find((p: any) => p.id === portionId);
-          if (updatedPortion) {
-            editPortionText = updatedPortion.text;
-            editPortionTitle = updatedPortion.title || '';
-          }
-        }
-        await invalidateAll();
-      } else {
-        alert('Erreur lors de la correction');
-      }
-    } finally {
-      correctingPortions[portionId] = false;
-    }
-  }
-
-  async function factcheckPortion(id: string) {
-    verifyingPortions[id] = true;
-    try {
-      const res = await fetch(`/api/admin/artworks/${oeuvre.id}/factcheck-portion`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ portionId: id })
-      });
-      if (res.ok) {
-        await invalidateAll();
-      } else {
-        alert("Erreur lors de la vérification de la partie");
-      }
-    } finally {
-      verifyingPortions[id] = false;
-    }
-  }
-
-  let unvalidatingPortions: Record<string, boolean> = $state({});
-
-  async function unvalidatePortion(id: string) {
-    unvalidatingPortions[id] = true;
-    try {
-      const res = await fetch(`/api/admin/artworks/${oeuvre.id}/unvalidate-portion`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ portionId: id })
-      });
-      if (res.ok) {
-        await invalidateAll();
-      } else {
-        alert("Erreur lors de l'invalidation de la partie");
-      }
-    } finally {
-      unvalidatingPortions[id] = false;
-    }
-  }
-
-  async function validatePortion(id: string) {
-    validatingPortions[id] = true;
-    try {
-      const res = await fetch(`/api/admin/artworks/${oeuvre.id}/validate-portion`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ portionId: id })
-      });
-      if (res.ok) {
-        await invalidateAll();
-      } else {
-        alert("Erreur lors de la validation de la partie");
-      }
-    } finally {
-      validatingPortions[id] = false;
-    }
-  }
-
-  async function saveEditPortion() {
-    if (!editPortionText.trim()) return;
-    savingPortion = true;
-    try {
-      const res = await fetch(`/api/admin/artworks/${oeuvre.id}/edit-portion`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          portionId: editingPortionId,
-          title: editPortionTitle,
-          text: editPortionText
-        })
-      });
-      if (res.ok) {
-        await invalidateAll();
-        editingPortionId = null;
-      } else {
-        alert('Erreur lors de la modification');
-      }
-    } finally {
-      savingPortion = false;
-    }
-  }
+  let portions = $derived(getPortions(content));
 </script>
 
 {#if portions.length > 0}
@@ -151,144 +16,30 @@
   <div class="article-section">
     <h3 class="section-subtitle">ARTICLE</h3>
     <div class="statements-list">
-      {#each portions.filter((p: any) => p.type === 'article') as portion, index}
-        <div class="statement-card {portion.status.toLowerCase()}">
-          <div class="statement-header">
-            <span class="portion-index">Partie {index + 1}</span>
-            <span class="status-pill {portion.status.toLowerCase()}">{portion.status}</span>
-          </div>
-          
-          {#if editingPortionId === portion.id}
-            <input type="text" bind:value={editPortionTitle} class="edit-input" placeholder="Titre de la partie (optionnel)" />
-            <textarea bind:value={editPortionText} class="edit-textarea" rows="4"></textarea>
-            <div class="edit-actions">
-              <Button variant="primary" size="sm" onclick={saveEditPortion} loading={savingPortion}>Enregistrer</Button>
-              <Button variant="outline" size="sm" onclick={() => correctManual(portion.id)} loading={correctingPortions[portion.id]}>Générer</Button>
-              <Button variant="outline" size="sm" onclick={() => editingPortionId = null}>Annuler</Button>
-            </div>
-          {:else}
-            {#if portion.title}
-              <h4 class="statement-title">{portion.title}</h4>
-            {/if}
-            <div class="rich-text statement-text">
-              {@html parseMarkdown(portion.text)}
-            </div>
-          {/if}
-          
-          {#if portion.explanation || portion.source_quote || portion.status?.toUpperCase() !== 'VERIFIED'}
-            <div class="statement-feedback">
-              {#if portion.explanation}
-                <p class="statement-explanation">{portion.explanation}</p>
-              {/if}
-              
-              {#if portion.source_quote}
-                <div class="statement-source">
-                  <span class="source-label">Source Wikipédia</span>
-                  <p>"{portion.source_quote}"</p>
-                </div>
-              {/if}
-
-              <div class="statement-actions">
-                <Button variant="outline" size="sm" onclick={() => { editingPortionId = portion.id; editPortionTitle = portion.title || ''; editPortionText = portion.text; }}>
-                  Modifier
-                </Button>
-                <Button variant="outline" size="sm" onclick={() => factcheckPortion(portion.id)} loading={verifyingPortions[portion.id]} disabled={portion.status?.toUpperCase() === 'VERIFIED'}>
-                  Vérifier
-                </Button>
-
-                {#if portion.status?.toUpperCase() === 'VERIFIED'}
-                  <Button variant="outline" size="sm" onclick={() => unvalidatePortion(portion.id)} loading={unvalidatingPortions[portion.id]}>
-                    Invalider
-                  </Button>
-                {:else}
-                  {#if portion.status?.toUpperCase() === 'FALSE'}
-                    <Button variant="danger" size="sm" onclick={() => correctManual(portion.id)} loading={correctingPortions[portion.id]}>
-                      Corriger
-                    </Button>
-                  {/if}
-                  <Button variant="outline" size="sm" onclick={() => validatePortion(portion.id)} loading={validatingPortions[portion.id]}>
-                    Valider
-                  </Button>
-                {/if}
-
-                <Button variant="outline" size="sm" onclick={() => deletePortion(portion.id)} loading={deletingPortions[portion.id]}>
-                  Supprimer
-                </Button>
-              </div>
-            </div>
-          {/if}
-        </div>
+      {#each portions.filter((p: { type?: string }) => p.type === 'article') as portion, index (portion.id || index)}
+        <AdminPortionItem 
+          {portion} 
+          {index} 
+          typeLabel="Partie" 
+          {oeuvre} 
+          {checking} 
+        />
       {/each}
     </div>
   </div>
 
-  {#if portions.some((p: any) => p.type === 'anecdote')}
+  {#if portions.some((p: { type?: string }) => p.type === 'anecdote')}
     <div class="anecdotes-section">
       <h3 class="section-subtitle">ANECDOTES</h3>
       <div class="statements-list">
-      {#each portions.filter((p: any) => p.type === 'anecdote') as portion, index}
-        <div class="statement-card {portion.status.toLowerCase()}">
-          <div class="statement-header">
-            <span class="portion-index">Anecdote {index + 1}</span>
-            <span class="status-pill {portion.status.toLowerCase()}">{portion.status}</span>
-          </div>
-          
-          {#if editingPortionId === portion.id}
-            <textarea bind:value={editPortionText} class="edit-textarea" rows="4"></textarea>
-            <div class="edit-actions">
-              <Button variant="primary" size="sm" onclick={saveEditPortion} loading={savingPortion}>Enregistrer</Button>
-              <Button variant="outline" size="sm" onclick={() => correctManual(portion.id)} loading={correctingPortions[portion.id]}>Générer</Button>
-              <Button variant="outline" size="sm" onclick={() => editingPortionId = null}>Annuler</Button>
-            </div>
-          {:else}
-            <div class="rich-text statement-text">
-              {@html parseMarkdown(portion.text)}
-            </div>
-          {/if}
-          
-          {#if portion.explanation || portion.source_quote || portion.status?.toUpperCase() !== 'VERIFIED'}
-            <div class="statement-feedback">
-              {#if portion.explanation}
-                <p class="statement-explanation">{portion.explanation}</p>
-              {/if}
-              
-              {#if portion.source_quote}
-                <div class="statement-source">
-                  <span class="source-label">Source Wikipédia</span>
-                  <p>"{portion.source_quote}"</p>
-                </div>
-              {/if}
-
-              <div class="statement-actions">
-                <Button variant="outline" size="sm" onclick={() => { editingPortionId = portion.id; editPortionTitle = portion.title || ''; editPortionText = portion.text; }}>
-                  Modifier
-                </Button>
-                <Button variant="outline" size="sm" onclick={() => factcheckPortion(portion.id)} loading={verifyingPortions[portion.id]} disabled={portion.status?.toUpperCase() === 'VERIFIED'}>
-                  Vérifier
-                </Button>
-
-                {#if portion.status?.toUpperCase() === 'VERIFIED'}
-                  <Button variant="outline" size="sm" onclick={() => unvalidatePortion(portion.id)} loading={unvalidatingPortions[portion.id]}>
-                    Invalider
-                  </Button>
-                {:else}
-                  {#if portion.status?.toUpperCase() === 'FALSE'}
-                    <Button variant="danger" size="sm" onclick={() => correctManual(portion.id)} loading={correctingPortions[portion.id]}>
-                      Corriger
-                    </Button>
-                  {/if}
-                  <Button variant="outline" size="sm" onclick={() => validatePortion(portion.id)} loading={validatingPortions[portion.id]}>
-                    Valider
-                  </Button>
-                {/if}
-
-                <Button variant="outline" size="sm" onclick={() => deletePortion(portion.id)} loading={deletingPortions[portion.id]}>
-                  Supprimer
-                </Button>
-              </div>
-            </div>
-          {/if}
-        </div>
+      {#each portions.filter((p: { type?: string }) => p.type === 'anecdote') as portion, index (portion.id || index)}
+        <AdminPortionItem 
+          {portion} 
+          {index} 
+          typeLabel="Anecdote" 
+          {oeuvre} 
+          {checking} 
+        />
       {/each}
       </div>
     </div>
@@ -355,27 +106,6 @@
     letter-spacing: 0.05em;
     color: var(--color-text-secondary);
     margin: 0;
-  }
-
-  .statements-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-  }
-
-  .statement-card {
-    background: transparent;
-    border: none;
-    border-bottom: 1px solid var(--color-border-subtle);
-    border-radius: 0;
-    padding: 0 0 1.5rem 0;
-    transition: all 0.2s ease;
-  }
-
-  .statement-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     margin-bottom: 0.75rem;
   }
 

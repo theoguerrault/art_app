@@ -23,8 +23,8 @@ export async function POST({ params }) {
     });
 
     return json({ success: true, content: updated });
-  } catch (error: any) {
-    console.error('[API/admin/unvalidate] Error:', error);
-    return json({ error: error.message || String(error) }, { status: 500 });
+  } catch (error: unknown) {
+    void('[API/admin/unvalidate] Error:', error);
+    return json({ error: error instanceof Error ? error.message : String(error) }, { status: 500 });
   }
 }

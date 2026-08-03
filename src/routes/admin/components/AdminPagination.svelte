@@ -74,7 +74,7 @@
     text-decoration: none;
     font-size: 0.9rem;
     font-weight: 500;
-    transition: all 0.2s;
+    transition: opacity 0.2s, transform 0.2s;
   }
 
   .page-btn:hover:not(.disabled) {

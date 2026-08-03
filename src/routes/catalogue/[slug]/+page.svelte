@@ -1,41 +1,23 @@
 <script lang="ts">
-	import { onMount } from "svelte";
+	let isFetchingDescription = $state(false);
+
 	import type { PageData } from "./$types";
 	import ArtworkCard from "$lib/features/artwork/components/ArtworkCard.svelte";
+	import ArtworkDetailHeader from '$lib/features/artwork/components/ArtworkDetailHeader.svelte';
 	import GlossaryBottomSheet from "$lib/components/ui/GlossaryBottomSheet.svelte";
+
 	import {
-		ArrowLeft,
-		Lightbulb,
-		Brain,
-		X,
-		Bank,
-		PaintBrush,
-		Ruler,
-		Tag,
-		Calendar,
-		User,
-		Info,
-		Compass,
-		BookOpen,
-		Eye,
-		Article,
-		Heart,
-		SealCheck
-	} from "phosphor-svelte";
-	import { supabase } from "$lib/supabase/client";
-	import {
-		queueOfflineAnswer,
 		saveToLocalCache,
 		readFromLocalCache,
 	} from "$lib/offline/storage";
-	import { parseMarkdown } from '$lib/utils/markdown';
+	import { apiClient } from '$lib/utils/api';
 
 	import { untrack } from 'svelte';
 
 	let { data }: { data: PageData } = $props();
 
 	let lesson = $derived(data.lesson);
-	let progress = $derived(data.progress);
+
 
 	let glossaryOpen = $state(false);
 	let glossaryTitle = $state('');
@@ -44,31 +26,22 @@
 
 	let isFavorite = $state(false);
 
-	onMount(async () => {
-		if (lesson && typeof window !== 'undefined') {
+	// Check local cache only — no component-level GET fetch
+	$effect(() => {
+		(async () => {
+			if (!lesson || typeof window === 'undefined') return;
 			const cacheKey = 'user_favorites_cache';
 			const favCache = await readFromLocalCache(cacheKey, 'favorites');
 			const cached = favCache ? favCache.data : [];
 			if (cached.includes(lesson.id)) {
 				isFavorite = true;
-			} else if (navigator.onLine) {
-				const res = await fetch('/api/favorites');
-				if (res.ok) {
-					const data = await res.json();
-					isFavorite = data.favorites.includes(lesson.id);
-					await saveToLocalCache(cacheKey, { id: 'favorites', data: data.favorites });
-				}
 			}
-		}
+		})();
 	});
 
 	async function toggleFavorite() {
 		isFavorite = !isFavorite; // Optimistic
-		const res = await fetch('/api/favorites', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ id_oeuvre: lesson.id })
-		});
+		const res = await apiClient.post('/api/favorites', { id_oeuvre: lesson.id });
 		if (!res.ok) {
 			isFavorite = !isFavorite; // Revert
 		} else {
@@ -82,6 +55,7 @@
 	}
 
 	function openGlossary(type: 'artiste' | 'courant') {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		const lessonData = lesson as any;
 		if (type === 'artiste' && lessonData.glossary?.artiste_description) {
 			glossaryTitle = lesson.artistes?.nom || 'Artiste';
@@ -96,15 +70,24 @@
 		}
 	}
 
+	function handleOpenCourant() {
+		openGlossary('courant');
+	}
+
+	function handleOpenArtiste() {
+		openGlossary('artiste');
+	}
+
 	let dynamicArticlePrincipal = $state<string | null>(null);
 	
 	let isContentEmpty = $derived(isMissingOrPlaceholder(dynamicArticlePrincipal || lesson.article_principal));
 
-	let isFetchingDescription = $state(false);
+
 	
 	let lastInitializedSlug = '';
 
 	function isMissingOrPlaceholder(str: string | null | undefined): boolean {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		if (lesson && (lesson as any).article_portions && (lesson as any).article_portions.length > 0) return false;
 		if (!str || str.trim() === '') return true;
 		const placeholders = [
@@ -116,10 +99,7 @@
 		return placeholders.some((p) => str.includes(p));
 	}
 
-	function isMissingOrPlaceholderArray(arr: string[] | null | undefined): boolean {
-		if (!arr || arr.length === 0) return true;
-		return arr.some(str => isMissingOrPlaceholder(str));
-	}
+
 
 	function extractHue(oklch: string): number {
 		const match = oklch.match(/oklch\([\d.]+\s+[\d.]+\s+([\d.]+)\)/);
@@ -152,12 +132,12 @@
 				// 2. Handle Description Fetch
 				if (dynamicArticlePrincipal === null && navigator.onLine) {
 					isFetchingDescription = true;
-					fetch(`/api/artwork-description/${encodeURIComponent(lesson.slug)}`)
+					apiClient.request(`/api/artwork-description/${encodeURIComponent(lesson.slug)}`)
 						.then((res) => res.json())
 						.then((data) => {
 							if (data?.article_principal) dynamicArticlePrincipal = data.article_principal;
 						})
-						.catch((err) => console.warn('[DetailPage] Failed to fetch descriptions:', err))
+						.catch((err) => void('[DetailPage] Failed to fetch descriptions:', err))
 						.finally(() => {
 							isFetchingDescription = false;
 						});
@@ -171,41 +151,18 @@
 
 <div class="detail-view">
 	<nav class="back-nav">
-		<a href="/catalogue" class="back-link">
+		<a data-sveltekit-preload-data="hover" href="/catalogue" data-sveltekit-prefetch class="back-link">
 			<span>Retour au catalogue</span>
 		</a>
 	</nav>
 
-	<header class="detail-header">
-		{#if (lesson as any).glossary?.courant_description}
-			<button type="button" class="movement-tag clickable" style:background-color={lesson.oklch_token} onclick={() => openGlossary('courant')}>
-				{lesson.nom_courant}
-			</button>
-		{:else}
-			<span class="movement-tag" style:background-color={lesson.oklch_token}>
-				{lesson.nom_courant}
-			</span>
-		{/if}
-		<div class="actions-row">
-			{#if (lesson as any).verification_status === 'VERIFIED'}
-				<span class="verified-pill" title="Contenu vérifié à 100%">
-					<SealCheck size={22} weight="fill" />
-				</span>
-			{/if}
-			<button class="favorite-btn" onclick={toggleFavorite} aria-label="Toggle Favorite">
-				<Heart size={24} weight={isFavorite ? 'fill' : 'bold'} color={isFavorite ? '#ff3b30' : 'currentColor'} />
-			</button>
-		</div>
-		<h1 class="artwork-title">{lesson.titre}</h1>
-		<p class="artwork-meta">
-			{#if (lesson as any).glossary?.artiste_description}
-				<button type="button" class="artist-link" onclick={() => openGlossary('artiste')}>{lesson.artistes?.nom}</button>
-			{:else}
-				{lesson.artistes?.nom}
-			{/if}
-			({lesson.date_creation})
-		</p>
-	</header>
+	<ArtworkDetailHeader
+		artwork={lesson}
+		{isFavorite}
+		onToggleFavorite={toggleFavorite}
+		onOpenCourant={handleOpenCourant}
+		onOpenArtiste={handleOpenArtiste}
+	/>
 
 	<section class="card-display">
 		<ArtworkCard
@@ -217,10 +174,10 @@
 		/>
 	</section>
 
-	{#if isContentEmpty || (lesson as any).verification_status !== 'VERIFIED'}
+	{#if isContentEmpty || lesson.verification_status !== 'VERIFIED'}
 		<div class="admin-quick-action">
 			<p>{isContentEmpty ? "Ce contenu n'est pas encore généré." : "Ce contenu est en attente de validation."}</p>
-			<a href={`/admin/oeuvres/${lesson.id}`} class="admin-text-link">
+			<a data-sveltekit-preload-data="hover" href={`/admin/oeuvres/${lesson.id}`} class="admin-text-link">
 				Éditer dans l'Admin →
 			</a>
 		</div>
@@ -261,104 +218,11 @@
 		text-decoration: underline;
 	}
 
-	.detail-header {
-		text-align: center;
-	}
-
-	.movement-tag {
-		display: inline-block;
-		padding: 0.35rem 0.85rem;
-		border-radius: 20px;
-		font-size: 0.75rem;
-		font-weight: 700;
-		text-transform: uppercase;
-		letter-spacing: 0.05em;
-		color: var(--color-bg);
-		margin-bottom: 0.75rem;
-		border: none;
-	}
-
-	.movement-tag.clickable {
-		cursor: pointer;
-		position: relative;
-		transition: transform 0.2s ease, opacity 0.2s ease;
-	}
-
-	.movement-tag.clickable:hover {
-		transform: scale(1.05);
-		opacity: 0.9;
-	}
-
-	.artwork-title {
-		font-family: "Instrument Serif", serif;
-		font-size: 2.5rem;
-		font-weight: 400;
-		margin: 0 0 0.5rem 0;
-		color: var(--color-text-primary);
-		line-height: 1.1;
-	}
-
-	.actions-row {
+	.card-display {
 		display: flex;
-		align-items: center;
-		justify-content: center;
-		gap: 0.75rem;
-		margin-bottom: 0.5rem;
+		flex-direction: column;
+		gap: 2rem;
 	}
-
-	/* Remove the orphan rule — artwork-title is now standalone */
-
-	.verified-pill {
-		color: var(--color-success);
-		display: flex;
-		align-items: center;
-		flex-shrink: 0;
-	}
-
-	.favorite-btn {
-		background: none;
-		border: none;
-		padding: 0;
-		color: var(--color-text-muted);
-		cursor: pointer;
-		display: flex;
-		align-items: center;
-		transition: transform 0.2s ease, color 0.2s ease;
-		flex-shrink: 0;
-	}
-
-	.favorite-btn:hover {
-		transform: scale(1.1);
-	}
-	.favorite-btn:active {
-		transform: scale(0.95);
-	}
-
-	.artwork-meta {
-		font-size: 1rem;
-		color: var(--color-text-muted);
-		margin: 0;
-	}
-
-	.artist-link {
-		background: none;
-		border: none;
-		padding: 0;
-		font: inherit;
-		color: var(--color-text-primary);
-		font-weight: 600;
-		cursor: pointer;
-		text-decoration: underline;
-		text-decoration-style: dotted;
-		text-underline-offset: 4px;
-		transition: color 0.2s ease;
-	}
-
-	.artist-link:hover {
-		color: var(--color-primary);
-	}
-
-
 
 	@keyframes fadeIn {
 		from {
@@ -388,9 +252,9 @@
 		}
 
 		:global(.artwork-card) {
-			border-radius: 0 !important;
-			border-left: none !important;
-			border-right: none !important;
+			border-radius: 0 ;
+			border-left: none ;
+			border-right: none ;
 		}
 	}
 

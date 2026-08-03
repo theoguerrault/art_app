@@ -1,11 +1,11 @@
 <script lang="ts">
-	import type { Artwork } from '$lib/types/database';
+	import type { Artwork, ActiveLessonView } from '$lib/types/database';
 	import ArtworkVisual from './ArtworkVisual.svelte';
 	import ArtworkSpecs from './ArtworkSpecs.svelte';
 	import ArtworkInsight from './ArtworkInsight.svelte';
 
 	interface ArtworkCardProps {
-		artwork: Artwork;
+		artwork: Artwork | ActiveLessonView;
 		movementName?: string;
 		oklchToken?: string;
 		article?: string;
@@ -19,33 +19,30 @@
 		movementName = 'Art Historique',
 		oklchToken = 'var(--movement-theme)',
 		article,
-		isEmpty = false,
 		hideDescription = false,
 		eager = true
 	}: ArtworkCardProps = $props();
 
+	const lessonData = artwork as ActiveLessonView;
+
 	let displayMovementName = $derived(
 		movementName !== 'Historical Art'
 			? movementName
-			: ('nom_courant' in artwork && typeof (artwork as any).nom_courant === 'string'
-					? (artwork as any).nom_courant
-					: 'Art Historique')
+			: (lessonData.nom_courant || 'Art Historique')
 	);
 
 	let displayOklchToken = $derived(
 		oklchToken !== 'var(--movement-theme)'
 			? oklchToken
-			: ('oklch_token' in artwork && typeof (artwork as any).oklch_token === 'string'
-					? (artwork as any).oklch_token
-					: 'var(--movement-theme)')
+			: (lessonData.oklch_token || 'var(--movement-theme)')
 	);
 
 	let displayAnecdote = $derived(
 		article ||
-			('article_principal' in artwork && typeof (artwork as any).article_principal === 'string'
-				? ('introduction' in artwork && typeof (artwork as any).introduction === 'string' 
-					? `**${(artwork as any).introduction}**\n\n${(artwork as any).article_principal}` 
-					: (artwork as any).article_principal)
+			(lessonData.article_principal
+				? (lessonData.introduction 
+					? `**${lessonData.introduction}**\n\n${lessonData.article_principal}` 
+					: lessonData.article_principal)
 				: 'Découvrez l\'histoire captivante et l\'essence historique de ce chef-d\'œuvre.')
 	);
 
@@ -74,8 +71,8 @@
 {:else}
 	<ArtworkInsight 
 		artworkTitle={`${artwork.titre} - ${artwork.artistes?.nom || 'Inconnu'} (${artwork.date_creation})`}
-		introduction={(artwork as any).introduction}
-		portions={(artwork as any).article_portions || []}
+		introduction={lessonData.introduction ?? undefined}
+		portions={lessonData.article_portions || []}
 		articlePrincipal={displayAnecdote} 
 	/>
 {/if}

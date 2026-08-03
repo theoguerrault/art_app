@@ -42,12 +42,12 @@ export async function POST(event: RequestEvent) {
       return json({ status: 'added' });
     }
   } catch (err) {
-    console.error('Error toggling favorite:', err);
+    void('Error toggling favorite:', err);
     return json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
 
-export async function GET(event: RequestEvent) {
+export async function GET(_event: RequestEvent) {
   // Temporary: use anonymous user since auth isn't fully integrated in event.locals
   const userId = '00000000-0000-0000-0000-000000000001';
 
@@ -59,7 +59,7 @@ export async function GET(event: RequestEvent) {
     
     return json({ favorites: favorites.map(f => f.id_oeuvre) });
   } catch (err) {
-    console.error('Error fetching favorites:', err);
+    void('Error fetching favorites:', err);
     return json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }

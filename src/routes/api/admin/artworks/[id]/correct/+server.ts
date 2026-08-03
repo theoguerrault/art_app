@@ -11,10 +11,10 @@ export async function POST({ params, request }) {
   }
 
   try {
-    let body: any = {};
+    let body: Record<string, unknown> = {};
     try {
       body = await request.json();
-    } catch (e) {}
+    } catch {}
 
     const { portionId } = body;
     if (!portionId) {
@@ -30,6 +30,7 @@ export async function POST({ params, request }) {
       return json({ error: 'Artwork or content not found' }, { status: 404 });
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let updatedPortions = artwork.oeuvre_translations[0].article_portions as any[] || [];
     const portionToCorrect = updatedPortions.find(p => p.id === portionId);
     
@@ -93,8 +94,10 @@ export async function POST({ params, request }) {
       return p;
     });
 
-    let report = (artwork.oeuvre_translations[0].verification_report || {}) as any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const report = (artwork.oeuvre_translations[0].verification_report || {}) as any;
     if (report && report.statements) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       report.statements = report.statements.map((s: any) => {
         if (s.id === portionId) {
           return {
@@ -138,10 +141,10 @@ export async function POST({ params, request }) {
     });
 
     return json({ success: true, content: updated });
-  } catch (error: any) {
-    console.error('[API/admin/correct] Error:', error);
+  } catch (error: unknown) {
+    void('[API/admin/correct] Error:', error);
     
-    const errorMessage = error.message || String(error);
+    const errorMessage = error instanceof Error ? error.message : String(error);
     if (errorMessage.includes('Quota exceeded') || errorMessage.includes('429')) {
       return json({ error: 'Le quota quotidien Gemini a été atteint. Veuillez réessayer demain.' }, { status: 429 });
     }

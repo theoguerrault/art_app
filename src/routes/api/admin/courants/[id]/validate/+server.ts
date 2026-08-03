@@ -12,8 +12,8 @@ export async function POST({ params }) {
     });
 
     return json({ success: true, content: updated });
-  } catch (error: any) {
-    console.error('[API/admin/courants/validate] Error:', error);
-    return json({ error: error.message || String(error) }, { status: 500 });
+  } catch (error: unknown) {
+    void('[API/admin/courants/validate] Error:', error);
+    return json({ error: error instanceof Error ? error.message : String(error) }, { status: 500 });
   }
 }

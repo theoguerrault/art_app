@@ -16,13 +16,14 @@ export interface ArtworkData {
   image_url_full?: string | null;
   image_url_thumb?: string | null;
   is_public_domain?: boolean;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   raw_metadata?: Record<string, any>;
 }
 
 /**
  * External Zod Schema for the final MCQ (Multiple Choice Question) returned to callers
  */
-export const QcmSchema = z.object({
+const QcmSchema = z.object({
   sourceQuote: z.string().min(5).max(400),
   sourceField: z.string().optional(),
   conceptTag: z.string(),
@@ -42,7 +43,7 @@ const RawGeminiQcmSchema = z.object({
   explanation: z.string().min(15).max(450)
 });
 
-export class MaxQuestionsReachedError extends Error {
+class MaxQuestionsReachedError extends Error {
   constructor(message: string) {
     super(message);
     this.name = 'MaxQuestionsReachedError';
@@ -139,6 +140,7 @@ export async function generateQuizFromArtworkMetadata(
   const availableAngles = POSSIBLE_ANGLES.filter(angle => {
     if (forbiddenTags.has(angle.id)) return false;
     const validFields = angle.targetFields.filter(field => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const val = artwork.raw_metadata?.[field] || (artwork as any)[field];
       if (val === null || val === undefined || val === '' || val === 'N/A') return false;
       const strVal = typeof val === 'object' ? JSON.stringify(val) : String(val);
@@ -155,14 +157,16 @@ export async function generateQuizFromArtworkMetadata(
 
   let selectedAngle: QuizAngle = availableAngles[Math.floor(Math.random() * availableAngles.length)];
   if (context.forcedAngle) {
-    const found = POSSIBLE_ANGLES.find(a => a.id === context.forcedAngle || a.aliases?.includes(context.forcedAngle!));
+    const forcedAngle = context.forcedAngle;
+    const found = POSSIBLE_ANGLES.find(a => a.id === forcedAngle || a.aliases?.includes(forcedAngle));
     if (found && availableAngles.some(a => a.id === found.id)) {
       selectedAngle = found;
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const cleanMetadata: Record<string, any> = {};
-  const coreFields = ['id', 'title', 'artist_title', 'date_display', 'is_public_domain', 'description_clean', 'medium_display'];
+  const coreFields = ['id', 'title', 'artist_title', 'date_display', 'is_public_domain', 'description_clean', 'medium_display', 'style_title', 'department_title', 'place_of_origin', 'dimensions', 'image_url_full', 'image_url_thumb'];
   const fieldsToInclude = new Set([...coreFields, ...selectedAngle.targetFields]);
 
   for (const [key, value] of Object.entries(artwork.raw_metadata || {})) {
@@ -235,6 +239,7 @@ Generate an engaging MCQ adhering strictly to the schema and fidelity rules.`;
     temperature: 0.5
   });
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const obj = rawJson as Record<string, any>;
   if (typeof obj.correctAnswer === 'string') obj.correctAnswer = obj.correctAnswer.trim().slice(0, 120);
   if (Array.isArray(obj.distractors)) obj.distractors = obj.distractors.filter(d => typeof d === 'string').map(d => d.trim().slice(0, 120));

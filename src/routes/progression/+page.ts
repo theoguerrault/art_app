@@ -11,7 +11,7 @@ export const load: PageLoad = async () => {
 	let movements: Movement[] = [];
 	let progressList: UserProgress[] = [];
 	let historyList: AnswerHistory[] = [];
-	let artworkToMovement: Record<number, number> = {};
+	const artworkToMovement: Record<number, number> = {};
 
 	if (!isOnline) {
 		progressList = (await readFromLocalCache('user_progress_cache')) || [];
@@ -44,7 +44,7 @@ export const load: PageLoad = async () => {
 			const localHistory = (await readFromLocalCache('offline_sync_queue')) || [];
 			historyList = historyRes.data && historyRes.data.length > 0 ? (historyRes.data as unknown as AnswerHistory[]) : localHistory;
 		} catch (err) {
-			console.warn('[ProgressLoad] Supabase query error, reading cache:', err);
+			void('[ProgressLoad] Supabase query error, reading cache:', err);
 			progressList = (await readFromLocalCache('user_progress_cache')) || [];
 			historyList = (await readFromLocalCache('offline_sync_queue')) || [];
 			const fullArtworks: Artwork[] = (await readFromLocalCache('cached_artworks')) || [];

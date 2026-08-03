@@ -1,7 +1,8 @@
 <script lang="ts">
 	import type { MCQ, QCMSynthese } from '$lib/types/database';
-	import { CheckCircle, XCircle, Target, Lightbulb } from 'phosphor-svelte';
 	import { createQuizSession } from '../logic/useQuizSession.svelte';
+	import MCQOption from './MCQOption.svelte';
+	import MCQExplanation from './MCQExplanation.svelte';
 
 	interface QuickMCQProps {
 		qcm_synthese?: QCMSynthese | MCQ | null;
@@ -30,9 +31,17 @@
 		session.setDisabled(disabled);
 	});
 
-	function handleKeyDown(event: KeyboardEvent, index: number) {
-		if (event.key === 'Enter' || event.key === ' ') {
-			event.preventDefault();
+	function handleOptionClick(e: MouseEvent) {
+		const target = e.currentTarget as HTMLButtonElement;
+		const index = parseInt(target.dataset.index || '0', 10);
+		session.selectOption(index);
+	}
+
+	function handleOptionKeydown(e: KeyboardEvent) {
+		if (e.key === 'Enter' || e.key === ' ') {
+			e.preventDefault();
+			const target = e.currentTarget as HTMLButtonElement;
+			const index = parseInt(target.dataset.index || '0', 10);
 			session.selectOption(index);
 		}
 	}
@@ -62,58 +71,22 @@
 				</div>
 			{:else}
 				<div class="options-container responsive-options-grid" role="group" aria-label="Options à choix multiples">
-				{#each session.qcm.options as option, idx}
-					{@const isSelected = session.selectedIndex === idx}
-					{@const isCorrectOption = idx === session.qcm.correctIndex}
-					{@const showSuccess = session.isAnswered && isCorrectOption}
-					{@const showError = session.isAnswered && isSelected && !isCorrectOption}
-
-					<button
-						type="button"
-						class="option-btn"
-						class:selected={isSelected}
-						class:correct-state={showSuccess}
-						class:error-state={showError}
-						class:locked={session.isAnswered || session.disabled}
-						disabled={session.isAnswered || session.disabled}
-						onclick={() => session.selectOption(idx)}
-						onkeydown={(e) => handleKeyDown(e, idx)}
-						aria-pressed={isSelected}
-					>
-						<span class="option-letter">{String.fromCharCode(65 + idx)}</span>
-						<span class="option-text">{option}</span>
-						{#if showSuccess}
-							<span class="status-icon" aria-label="Correct">
-								<CheckCircle size={20} weight="fill" />
-							</span>
-						{:else if showError}
-							<span class="status-icon" aria-label="Incorrect">
-								<XCircle size={20} weight="fill" />
-							</span>
-						{/if}
-					</button>
+				{#each session.qcm.options as option, idx (idx)}
+					<MCQOption
+						{option}
+						{idx}
+						isSelected={session.selectedIndex === idx}
+						showSuccess={session.isAnswered && idx === session.qcm.correctIndex}
+						showError={session.isAnswered && session.selectedIndex === idx && idx !== session.qcm.correctIndex}
+						isLocked={session.isAnswered || session.disabled}
+						onclick={handleOptionClick}
+						onkeydown={handleOptionKeydown}
+					/>
 				{/each}
 			</div>
 
 			{#if session.isAnswered && session.qcm.explanation}
-				<div
-					class="explanation-box"
-					class:explanation-success={session.isCorrect}
-					class:explanation-error={!session.isCorrect}
-					role="region"
-					aria-live="polite"
-				>
-					<div class="explanation-title">
-						{#if session.isCorrect}
-							<Target size={20} weight="fill" class="title-icon success-icon" />
-							<span>Correct !</span>
-						{:else}
-							<Lightbulb size={20} weight="fill" class="title-icon info-icon" />
-							<span>Bel effort !</span>
-						{/if}
-					</div>
-					<p class="explanation-text">{session.qcm.explanation}</p>
-				</div>
+				<MCQExplanation isCorrect={session.isCorrect} explanation={session.qcm.explanation} />
 			{/if}
 			{/if}
 		</div>
@@ -199,119 +172,6 @@
 		gap: 0.75rem;
 	}
 
-	.option-btn {
-		display: flex;
-		align-items: center;
-		gap: 0.875rem;
-		width: 100%;
-		padding: 0.875rem 1rem;
-		text-align: left;
-		background-color: var(--color-bg);
-		border: 1.5px solid var(--color-border);
-		border-radius: var(--radius-pill);
-		color: var(--color-text-primary);
-		font-weight: 500;
-		transition: border-color 0.15s ease, background-color 0.15s ease, transform 0.1s ease;
-	}
-
-	.option-btn:not(.locked):hover {
-		border-color: var(--color-primary);
-		background-color: var(--color-surface-hover);
-		transform: translateY(-1px);
-	}
-
-	.option-btn:focus-visible {
-		outline: 2px solid var(--color-primary);
-		outline-offset: 2px;
-	}
-
-	.option-btn.locked {
-		cursor: default;
-	}
-
-	.option-letter {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		width: 1.85rem;
-		height: 1.85rem;
-		border-radius: 50%; /* Perfect circle inside pill */
-		background-color: var(--color-border-subtle);
-		color: var(--color-text-secondary);
-		font-weight: 700;
-		font-size: 0.875rem;
-		flex-shrink: 0;
-	}
-
-	.option-text {
-		flex: 1;
-		font-size: 0.95rem;
-		line-height: 1.4;
-	}
-
-	.status-icon {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		margin-left: auto;
-	}
-
-	/* Semantic Feedback States */
-	.correct-state {
-		background-color: var(--color-success-bg) !important;
-		border-color: var(--color-success) !important;
-		color: var(--color-text-primary);
-	}
-
-	.correct-state .option-letter {
-		background-color: var(--color-success);
-		color: oklch(0.99 0 0);
-	}
-
-	.error-state {
-		background-color: var(--color-error-bg) !important;
-		border-color: var(--color-error) !important;
-		color: var(--color-text-primary);
-	}
-
-	.error-state .option-letter {
-		background-color: var(--color-error);
-		color: oklch(0.99 0 0);
-	}
-
-	.explanation-box {
-		margin-top: 1.25rem;
-		padding: 1.1rem;
-		border-radius: var(--radius-md);
-		border-left: 4px solid var(--color-primary);
-		background-color: var(--color-bg);
-		animation: fadeIn 0.2s ease;
-	}
-
-	.explanation-success {
-		border-left-color: var(--color-success);
-		background-color: var(--color-success-bg);
-	}
-
-	.explanation-error {
-		border-left-color: var(--color-error);
-		background-color: var(--color-error-bg);
-	}
-
-	.explanation-title {
-		display: flex;
-		align-items: center;
-		gap: 0.45rem;
-		font-weight: 700;
-		font-size: 0.95rem;
-		margin-bottom: 0.35rem;
-	}
-
-	.explanation-text {
-		font-size: 0.925rem;
-		line-height: 1.5;
-		color: var(--color-text-primary);
-	}
 
 	.mcq-empty {
 		padding: 1.5rem;
@@ -320,16 +180,5 @@
 		background: var(--color-surface);
 		border-radius: var(--radius-md);
 		border: 1px dashed var(--color-border);
-	}
-
-	@keyframes fadeIn {
-		from {
-			opacity: 0;
-			transform: translateY(4px);
-		}
-		to {
-			opacity: 1;
-			transform: translateY(0);
-		}
 	}
 </style>

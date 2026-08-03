@@ -18,6 +18,7 @@
     class?: string;
     onclick?: (e: MouseEvent) => void;
     children?: Snippet;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [key: string]: any;
   } = $props();
 </script>
@@ -46,7 +47,7 @@
     border-radius: 8px;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: opacity 0.2s ease, transform 0.2s ease;
     font-family: inherit;
     text-decoration: none;
   }

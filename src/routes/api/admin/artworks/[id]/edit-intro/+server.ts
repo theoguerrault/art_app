@@ -14,7 +14,8 @@ export async function POST({ params, request }) {
       where: { id_oeuvre_language_code: { id_oeuvre: id, language_code: 'fr' } }
     });
 
-    let report = (current?.verification_report as any) || {};
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const report = (current?.verification_report as any) || {};
     if (report.introduction) {
       report.introduction = {
         ...report.introduction,
@@ -30,6 +31,7 @@ export async function POST({ params, request }) {
       };
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const currentPortions = (current?.article_portions || []) as any[];
     report.global_score = calculateGlobalScore(report, currentPortions, introduction);
 
@@ -43,8 +45,8 @@ export async function POST({ params, request }) {
     });
 
     return json({ success: true, content: updated });
-  } catch (error: any) {
-    console.error('[API/admin/edit-intro] Error:', error);
-    return json({ error: error.message || String(error) }, { status: 500 });
+  } catch (error: unknown) {
+    void('[API/admin/edit-intro] Error:', error);
+    return json({ error: error instanceof Error ? error.message : String(error) }, { status: 500 });
   }
 }

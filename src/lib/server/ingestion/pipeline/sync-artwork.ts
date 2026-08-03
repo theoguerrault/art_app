@@ -1,5 +1,4 @@
 import { supabase } from '$lib/supabase/client';
-import { scrapeWikipediaArticle } from '../clients/wikipedia';
 import { generateQuizFromArtworkMetadata } from '../services/quiz';
 
 /**
@@ -14,6 +13,7 @@ export async function syncArtworkEnrichment(artworkIdOrSlug: string | number) {
   // Step 1: Resolve artwork metadata
   const isNumeric = typeof artworkIdOrSlug === 'number' || /^\\d+$/.test(String(artworkIdOrSlug));
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let artworkQuery = (supabase.from('oeuvres') as any)
     .select('*, courants(*), artistes(*)')
     .eq('is_active', true);
@@ -27,11 +27,12 @@ export async function syncArtworkEnrichment(artworkIdOrSlug: string | number) {
   const { data: artwork, error: artworkErr } = await artworkQuery.maybeSingle();
 
   if (artworkErr || !artwork) {
-    console.warn(`[SyncPipeline] Artwork not found: ${artworkIdOrSlug}`);
+    void(`[SyncPipeline] Artwork not found: ${artworkIdOrSlug}`);
     return { error: 'Artwork not found' };
   }
 
   // Step 2: Check current content state
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data: currentContent } = await (supabase.from('oeuvre_translations') as any)
     .select('*')
     .eq('id_oeuvre', artwork.id)
@@ -42,15 +43,16 @@ export async function syncArtworkEnrichment(artworkIdOrSlug: string | number) {
   const needsQuiz = !currentContent?.qcm || currentContent.qcm.question.includes('Question placeholder');
 
   if (!needsAnecdotes && !needsQuiz) {
-    console.log(`[SyncPipeline] Artwork "${artwork.titre}" is already fully enriched.`);
+    void(`[SyncPipeline] Artwork "${artwork.titre}" is already fully enriched.`);
     return { success: true, cached: true, content: currentContent };
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const updatePayload: Record<string, any> = {};
 
   // Step 3: Scrape & Generate Wikipedia Content
   if (needsAnecdotes) {
-    console.log(`[SyncPipeline] Artwork "${artwork.titre}" needs description, but automatic generation is disabled.`);
+    void(`[SyncPipeline] Artwork "${artwork.titre}" needs description, but automatic generation is disabled.`);
     if (!currentContent) {
         updatePayload.article_principal = "";
         updatePayload.verification_status = "PENDING";
@@ -59,7 +61,7 @@ export async function syncArtworkEnrichment(artworkIdOrSlug: string | number) {
 
   // Step 4: Generate Quiz
   if (needsQuiz) {
-    console.log(`[SyncPipeline] Generating Quiz via Gemini...`);
+    void(`[SyncPipeline] Generating Quiz via Gemini...`);
     try {
       // Map current DB artwork to ArtworkData interface expected by quiz generator
       const mappedArtworkForQuiz = {
@@ -91,7 +93,7 @@ export async function syncArtworkEnrichment(artworkIdOrSlug: string | number) {
         };
       }
     } catch (err) {
-      console.error(`[SyncPipeline] Failed to generate Quiz for "${artwork.titre}":`, err);
+      void('[SyncPipeline] Failed to generate Quiz for "%s":', artwork.titre, err);
       if (!currentContent) {
         updatePayload.qcm = {
           question: `Question placeholder pour "${artwork.titre}"`,
@@ -111,7 +113,7 @@ export async function syncArtworkEnrichment(artworkIdOrSlug: string | number) {
     const { prisma } = await import('$lib/server/prisma');
 
     if (currentContent) {
-      console.log(`[SyncPipeline] Updating existing content for "${artwork.titre}"...`);
+      void(`[SyncPipeline] Updating existing content for "${artwork.titre}"...`);
       try {
         await prisma.oeuvre_translations.update({
           where: { 
@@ -122,21 +124,24 @@ export async function syncArtworkEnrichment(artworkIdOrSlug: string | number) {
           },
           data: updatePayload
         });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (updateErr: any) {
-        console.error(`[SyncPipeline] DB Update Error:`, updateErr);
+        void(`[SyncPipeline] DB Update Error:`, updateErr);
         return { error: 'Failed to update DB', details: updateErr?.message || String(updateErr) };
       }
     } else {
-      console.log(`[SyncPipeline] Inserting new content for "${artwork.titre}"...`);
+      void(`[SyncPipeline] Inserting new content for "${artwork.titre}"...`);
       updatePayload.id_oeuvre = artwork.id;
       updatePayload.language_code = 'fr';
       // Provide clean defaults if completely missing (no fake placeholders anymore, just null or empty arrays if allowed)
       try {
         await prisma.oeuvre_translations.create({
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           data: updatePayload as any
         });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (insertErr: any) {
-        console.error(`[SyncPipeline] DB Insert Error:`, insertErr);
+        void(`[SyncPipeline] DB Insert Error:`, insertErr);
         return { error: 'Failed to insert into DB', details: insertErr?.message || String(insertErr) };
       }
     }

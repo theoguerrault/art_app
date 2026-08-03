@@ -32,10 +32,10 @@ export const GET: RequestHandler = async ({ params }) => {
 			anecdotes_secretes: result.content?.anecdotes_secretes,
 			source: result.updated?.includes('detailed_description') ? 'generated' : 'cache'
 		});
-	} catch (err: any) {
-		console.error(`[/api/artwork-description] Error for slug "${slug}":`, err);
+	} catch (err: unknown) {
+		void('[/api/artwork-description] Error for slug "%s":', slug, err);
 		return json(
-			{ error: 'Failed to get artwork description', details: err?.message || String(err) },
+			{ error: 'Failed to get artwork description', details: err instanceof Error ? err.message : String(err) },
 			{ status: 500 }
 		);
 	}

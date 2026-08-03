@@ -1,14 +1,14 @@
 <script lang="ts">
-	import { authStore } from '$lib/core/auth.svelte';
+
 	import { supabase } from '$lib/supabase/client';
 	import { EnvelopeSimple, LockKey, CircleNotch } from 'phosphor-svelte';
 	import { goto } from '$app/navigation';
 	import { flushOfflineQueue } from '$lib/offline/sync';
-	import { readFromLocalCache, getOfflineQueueItems } from '$lib/offline/storage';
+	import { getOfflineQueueItems } from '$lib/offline/storage';
 
 	let isLogin = $state(true);
-	let email = $state('');
-	let password = $state('');
+	let email = '';
+	let password = '';
 	let loading = $state(false);
 	let errorMessage = $state('');
 
@@ -24,7 +24,7 @@
 				await flushOfflineQueue();
 			}
 		} catch (err) {
-			console.error('[Auth] Failed to migrate anonymous data:', err);
+			void('[Auth] Failed to migrate anonymous data:', err);
 		}
 	}
 
@@ -57,11 +57,16 @@
 					goto('/');
 				}
 			}
-		} catch (error: any) {
-			errorMessage = error.message || 'Une erreur est survenue lors de l\'authentification.';
+		} catch (error: unknown) {
+			errorMessage = (error instanceof Error ? error.message : String(error)) || 'Une erreur est survenue lors de l\'authentification.';
 		} finally {
 			loading = false;
 		}
+	}
+	
+	function toggleLogin() {
+		isLogin = !isLogin;
+		errorMessage = '';
 	}
 </script>
 
@@ -130,10 +135,7 @@
 				<button
 					type="button"
 					class="toggle-btn"
-					onclick={() => {
-						isLogin = !isLogin;
-						errorMessage = '';
-					}}
+					onclick={toggleLogin}
 					disabled={loading}
 				>
 					{isLogin ? "S'inscrire" : 'Se connecter'}

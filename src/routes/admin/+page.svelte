@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { onMount } from 'svelte';
 
-	onMount(() => {
+	$effect(() => {
 		goto('/admin/oeuvres', { replaceState: true });
 	});
 </script>

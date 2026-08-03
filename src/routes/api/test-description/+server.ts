@@ -1,4 +1,4 @@
-import { json } from '@sveltejs/kit';
+
 import { generateArtworkContent } from '$lib/server/ingestion/services/description';
 
 async function fetchWikipediaText(title: string): Promise<string> {

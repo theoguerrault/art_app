@@ -63,7 +63,7 @@
 		max-width: 90vw;
 		opacity: 0;
 		pointer-events: none;
-		transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+		transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 	}
 
 	.offline-banner {

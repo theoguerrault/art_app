@@ -1,5 +1,5 @@
 import { supabase } from '$lib/supabase/client';
-import { getOfflineQueueItems, removeFromOfflineQueue, type OfflineSyncQueueItem } from './storage';
+import { getOfflineQueueItems, removeFromOfflineQueue } from './storage';
 
 let isSyncing = false;
 
@@ -31,6 +31,7 @@ export async function flushOfflineQueue(): Promise<{ successCount: number; failC
 
 			try {
 				// 1. Insert into `historique_reponses`
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any
 				const { error: insertError } = await (supabase.from('historique_reponses') as any).insert({
 					user_id: item.user_id,
 					id_oeuvre: item.id_oeuvre ?? null,
@@ -43,13 +44,14 @@ export async function flushOfflineQueue(): Promise<{ successCount: number; failC
 				});
 
 				if (insertError) {
-					console.error('[OfflineSync] Supabase error inserting historique_reponses:', insertError);
+					void('[OfflineSync] Supabase error inserting historique_reponses:', insertError);
 					failCount++;
 					continue; // Retain in queue for next retry
 				}
 
 				// 2. Upsert into `user_artwork_progress` if `id_oeuvre` is provided
 				if (item.id_oeuvre !== undefined && item.id_oeuvre !== null) {
+					// eslint-disable-next-line @typescript-eslint/no-explicit-any
 					const { error: upsertError } = await (supabase.from('user_artwork_progress') as any).upsert(
 						{
 							user_id: item.user_id,
@@ -64,7 +66,7 @@ export async function flushOfflineQueue(): Promise<{ successCount: number; failC
 					);
 
 					if (upsertError) {
-						console.error('[OfflineSync] Supabase error upserting user_artwork_progress:', upsertError);
+						void('[OfflineSync] Supabase error upserting user_artwork_progress:', upsertError);
 						// Note: if upsert fails, we don't remove from queue so both can be retried safely or logged
 						failCount++;
 						continue;
@@ -75,7 +77,7 @@ export async function flushOfflineQueue(): Promise<{ successCount: number; failC
 				await removeFromOfflineQueue(item.queue_id);
 				successCount++;
 			} catch (err) {
-				console.error('[OfflineSync] Exception during sync processing item:', err);
+				void('[OfflineSync] Exception during sync processing item:', err);
 				failCount++;
 			}
 		}

@@ -17,7 +17,7 @@ const USER_AGENT = 'ArtCoachApp/1.0 (mailto:contact@artcoach.app)';
 export async function scrapeWikipediaArticle(
   title: string,
   artist: string | null,
-  lang: string = 'fr',
+  lang = 'fr',
   exactWikiTitle?: string | null,
   titre_international?: string | null
 ): Promise<WikipediaArtExtract | null> {
@@ -97,13 +97,14 @@ async function fetchArticleForLang(
     if (res.ok) {
       const data = await res.json();
       const pages = data?.query?.pages || {};
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const pageObj = Object.values(pages)[0] as any;
       text = pageObj?.extract || null;
     }
 
     return { summary, text, lang, thumbnailUrl, originalImageUrl };
   } catch (err) {
-    console.warn(`[WikipediaClient] Failed to fetch article for "${title}" (${lang}):`, err);
+    void('[WikipediaClient] Failed to fetch article for "%s" (%s):', title, lang, err);
     return null;
   }
 }

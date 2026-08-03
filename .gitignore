@@ -25,3 +25,9 @@ vite.config.ts.timestamp-*
 # Patch
 *.patch
 .env*
+
+# Local AI scripts and reports
+eslint-report.json
+fix-*.cjs
+disable-*.cjs
+.svelte-doctor/*

@@ -1,4 +1,4 @@
-import { GoogleGenAI, Type } from '@google/genai';
+import { GoogleGenAI } from '@google/genai';
 import { env } from '$env/dynamic/private';
 
 // Ordre de priorité basé sur test live du 2026-07-23 :
@@ -9,7 +9,7 @@ export const GEMINI_DEFAULT_MODELS = [
   'gemini-3.6-flash'
 ];
 
-export const GEMINI_PRO_MODELS = [
+const GEMINI_PRO_MODELS = [
   'gemini-3.1-pro-preview',
   'gemini-3-flash-preview',
   'gemini-3.1-flash-lite'
@@ -18,6 +18,7 @@ export const GEMINI_PRO_MODELS = [
 export interface GeminiRequestOptions {
   systemInstruction: string;
   userPrompt: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   responseSchema?: any;
   models?: string[];
   temperature?: number;
@@ -28,6 +29,7 @@ export interface GeminiRequestOptions {
  * Executes a Gemini request with automatic fallback across multiple models
  * and exponential backoff for transient errors (429, 503).
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function generateContentWithRetry<T = any>(options: GeminiRequestOptions): Promise<T> {
   const apiKey = options.apiKey || env.GEMINI_API_KEY || process.env.GEMINI_API_KEY;
   if (!apiKey) {
@@ -36,16 +38,18 @@ export async function generateContentWithRetry<T = any>(options: GeminiRequestOp
 
   const ai = new GoogleGenAI({ apiKey });
   const modelsToTry = options.models || GEMINI_DEFAULT_MODELS;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let lastError: any = null;
 
   for (const modelName of modelsToTry) {
-    console.log(`[GenAI] Sending request to Gemini (${modelName})...`);
+    void(`[GenAI] Sending request to Gemini (${modelName})...`);
     let attempts = 0;
     const maxRetriesPerModel = 2;
 
     while (attempts < maxRetriesPerModel) {
       attempts++;
       try {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const config: any = {
           systemInstruction: options.systemInstruction,
           temperature: options.temperature ?? 0.5,
@@ -72,36 +76,38 @@ export async function generateContentWithRetry<T = any>(options: GeminiRequestOp
           try {
             parsedJson = JSON.parse(responseText);
             return parsedJson as T;
-          } catch (err) {
+          } catch {
             throw new Error(`Failed to parse JSON from model ${modelName}: ${responseText}`);
           }
         }
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return responseText as any as T;
 
-      } catch (error: any) {
+      } catch (error: unknown) {
         lastError = error;
-        const status = error?.status || error?.error?.status || '';
-        const code = error?.code || error?.error?.code || 0;
-        const errorMessage = error?.message || String(error);
+        const err = error as Record<string, any>;
+        const status = err?.status || err?.error?.status || '';
+        const code = err?.code || err?.error?.code || 0;
+        const errorMessage = err?.message || String(error);
 
         const isTransient = status === 'UNAVAILABLE' || code === 503 || status === 'RESOURCE_EXHAUSTED' || code === 429;
         const isModelNotFoundOrUnsupported = status === 'NOT_FOUND' || code === 404 || errorMessage.includes('not found') || errorMessage.includes('is not supported');
         const isValidationOrParsingError = errorMessage.includes('Failed to parse JSON');
 
         if (isModelNotFoundOrUnsupported) {
-          console.warn(`[GenAI] ⚠️ Model "${modelName}" unavailable (${status || code}). Switching immediately to next model...`);
+          void(`[GenAI] ⚠️ Model "${modelName}" unavailable (${status || code}). Switching immediately to next model...`);
           break; // Break the retry loop, try next model
         }
 
         if ((isTransient || isValidationOrParsingError) && attempts < maxRetriesPerModel) {
           const delayMs = isTransient ? Math.pow(2, attempts) * 1000 : 500;
-          console.warn(`[GenAI] ⚠️ Error on "${modelName}" (${errorMessage}) (attempt ${attempts}/${maxRetriesPerModel}). Retrying in ${delayMs / 1000}s...`);
+          void(`[GenAI] ⚠️ Error on "${modelName}" (${errorMessage}) (attempt ${attempts}/${maxRetriesPerModel}). Retrying in ${delayMs / 1000}s...`);
           await new Promise(resolve => setTimeout(resolve, delayMs));
           continue;
         }
 
-        console.warn(`[GenAI] ⚠️ Failed with model "${modelName}" (${errorMessage}). Switching to next fallback model...`);
+        void(`[GenAI] ⚠️ Failed with model "${modelName}" (${errorMessage}). Switching to next fallback model...`);
         break; // Max retries reached for this model, move to next
       }
     }

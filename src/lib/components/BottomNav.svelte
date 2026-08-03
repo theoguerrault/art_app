@@ -1,10 +1,11 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import { PaintBrush, Books, Gear, ShieldStar } from 'phosphor-svelte';
 
 	interface TabItem {
 		href: string;
 		label: string;
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		icon: any;
 	}
 
@@ -15,7 +16,7 @@
 		{ href: '/settings', label: 'Paramètres', icon: Gear }
 	];
 
-	let currentPath = $derived($page.url?.pathname || '/');
+	let currentPath = $derived(page.url?.pathname || '/');
 
 	function isActive(href: string): boolean {
 		if (href === '/') {
@@ -77,7 +78,7 @@
 	<div class="glass-rim" aria-hidden="true"></div>
 
 	<ul class="nav-list" role="list">
-		{#each tabs as tab}
+		{#each tabs as tab (tab.href || tab)}
 			{@const active = isActive(tab.href)}
 			{@const IconComponent = tab.icon}
 			<li class="nav-item">

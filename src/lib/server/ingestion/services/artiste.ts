@@ -41,7 +41,7 @@ Rédige une description très courte (2 à 3 phrases maximum) de cet artiste. El
     
     return response.description;
   } catch (error) {
-    console.error(`[AI:Artist] Error generating definition for ${artistName}:`, error);
+    void('[AI:Artist] Error generating definition for %s:', artistName, error);
     return null;
   }
 }

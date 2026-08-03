@@ -1,17 +1,14 @@
 <script lang="ts">
-  import { untrack } from 'svelte';
   import { invalidateAll } from '$app/navigation';
   import { parseMarkdown } from '$lib/utils/markdown';
-  import { Sparkle, ShieldCheck, ArrowLeft, Warning, PencilSimple, Check, X } from 'phosphor-svelte';
+  import { html } from '$lib/actions/html';
+  import { Sparkle, ArrowLeft, Warning, PencilSimple, Check, X } from 'phosphor-svelte';
   import Button from '$lib/components/ui/Button.svelte';
+  import { apiClient } from '$lib/utils/api';
 
   let { data } = $props();
   let artiste = $derived(data.artiste);
-  let content = $state(untrack(() => data.artiste.artiste_translations[0]));
-  
-  $effect(() => {
-    content = data.artiste.artiste_translations[0];
-  });
+  let content = $derived(data.artiste.artiste_translations[0]);
   
   let generating = $state(false);
   let validating = $state(false);
@@ -20,21 +17,16 @@
 
   async function saveEdit() {
     try {
-      const res = await fetch(`/api/admin/artistes/${artiste.id}/edit-description`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content: editContent })
-      });
+      const res = await apiClient.post(`/api/admin/artistes/${artiste.id}/edit-description`, { content: editContent });
       if (res.ok) {
         const json = await res.json();
-        if (json.content) content = json.content;
         await invalidateAll();
         editing = false;
       } else {
         alert('Erreur lors de la sauvegarde');
       }
     } catch (e) {
-      console.error(e);
+      void(e);
     }
   }
 
@@ -42,10 +34,9 @@
     if (content?.description_courte && !confirm('Du contenu existe déjà. Voulez-vous vraiment le regénérer ?')) return;
     generating = true;
     try {
-      const res = await fetch(`/api/admin/artistes/${artiste.id}/generate`, { method: 'POST' });
+      const res = await apiClient.post(`/api/admin/artistes/${artiste.id}/generate`);
       if (res.ok) {
         const json = await res.json();
-        if (json.content) content = json.content;
         await invalidateAll();
       } else {
         alert('Erreur lors de la génération');
@@ -58,10 +49,9 @@
   async function validateManual() {
     validating = true;
     try {
-      const res = await fetch(`/api/admin/artistes/${artiste.id}/validate`, { method: 'POST' });
+      const res = await apiClient.post(`/api/admin/artistes/${artiste.id}/validate`);
       if (res.ok) {
         const json = await res.json();
-        if (json.content) content = json.content;
         await invalidateAll();
       } else {
         alert('Erreur lors de la validation');
@@ -70,11 +60,20 @@
       validating = false;
     }
   }
+
+  function handleCancelEdit() {
+    editing = false;
+  }
+
+  function handleStartEdit() {
+    editContent = content?.description_courte || '';
+    editing = true;
+  }
 </script>
 
 <div class="admin-detail-view">
   <div class="top-nav">
-    <a href="/admin/artistes" class="back-link">
+    <a data-sveltekit-preload-data="hover" href="/admin/artistes" data-sveltekit-prefetch class="back-link">
       <ArrowLeft size={20} />
       <span>Retour à la liste</span>
     </a>
@@ -113,9 +112,9 @@
             <div class="action-buttons">
               {#if editing}
                 <Button variant="primary" size="sm" onclick={saveEdit} title="Sauvegarder"><Check size={18} /></Button>
-                <Button variant="outline" size="sm" onclick={() => editing = false} title="Annuler"><X size={18} /></Button>
+                <Button variant="outline" size="sm" onclick={handleCancelEdit} title="Annuler"><X size={18} /></Button>
               {:else}
-                <Button variant="outline" size="sm" onclick={() => { editContent = content?.description_courte || ''; editing = true; }} title="Éditer"><PencilSimple size={18} /></Button>
+                <Button variant="outline" size="sm" onclick={handleStartEdit} title="Éditer"><PencilSimple size={18} /></Button>
               {/if}
             </div>
           </div>
@@ -123,9 +122,7 @@
           {#if editing}
             <textarea class="edit-textarea" bind:value={editContent} rows="6"></textarea>
           {:else}
-            <div class="rich-text statement-text">
-              {@html parseMarkdown(content.description_courte)}
-            </div>
+            <div class="rich-text statement-text" use:html={parseMarkdown(content.description_courte)}></div>
           {/if}
           
           {#if content.verification_status !== 'VERIFIED'}
@@ -320,7 +317,7 @@
   }
 
   .mb-0 {
-    margin-bottom: 0 !important;
+    margin-bottom: 0 ;
   }
 
   .section-header {

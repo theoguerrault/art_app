@@ -3,7 +3,9 @@
  * and the introduction verification status.
  */
 export function calculateGlobalScore(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   report: any,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   articlePortions: any[] = [],
   introductionText?: string | null
 ): number {
@@ -45,7 +47,9 @@ export function calculateGlobalScore(
  * based on all article portions and introduction status.
  */
 export function calculateGlobalStatus(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   report: any,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   articlePortions: any[] = [],
   introductionText?: string | null
 ): string {

@@ -26,6 +26,7 @@ export async function POST({ params }) {
       return json({ error: 'No introduction to verify' }, { status: 400 });
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const fakePortion: any = { id: 'intro', text: introduction, type: 'article', status: 'UNVERIFIED' };
 
     const titre = artwork.oeuvre_translations[0].titre;
@@ -43,7 +44,9 @@ export async function POST({ params }) {
     }
 
     const match = report.statements[0];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const existingReport = (artwork.oeuvre_translations[0].verification_report || {}) as any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const articlePortions = (artwork.oeuvre_translations[0].article_portions || []) as any[];
 
     const newReport = {
@@ -60,14 +63,15 @@ export async function POST({ params }) {
     const updated = await prisma.oeuvre_translations.update({
       where: { id_oeuvre_language_code: { id_oeuvre: id, language_code: 'fr' } },
       data: {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         verification_report: newReport as any,
         verification_status: globalStatus
       }
     });
 
     return json({ success: true, content: updated });
-  } catch (error: any) {
-    console.error('[API/admin/factcheck-intro] Error:', error);
-    return json({ error: error.message || String(error) }, { status: 500 });
+  } catch (error: unknown) {
+    void('[API/admin/factcheck-intro] Error:', error);
+    return json({ error: error instanceof Error ? error.message : String(error) }, { status: 500 });
   }
 }

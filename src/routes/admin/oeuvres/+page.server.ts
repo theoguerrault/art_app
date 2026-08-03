@@ -70,7 +70,7 @@ export const load: PageServerLoad = async ({ url }) => {
       }
     };
   } catch (err) {
-    console.error('[Admin Oeuvres Load Error]:', err);
+    void('[Admin Oeuvres Load Error]:', err);
     throw err;
   }
 };

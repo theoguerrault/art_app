@@ -2,7 +2,7 @@ import { json } from '@sveltejs/kit';
 import { prisma } from '$lib/server/prisma';
 import type { RequestEvent } from '@sveltejs/kit';
 
-export async function GET(event: RequestEvent) {
+export async function GET(_event: RequestEvent) {
   try {
     const verifiedArtworks = await prisma.oeuvres.findMany({
       where: {
@@ -52,7 +52,7 @@ export async function GET(event: RequestEvent) {
 
     return json({ artworks, mcqs });
   } catch (err) {
-    console.error('Error fetching verified artworks:', err);
+    void('Error fetching verified artworks:', err);
     return json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }

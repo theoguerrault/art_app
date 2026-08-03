@@ -12,11 +12,23 @@
 		eager?: boolean;
 	}
 
-	let { artwork, displayMovementName, displayOklchToken, cardAspectRatio, eager = false }: Props = $props();
+	let { artwork, cardAspectRatio, eager = false }: Props = $props();
 	let showFullscreen = $state(false);
+
+	function openFullscreen() {
+		showFullscreen = true;
+	}
+
+	function closeFullscreen() {
+		showFullscreen = false;
+	}
+
+	function handleCloseClick() {
+		showFullscreen = false;
+	}
 </script>
 
-<button class="card-visual" style:aspect-ratio={cardAspectRatio} onclick={() => showFullscreen = true} aria-label="Agrandir l'œuvre">
+<button class="card-visual" style:aspect-ratio={cardAspectRatio} onclick={openFullscreen} aria-label="Agrandir l'œuvre">
 	<div class="image-wrapper">
 		<img
 			src={artwork.image_url_full || artwork.image_url_thumb}
@@ -28,20 +40,19 @@
 </button>
 
 {#if showFullscreen}
-	<div 
-		class="fullscreen-modal" 
-		role="dialog" 
-		aria-modal="true" 
-		onclick={() => showFullscreen = false}
-		onkeydown={(e) => e.key === 'Escape' && (showFullscreen = false)}
-		tabindex="0"
+	<div
+		class="fullscreen-modal"
+		role="dialog"
+		aria-modal="true"
+		aria-label="Image plein écran"
 		transition:fade={{ duration: 200 }}
 	>
-		<button class="close-modal-btn" aria-label="Fermer" onclick={(e) => { e.stopPropagation(); showFullscreen = false; }}>
+		<button class="modal-backdrop" onclick={closeFullscreen} aria-label="Fermer l'image plein écran" tabindex="0"></button>
+		<button class="close-modal-btn" aria-label="Fermer" onclick={handleCloseClick}>
 			<X size={24} weight="bold" />
 		</button>
-		<img 
-			src={artwork.image_url_full || artwork.image_url_thumb} 
+		<img
+			src={artwork.image_url_full || artwork.image_url_thumb}
 			alt="{artwork.titre} par {artwork.artistes?.nom || 'Inconnu'}"
 			transition:scale={{ duration: 300, start: 0.95 }}
 		/>
@@ -92,7 +103,15 @@
 		align-items: center;
 		justify-content: center;
 		padding: 1rem;
+	}
+
+	.modal-backdrop {
+		position: absolute;
+		inset: 0;
+		background: transparent;
+		border: none;
 		cursor: zoom-out;
+		z-index: 0;
 	}
 
 	.fullscreen-modal img {

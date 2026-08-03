@@ -1,19 +1,20 @@
 <script lang="ts">
   import { page } from '$app/stores';
+  import type { Snippet } from 'svelte';
   
-  let { children } = $props();
+  let { children }: { children: Snippet } = $props();
 </script>
 
 <div class="admin-layout">
   <aside class="admin-sidebar">
     <nav class="sidebar-nav">
-      <a href="/admin/oeuvres" class="nav-item" class:active={$page.url.pathname.startsWith('/admin/oeuvres')}>
+      <a data-sveltekit-preload-data="hover" href="/admin/oeuvres" data-sveltekit-prefetch class="nav-item" class:active={$page.url.pathname.startsWith('/admin/oeuvres')}>
         <span>Œuvres</span>
       </a>
-      <a href="/admin/artistes" class="nav-item" class:active={$page.url.pathname.startsWith('/admin/artistes')}>
+      <a data-sveltekit-preload-data="hover" href="/admin/artistes" data-sveltekit-prefetch class="nav-item" class:active={$page.url.pathname.startsWith('/admin/artistes')}>
         <span>Artistes</span>
       </a>
-      <a href="/admin/courants" class="nav-item" class:active={$page.url.pathname.startsWith('/admin/courants')}>
+      <a data-sveltekit-preload-data="hover" href="/admin/courants" data-sveltekit-prefetch class="nav-item" class:active={$page.url.pathname.startsWith('/admin/courants')}>
         <span>Mouvements</span>
       </a>
     </nav>
@@ -57,7 +58,7 @@
     color: #FFFFFF;
     text-decoration: none;
     font-weight: 500;
-    transition: all 0.2s ease;
+    transition: opacity 0.2s ease, transform 0.2s ease;
   }
 
   .nav-item:hover {

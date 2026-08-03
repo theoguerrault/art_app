@@ -1,20 +1,18 @@
 <script lang="ts">
+	let isOnline = $state(true);
+	import { SvelteSet } from 'svelte/reactivity';
 	import type { PageData } from './$types';
-	import { supabase } from '$lib/supabase/client';
-	import { readFromLocalCache } from '$lib/offline/storage';
-	import { sanitizeArtworks } from '$lib/utils/artworks';
-	import type { Artwork } from '$lib/types/database';
-	import { MagnifyingGlass, X, Check, Heart } from 'phosphor-svelte';
 	import LazySection from '$lib/components/LazySection.svelte';
 	import CatalogArtworkCard from '$lib/features/artwork/components/CatalogArtworkCard.svelte';
+	import CatalogHeader from './components/CatalogHeader.svelte';
 
 	let { data }: { data: PageData } = $props();
 
-	let isOnline = $state(typeof window !== 'undefined' ? navigator.onLine : true);
+
 
 	let searchQuery = $state('');
 	let showFavoritesOnly = $state(false);
-	let selectedMovements = $state(new Set<number>());
+	let selectedMovements = new SvelteSet<number>();
 
 	let scrollY = $state(0);
 	let lastScrollY = $state(0);
@@ -39,24 +37,30 @@
 		selectedMovements = updated;
 	}
 
-	$effect(() => {
-		// Removed hue override to keep the primary pink color
-	});
+	function toggleFavoritesFilter() {
+		showFavoritesOnly = !showFavoritesOnly;
+	}
 
-	// Map progress by id_oeuvre
-	let progressSet = $derived(() => {
+	function computeProgressSet(progressList: { id_oeuvre?: number; box_level?: number; consecutive_correct?: number }[]) {
 		const set = new Set<number>();
-		for (const p of data.progressList) {
+		for (const p of progressList) {
 			if (p && p.id_oeuvre && (p.box_level > 1 || (p.consecutive_correct && p.consecutive_correct > 0))) {
 				set.add(p.id_oeuvre);
 			}
 		}
 		return set;
-	});
+	}
+	let progressSet = $derived(computeProgressSet(data.progressList));
 
-	let favoritesSet = $derived(() => {
-		return new Set<number>(data.favoritesList || []);
-	});
+	function computeFavoritesSet(favoritesList: number[]) {
+		return new Set<number>(favoritesList || []);
+	}
+	let favoritesSet = $derived(computeFavoritesSet(data.favoritesList));
+
+	function computeNormalizedQuery(query: string) {
+		return query.trim().toLowerCase();
+	}
+	let normalizedQuery = $derived(computeNormalizedQuery(searchQuery));
 
 	$effect(() => {
 		const handleOnline = () => (isOnline = true);
@@ -70,26 +74,34 @@
 		};
 	});
 
-	// Group loaded artworks by movement
-	let groupedMovements = $derived(() => {
-		const groups = new Map<number, { movement: any; items: any[]; discoveredCount: number; totalCount: number }>();
-		const pSet = progressSet();
+	type MovementType = { id: number; nom?: string; siecle?: string };
+	type ArtworkType = { id?: number; id_courant?: number; titre?: string; artistes?: { nom?: string } };
 
-		for (const m of data.movements || []) {
+	function computeGroupedMovements(
+		movements: MovementType[],
+		artworks: ArtworkType[],
+		pSet: Set<number>,
+		favSet: Set<number>,
+		activeMovements: Set<number>,
+		query: string,
+		qLower: string,
+		showFavs: boolean
+	) {
+		const groups = new Map<number, { movement: MovementType; items: ArtworkType[]; discoveredCount: number; totalCount: number }>();
+
+		for (const m of movements || []) {
 			groups.set(m.id, { movement: m, items: [], discoveredCount: 0, totalCount: 0 });
 		}
 
-		let filtered = data.artworks || [];
+		let filtered = artworks || [];
 
-		if (showFavoritesOnly) {
-			const favSet = favoritesSet();
+		if (showFavs) {
 			filtered = filtered.filter(a => a.id && favSet.has(a.id));
 		}
-		if (selectedMovements.size > 0) {
-			filtered = filtered.filter(a => a.id_courant && selectedMovements.has(a.id_courant));
+		if (activeMovements.size > 0) {
+			filtered = filtered.filter(a => a.id_courant && activeMovements.has(a.id_courant));
 		}
-		if (searchQuery.trim()) {
-			const qLower = searchQuery.trim().toLowerCase();
+		if (query.trim()) {
 			filtered = filtered.filter(
 				(a) =>
 					(a.titre && a.titre.toLowerCase().includes(qLower)) ||
@@ -97,10 +109,10 @@
 			);
 		}
 
-		// Calculate counts based on filtered artworks
 		for (const art of filtered) {
-			if (art.id_courant && groups.has(art.id_courant)) {
-				const grp = groups.get(art.id_courant)!;
+			if (art.id_courant === undefined) continue;
+			const grp = groups.get(art.id_courant);
+			if (grp) {
 				grp.totalCount++;
 				if (art.id && pSet.has(art.id)) {
 					grp.discoveredCount++;
@@ -109,55 +121,31 @@
 			}
 		}
 
-		// Return only movements that have matching items when searching, or all if no search query
 		return Array.from(groups.values()).filter((g) => {
-			if (selectedMovements.size > 0 && !selectedMovements.has(g.movement.id)) return false;
-			return g.items.length > 0 || (!searchQuery.trim() && !showFavoritesOnly && selectedMovements.size === 0);
+			if (activeMovements.size > 0 && !activeMovements.has(g.movement.id)) return false;
+			return g.items.length > 0 || (!query.trim() && !showFavs && activeMovements.size === 0);
 		});
-	});
+	}
+	let groupedMovements = $derived(computeGroupedMovements(data.movements, data.artworks, progressSet, favoritesSet, selectedMovements, searchQuery, normalizedQuery, showFavoritesOnly));
+	function resetSearch() {
+		searchQuery = '';
+	}
 </script>
 <svelte:window bind:scrollY={scrollY} />
 
 <div class="catalog-view">
-	<header class="catalog-header sticky-header" class:hidden={!headerVisible}>
-		<div class="search-bar">
-			<span class="search-icon" aria-hidden="true">
-				<MagnifyingGlass size={20} weight="regular" />
-			</span>
-			<input
-				type="search"
-				placeholder="Rechercher une œuvre..."
-				bind:value={searchQuery}
-				aria-label="Rechercher une œuvre"
-			/>
-			{#if searchQuery}
-				<button type="button" class="clear-btn" onclick={() => (searchQuery = '')} aria-label="Effacer">
-					<X size={18} weight="regular" />
-				</button>
-			{/if}
-		</div>
-		<div class="filters-bar">
-			<button 
-				class="filter-pill favorite-pill {showFavoritesOnly ? 'active' : ''}" 
-				onclick={() => (showFavoritesOnly = !showFavoritesOnly)}
-			>
-				<Heart size={16} weight={showFavoritesOnly ? 'fill' : 'regular'} />
-				Favoris
-			</button>
-			<div class="divider"></div>
-			{#each data.movements || [] as movement}
-				<button 
-					class="filter-pill movement-pill {selectedMovements.has(movement.id) ? 'active' : ''}" 
-					onclick={() => toggleMovement(movement.id)}
-				>
-					{movement.nom}
-				</button>
-			{/each}
-		</div>
-	</header>
+	<CatalogHeader 
+		bind:searchQuery 
+		{showFavoritesOnly}
+		onToggleFavorites={toggleFavoritesFilter}
+		bind:selectedMovements 
+		{headerVisible} 
+		movements={data.movements || []} 
+		{toggleMovement} 
+	/>
 
 	<div class="movements-list" class:header-hidden={!headerVisible}>
-		{#each groupedMovements() as group (group.movement.id)}
+		{#each groupedMovements as group (group.movement.id)}
 			<section class="movement-section" style:--movement-color="var(--color-primary)">
 				<div class="movement-header sticky-subheader">
 					<div>
@@ -176,8 +164,8 @@
 								{#each group.items as art (art.id)}
 									<CatalogArtworkCard 
 										{art} 
-										isFavorite={favoritesSet().has(art.id)} 
-										isDiscovered={progressSet().has(art.id)} 
+										isFavorite={favoritesSet.has(art.id)} 
+										isDiscovered={progressSet.has(art.id)} 
 									/>
 								{/each}
 							</div>
@@ -189,10 +177,10 @@
 			</section>
 		{/each}
 
-		{#if groupedMovements().length === 0}
+		{#if groupedMovements.length === 0}
 			<div class="empty-search">
 				<p>Aucun résultat pour "{searchQuery}".</p>
-				<button type="button" class="reset-btn" onclick={() => (searchQuery = '')}>Réinitialiser</button>
+				<button type="button" class="reset-btn" onclick={resetSearch}>Réinitialiser</button>
 			</div>
 		{/if}
 	</div>
@@ -206,79 +194,7 @@
 		padding-bottom: 2rem;
 	}
 
-	.sticky-header {
-		position: sticky;
-		top: 0;
-		z-index: 20;
-		background: color-mix(in oklch, var(--color-bg) 85%, transparent);
-		backdrop-filter: blur(12px);
-		-webkit-backdrop-filter: blur(12px);
-		padding: 1rem 0 1.25rem;
-		margin: -1rem -1.25rem 0;
-		border-bottom: 1px solid var(--color-border-subtle);
-		transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-	}
 
-	.sticky-header.hidden {
-		transform: translateY(-100%);
-	}
-
-	.search-bar {
-		position: relative;
-		margin: 0 1.25rem;
-		display: flex;
-		align-items: center;
-	}
-
-	.search-icon {
-		position: absolute;
-		left: 1rem;
-		display: flex;
-		align-items: center;
-		pointer-events: none;
-		color: var(--color-text-muted);
-	}
-
-	.search-bar input {
-		width: 100%;
-		padding: 0.85rem 2.5rem 0.85rem 2.8rem;
-		border-radius: 12px;
-		border: none;
-		background-color: var(--color-surface);
-		color: var(--color-text-primary);
-		font-size: 1rem;
-		box-shadow: inset 0 0 0 1px var(--color-border);
-		transition: box-shadow 0.2s ease, background-color 0.2s ease;
-		-webkit-appearance: none;
-		appearance: none;
-	}
-
-	.search-bar input:focus {
-		outline: none;
-		background-color: var(--color-bg);
-		box-shadow: inset 0 0 0 2px var(--color-primary);
-	}
-
-	.search-bar input::placeholder {
-		color: var(--color-text-muted);
-	}
-
-	.clear-btn {
-		position: absolute;
-		right: 0.25rem;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		color: var(--color-text-muted);
-		width: 44px;
-		height: 44px;
-		border-radius: 50%;
-	}
-
-	.clear-btn:hover {
-		color: var(--color-text-primary);
-		background: var(--color-surface-hover);
-	}
 
 	.movements-list {
 		display: flex;
@@ -384,56 +300,7 @@
 		min-height: 44px;
 	}
 
-	.filters-bar {
-		margin: 1rem 1.25rem 0;
-		display: flex;
-		gap: 0.5rem;
-		overflow-x: auto;
-		padding-bottom: 0.5rem;
-		-webkit-overflow-scrolling: touch;
-		scrollbar-width: none;
-	}
 
-	.filters-bar::-webkit-scrollbar {
-		display: none;
-	}
-
-	.divider {
-		width: 1px;
-		background: var(--color-border);
-		margin: 0 0.25rem;
-		flex-shrink: 0;
-	}
-
-	.filter-pill {
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		gap: 0.4rem;
-		padding: 0 1rem;
-		min-height: 40px; /* Better touch target */
-		border-radius: 20px;
-		background-color: var(--color-surface);
-		color: var(--color-text-secondary);
-		font-size: 0.85rem;
-		font-weight: 600;
-		box-shadow: inset 0 0 0 1px var(--color-border);
-		transition: all 0.2s ease;
-		white-space: nowrap;
-		flex-shrink: 0;
-	}
-
-	.filter-pill.favorite-pill.active {
-		background-color: color-mix(in oklch, #ff3b30 15%, transparent);
-		color: #ff3b30;
-		box-shadow: inset 0 0 0 1px #ff3b30;
-	}
-
-	.filter-pill.movement-pill.active {
-		background-color: var(--color-text-primary);
-		color: var(--color-bg);
-		box-shadow: inset 0 0 0 1px var(--color-text-primary);
-	}
 
 
 </style>

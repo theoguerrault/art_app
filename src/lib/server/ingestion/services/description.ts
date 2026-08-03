@@ -74,7 +74,7 @@ RÈGLES ABSOLUES :
   };
 
   try {
-    console.log(`[DescriptionService] Generating storytelling content for "${title}"...`);
+    void(`[DescriptionService] Generating storytelling content for "${title}"...`);
     const result = await generateContentWithRetry<GeneratedArtworkContent>({
       systemInstruction,
       userPrompt,
@@ -84,8 +84,8 @@ RÈGLES ABSOLUES :
     });
     return result;
   } catch (err) {
-    console.error(`[DescriptionService] Failed generating content for "${title}":`, err);
-    return null;
+    console.error('[DescriptionService] Failed generating content for "%s":', title, err);
+    throw err;
   }
 }
 
@@ -97,7 +97,7 @@ export async function factCheckArtworkContent(
   title: string,
   portionsToVerify: ContentPortion[],
   wikipediaText: string,
-  wikipediaLang: string = 'fr'
+  wikipediaLang = 'fr'
 ): Promise<FactCheckReport | null> {
   const trimmedText = trimWikipediaText(wikipediaText);
 
@@ -142,7 +142,7 @@ RÈGLES ABSOLUES :
   };
 
   try {
-    console.log(`[DescriptionService] Fact-checking content for "${title}" against Wikipedia...`);
+    void(`[DescriptionService] Fact-checking content for "${title}" against Wikipedia...`);
     const report = await generateContentWithRetry<FactCheckReport>({
       systemInstruction,
       userPrompt,
@@ -153,7 +153,7 @@ RÈGLES ABSOLUES :
 
     return report;
   } catch (err) {
-    console.error(`[DescriptionService] Failed fact-checking for "${title}":`, err);
+    void('[DescriptionService] Failed fact-checking for "%s":', title, err);
     return null;
   }
 }
@@ -162,7 +162,7 @@ export async function correctArtworkContentPortion(
   title: string,
   falsePortion: ContentPortion,
   wikipediaText: string,
-  wikipediaLang: string = 'fr'
+  _wikipediaLang = 'fr'
 ): Promise<string | null> {
   const trimmedText = trimWikipediaText(wikipediaText);
 
@@ -197,7 +197,7 @@ Mission : Réécris le paragraphe original en corrigeant ces erreurs en te basan
   };
 
   try {
-    console.log(`[DescriptionService] Auto-correcting portion for "${title}"...`);
+    void(`[DescriptionService] Auto-correcting portion for "${title}"...`);
     const result = await generateContentWithRetry<{ corrected_text: string }>({
       systemInstruction,
       userPrompt,
@@ -208,12 +208,12 @@ Mission : Réécris le paragraphe original en corrigeant ces erreurs en te basan
 
     return result?.corrected_text || null;
   } catch (err) {
-    console.error(`[DescriptionService] Failed auto-correcting portion for "${title}":`, err);
+    void('[DescriptionService] Failed auto-correcting portion for "%s":', title, err);
     return null;
   }
 }
 
-export async function regenerateArtworkIntroduction(title: string, artist: string | null, existingContext: string = ''): Promise<string | null> {
+export async function regenerateArtworkIntroduction(title: string, artist: string | null, existingContext = ''): Promise<string | null> {
   const systemInstruction = `Tu es un expert en histoire de l'art. Rédige une courte introduction sobre et concise présentant l'œuvre (ce que c'est, date, technique, contexte de création, etc.). N'utilise jamais de vouvoiement ou de tutoiement ("vous", "tu", "Savez-vous que"). Ne répète pas les informations suivantes :\n${existingContext}`;
 
   const userPrompt = `Rédige l'introduction pour l'œuvre "${title}"${artist ? ` par ${artist}` : ''}.`;
@@ -227,7 +227,7 @@ export async function regenerateArtworkIntroduction(title: string, artist: strin
   };
 
   try {
-    console.log(`[DescriptionService] Regenerating intro for "${title}"...`);
+    void(`[DescriptionService] Regenerating intro for "${title}"...`);
     const result = await generateContentWithRetry<{ introduction: string }>({
       systemInstruction,
       userPrompt,
@@ -237,7 +237,7 @@ export async function regenerateArtworkIntroduction(title: string, artist: strin
     });
     return result?.introduction || null;
   } catch (err) {
-    console.error(`[DescriptionService] Failed regenerating intro for "${title}":`, err);
+    void('[DescriptionService] Failed regenerating intro for "%s":', title, err);
     return null;
   }
 }

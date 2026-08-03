@@ -1,8 +1,8 @@
 import type { PageLoad } from './$types';
-import { supabase } from '$lib/supabase/client';
+
 import { readFromLocalCache, saveToLocalCache } from '$lib/offline/storage';
-import type { Artwork, UserProgress, ContentArtwork, Movement, ActiveLessonView } from '$lib/types/database';
-import { sanitizeArtworks } from '$lib/utils/artworks';
+import type { Artwork, UserProgress, ContentArtwork, ActiveLessonView } from '$lib/types/database';
+
 
 export const ssr = false; // Client-side rendering enabled for daily storage state logic
 
@@ -37,7 +37,7 @@ export const load: PageLoad = async ({ fetch }) => {
 						await saveToLocalCache('cached_mcqs', mcqs);
 					}
 				}
-			}).catch(err => console.warn('Background cache failed:', err));
+			}).catch(err => void('Background cache failed:', err));
 
 			// Fetch daily lesson from server
 			const res = await fetch('/api/daily-artwork');
@@ -46,7 +46,7 @@ export const load: PageLoad = async ({ fetch }) => {
 				return { lesson, isOffline: false };
 			}
 		} catch (err) {
-			console.warn('[TodayLoad] Error fetching online daily artwork, falling back to cache:', err);
+			void('[TodayLoad] Error fetching online daily artwork, falling back to cache:', err);
 		}
 	}
 
@@ -95,7 +95,7 @@ export const load: PageLoad = async ({ fetch }) => {
 		}
 
 		if (!selectedArtwork) {
-			const undiscovered = validatedArtworks.filter((art) => !progressMap.get(art.id) || !progressMap.get(art.id)!.last_presented_daily_at);
+			const undiscovered = validatedArtworks.filter((art) => !progressMap.get(art.id) || !progressMap.get(art.id)?.last_presented_daily_at);
 			if (undiscovered.length > 0) selectedArtwork = undiscovered[0];
 		}
 
@@ -119,18 +119,22 @@ export const load: PageLoad = async ({ fetch }) => {
 		const content = contentsMap[selectedArtwork.id];
 		lesson = {
 			...selectedArtwork,
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			nom_courant: (selectedArtwork as any).courants?.nom || 'Mouvement Artistique',
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			oklch_token: (selectedArtwork as any).courants?.oklch_token || 'var(--movement-theme)',
 			article_principal: content?.article_principal || 'Explorez l\'histoire remarquable et la composition de ce chef-d\'œuvre intemporel.',
 			qcm: content?.qcm || {
 				question: `Quel mouvement artistique ou période est le mieux représenté par "${selectedArtwork.titre}" ?`,
 				options: [
+					// eslint-disable-next-line @typescript-eslint/no-explicit-any
 					(selectedArtwork as any).courants?.nom || 'Impressionnisme',
 					'Expressionnisme abstrait',
 					'Néoclassicisme',
 					'Surréalisme'
 				],
 				correctIndex: 0,
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any
 				explanation: `"${selectedArtwork.titre}" créé par ${selectedArtwork.artistes?.nom || 'Inconnu'} est un exemple fondamental de ${(selectedArtwork as any).courants?.nom || 'Impressionnisme'}.`
 			}
 		};
@@ -138,6 +142,7 @@ export const load: PageLoad = async ({ fetch }) => {
 
 	return {
 		lesson,
+		isFavorite: false,
 		isOffline: !isOnline
 	};
 };
