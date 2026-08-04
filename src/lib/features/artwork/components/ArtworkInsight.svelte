@@ -1,6 +1,4 @@
 <script lang="ts">
-	import sanitizeHtml from 'sanitize-html';
-
 	interface Portion {
 		id?: string;
 		type?: string;
@@ -25,11 +23,45 @@
 	let articlePortions = $derived(filterPortions(portions, null));
 	let anecdotePortions = $derived(filterPortions(portions, 'anecdote'));
 
-	function cleanHtml(html: string | undefined | null) {
+	/**
+	 * Lightweight client-side HTML sanitizer.
+	 * Uses the browser's own DOMParser to parse & re-serialize HTML,
+	 * stripping dangerous tags/attributes without any server-side dep.
+	 * This replaces sanitize-html which crashes Vercel due to ESM/CJS conflict.
+	 */
+	function cleanHtml(html: string | undefined | null): string {
 		if (!html) return '';
-		return sanitizeHtml(html, {
-			allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img', 'h1', 'h2', 'span'])
-		});
+		const ALLOWED_TAGS = new Set([
+			'p', 'br', 'b', 'strong', 'i', 'em', 'u', 's', 'ul', 'ol', 'li',
+			'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote', 'a', 'img', 'span'
+		]);
+		const ALLOWED_ATTRS: Record<string, string[]> = {
+			a: ['href', 'title', 'target'],
+			img: ['src', 'alt', 'title']
+		};
+		const doc = new DOMParser().parseFromString(html, 'text/html');
+		function sanitizeNode(node: Element) {
+			const toRemove: Element[] = [];
+			for (const child of Array.from(node.children)) {
+				if (!ALLOWED_TAGS.has(child.tagName.toLowerCase())) {
+					// Replace disallowed element with its text content
+					const text = document.createTextNode(child.textContent || '');
+					child.replaceWith(text);
+				} else {
+					const allowedAttrNames = ALLOWED_ATTRS[child.tagName.toLowerCase()] || [];
+					for (const attr of Array.from(child.attributes)) {
+						if (!allowedAttrNames.includes(attr.name) || /^javascript:/i.test(attr.value)) {
+							toRemove.push(child);
+							child.removeAttribute(attr.name);
+						}
+					}
+					sanitizeNode(child);
+				}
+			}
+			for (const el of toRemove) el.remove();
+		}
+		sanitizeNode(doc.body);
+		return doc.body.innerHTML;
 	}
 
 	function html(node: HTMLElement, content: string | null | undefined) {
