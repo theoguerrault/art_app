@@ -172,13 +172,6 @@
 		gap: 0.25rem;
 	}
 
-	.title-with-icon {
-		display: flex;
-		align-items: center;
-		gap: 0.5rem;
-		color: var(--color-text-primary);
-	}
-
 	.section-title {
 		font-size: 1.5rem;
 		font-weight: 500;

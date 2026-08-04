@@ -3,6 +3,7 @@
 	import ArtworkVisual from './ArtworkVisual.svelte';
 	import ArtworkSpecs from './ArtworkSpecs.svelte';
 	import ArtworkInsight from './ArtworkInsight.svelte';
+	import { browser } from '$app/environment';
 
 	interface ArtworkCardProps {
 		artwork: Artwork | ActiveLessonView;
@@ -23,7 +24,13 @@
 		eager = true
 	}: ArtworkCardProps = $props();
 
-	const lessonData = artwork as ActiveLessonView;
+	const lessonData = {
+		get nom_courant() { return (artwork as ActiveLessonView).nom_courant; },
+		get oklch_token() { return (artwork as ActiveLessonView).oklch_token; },
+		get article_principal() { return (artwork as ActiveLessonView).article_principal; },
+		get introduction() { return (artwork as ActiveLessonView).introduction; },
+		get article_portions() { return (artwork as ActiveLessonView).article_portions; }
+	};
 
 	let displayMovementName = $derived(
 		movementName !== 'Historical Art'
@@ -47,6 +54,15 @@
 	);
 
 	let cardAspectRatio = $derived(artwork.aspect_ratio ? `${artwork.aspect_ratio}` : '4 / 3');
+
+	// Delay rendering of heavy markdown insight to client side to drastically reduce initial HTML size
+	let showInsight = $state(false);
+	$effect(() => {
+		// Use requestAnimationFrame to ensure the browser has painted the main visual (LCP) first
+		requestAnimationFrame(() => {
+			showInsight = true;
+		});
+	});
 </script>
 
 <div
@@ -68,7 +84,7 @@
 	<div class="hidden-description-box">
 		<p>La description est masquée pendant le quiz.</p>
 	</div>
-{:else}
+{:else if showInsight}
 	<ArtworkInsight 
 		artworkTitle={`${artwork.titre} - ${artwork.artistes?.nom || 'Inconnu'} (${artwork.date_creation})`}
 		introduction={lessonData.introduction ?? undefined}

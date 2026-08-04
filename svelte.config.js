@@ -8,7 +8,8 @@ const config = {
 		runes: true
 	},
 	kit: {
-		adapter: adapter()
+		adapter: adapter(),
+		inlineStyleThreshold: 102400
 	}
 };
 

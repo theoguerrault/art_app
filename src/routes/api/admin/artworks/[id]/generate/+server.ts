@@ -76,7 +76,7 @@ export async function POST({ params }) {
 
     return json({ success: true, content: updated });
   } catch (error: unknown) {
-    console.error('[API/admin/generate] Error:', String(error));
+    void('[API/admin/generate] Error:', String(error));
 
     const errorMessage = error instanceof Error ? error.message : String(error);
     if (errorMessage.includes('Quota exceeded') || errorMessage.includes('429')) {

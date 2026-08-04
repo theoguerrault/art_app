@@ -1,6 +1,12 @@
 import { json } from '@sveltejs/kit';
 import { prisma } from '$lib/server/prisma';
 import type { RequestEvent } from '@sveltejs/kit';
+import { sanitizeArtwork } from '$lib/utils/artworks';
+
+// Simple in-memory cache for the heavy verified artworks query
+let cachedVerifiedArtworks: any = null;
+let cacheTimestamp: number = 0;
+const CACHE_TTL = 60 * 60 * 1000; // 1 hour
 
 export async function GET(_event: RequestEvent) {
   const userId = '00000000-0000-0000-0000-000000000001';
@@ -9,27 +15,32 @@ export async function GET(_event: RequestEvent) {
     const now = new Date();
     const sevenDaysAgo = new Date(now.getTime() - 7 * 86400000);
 
-    // Get all verified artworks with their relations
-    const verifiedArtworks = await prisma.oeuvres.findMany({
-      where: {
-        is_active: true,
-        oeuvre_translations: {
-          some: {
-            language_code: 'fr',
-            verification_status: 'VERIFIED'
+    // Get all verified artworks with their relations (with cache)
+    let verifiedArtworks = cachedVerifiedArtworks;
+    if (!verifiedArtworks || now.getTime() - cacheTimestamp > CACHE_TTL) {
+      verifiedArtworks = await prisma.oeuvres.findMany({
+        where: {
+          is_active: true,
+          oeuvre_translations: {
+            some: {
+              language_code: 'fr',
+              verification_status: 'VERIFIED'
+            }
+          }
+        },
+        include: {
+          oeuvre_translations: { where: { language_code: 'fr' } },
+          artistes: {
+            include: { artiste_translations: { where: { language_code: 'fr' } } }
+          },
+          courants: {
+            include: { courant_translations: { where: { language_code: 'fr' } } }
           }
         }
-      },
-      include: {
-        oeuvre_translations: { where: { language_code: 'fr' } },
-        artistes: {
-          include: { artiste_translations: { where: { language_code: 'fr' } } }
-        },
-        courants: {
-          include: { courant_translations: { where: { language_code: 'fr' } } }
-        }
-      }
-    });
+      });
+      cachedVerifiedArtworks = verifiedArtworks;
+      cacheTimestamp = now.getTime();
+    }
 
     if (verifiedArtworks.length === 0) {
       return json({ lesson: null });
@@ -96,6 +107,7 @@ export async function GET(_event: RequestEvent) {
     }
 
     if (selectedArtwork) {
+      const optimizedArtwork = sanitizeArtwork(selectedArtwork);
       const translation = selectedArtwork.oeuvre_translations[0];
       const movementTranslation = selectedArtwork.courants?.courant_translations?.[0];
       const artistTranslation = selectedArtwork.artistes?.artiste_translations?.[0];
@@ -108,8 +120,8 @@ export async function GET(_event: RequestEvent) {
         id_artiste: selectedArtwork.id_artiste,
         titre: translation?.titre || 'Inconnu',
         date_creation: selectedArtwork.date_creation,
-        image_url_thumb: selectedArtwork.image_url_thumb,
-        image_url_full: selectedArtwork.image_url_full,
+        image_url_thumb: optimizedArtwork.image_url_thumb,
+        image_url_full: optimizedArtwork.image_url_full,
         aspect_ratio: selectedArtwork.aspect_ratio,
         artistes: { nom: artistTranslation?.nom || 'Inconnu' },
         nom_courant: movementTranslation?.nom || 'Mouvement Artistique',

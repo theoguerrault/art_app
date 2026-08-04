@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { MagnifyingGlass, X, Heart } from 'phosphor-svelte';
-	import type { SvelteSet } from 'svelte/reactivity';
+
 
 	let {
 		searchQuery = $bindable(''),
@@ -13,7 +13,7 @@
 	}: {
 		searchQuery: string;
 		showFavoritesOnly: boolean;
-		selectedMovements: SvelteSet<number>;
+		selectedMovements: number[];
 		headerVisible: boolean;
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		movements: any[];
@@ -64,7 +64,7 @@
 		<div class="divider"></div>
 		{#each movements as movement (movement.id || movement)}
 			<button 
-				class="filter-pill movement-pill {selectedMovements.has(movement.id) ? 'active' : ''}" 
+				class="filter-pill movement-pill {selectedMovements.includes(movement.id) ? 'active' : ''}" 
 				data-id={movement.id}
 				onclick={handleToggleMovement}
 			>

@@ -87,6 +87,7 @@
 					class="nav-link"
 					class:active
 					aria-current={active ? 'page' : undefined}
+					aria-label={tab.label}
 				>
 					<!-- Active background pill -->
 					{#if active}

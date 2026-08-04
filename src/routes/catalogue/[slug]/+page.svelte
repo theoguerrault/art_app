@@ -246,7 +246,7 @@
 			margin-right: -1.25rem;
 		}
 		
-		.back-nav, .detail-header, :global(.glossary-content) {
+		.back-nav, :global(.glossary-content) {
 			padding-left: 1.25rem;
 			padding-right: 1.25rem;
 		}

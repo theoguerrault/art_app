@@ -84,7 +84,7 @@ RÈGLES ABSOLUES :
     });
     return result;
   } catch (err) {
-    console.error('[DescriptionService] Failed generating content for "%s":', title, err);
+    void('[DescriptionService] Failed generating content for "%s":', title, err);
     throw err;
   }
 }

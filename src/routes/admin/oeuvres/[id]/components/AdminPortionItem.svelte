@@ -28,8 +28,8 @@
 	let isUnvalidating = $state(false);
 
 	let isEditing = $state(false);
-	let editTitle = $state(portion.title || '');
-	let editText = $state(portion.text || '');
+	let editTitle = $state('');
+	let editText = $state('');
 	let isSaving = $state(false);
 
 	async function doAction(endpoint: string, stateSetter: (val: boolean) => void, errorMsg: string) {

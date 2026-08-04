@@ -13,10 +13,9 @@
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"lint": "eslint .",
 		"doctor": "svelte-doctor check --baseline",
-		"lhci": "lhci autorun"
+		"lighthouse": "lighthouse http://localhost:5174 --view"
 	},
 	"devDependencies": {
-		"@lhci/cli": "^0.15.1",
 		"@sveltejs/adapter-auto": "^7.0.1",
 		"@sveltejs/kit": "^2.63.0",
 		"@sveltejs/vite-plugin-svelte": "^7.1.2",
@@ -26,7 +25,9 @@
 		"eslint": "^9.20.0",
 		"eslint-plugin-svelte": "^2.46.1",
 		"globals": "^15.14.0",
+		"lighthouse": "^12.2.0",
 		"prisma": "^6.19.3",
+		"puppeteer": "^24.1.0",
 		"svelte": "^5.56.1",
 		"svelte-check": "^4.6.0",
 		"svelte-doctor": "^0.3.3",
@@ -39,7 +40,9 @@
 		"@google/genai": "^2.12.0",
 		"@prisma/client": "^6.19.3",
 		"@supabase/supabase-js": "^2.109.0",
+		"@types/md5": "^2.3.6",
 		"marked": "^18.0.7",
+		"md5": "^2.3.0",
 		"phosphor-svelte": "^3.1.0",
 		"sanitize-html": "^2.17.6",
 		"zod": "^4.4.3"

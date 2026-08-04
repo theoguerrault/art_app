@@ -31,7 +31,7 @@ export async function POST({ params }) {
 
     return json({ success: true, content: updated });
   } catch (error: unknown) {
-    console.error('[API/admin/artistes/generate] Error:', String(error));
+    void('[API/admin/artistes/generate] Error:', String(error));
     return json({ error: error instanceof Error ? error.message : String(error) }, { status: 500 });
   }
 }

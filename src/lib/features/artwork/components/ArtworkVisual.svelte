@@ -28,14 +28,40 @@
 	}
 </script>
 
+<svelte:head>
+	{#if eager}
+		{#if artwork.image_url_full && artwork.image_url_thumb && artwork.image_url_full !== artwork.image_url_thumb}
+			<link rel="preload" as="image" href={artwork.image_url_thumb} media="(max-width: 768px)" fetchpriority="high" />
+			<link rel="preload" as="image" href={artwork.image_url_full} media="(min-width: 769px)" fetchpriority="high" />
+		{:else}
+			<link rel="preload" as="image" href={artwork.image_url_full || artwork.image_url_thumb} fetchpriority="high" />
+		{/if}
+	{/if}
+</svelte:head>
+
 <button class="card-visual" style:aspect-ratio={cardAspectRatio} onclick={openFullscreen} aria-label="Agrandir l'œuvre">
 	<div class="image-wrapper">
-		<img
-			src={artwork.image_url_full || artwork.image_url_thumb}
-			alt="{artwork.titre} par {artwork.artistes?.nom || 'Inconnu'}"
-			loading={eager ? "eager" : "lazy"}
-			decoding="async"
-		/>
+		{#if artwork.image_url_full && artwork.image_url_thumb && artwork.image_url_full !== artwork.image_url_thumb}
+			<picture>
+				<source media="(max-width: 768px)" srcset={artwork.image_url_thumb} />
+				<source media="(min-width: 769px)" srcset={artwork.image_url_full} />
+				<img
+					src={artwork.image_url_full}
+					alt="{artwork.titre} par {artwork.artistes?.nom || 'Inconnu'}"
+					loading={eager ? "eager" : "lazy"}
+					fetchpriority={eager ? "high" : "auto"}
+					decoding={eager ? "sync" : "async"}
+				/>
+			</picture>
+		{:else}
+			<img
+				src={artwork.image_url_full || artwork.image_url_thumb}
+				alt="{artwork.titre} par {artwork.artistes?.nom || 'Inconnu'}"
+				loading={eager ? "eager" : "lazy"}
+				fetchpriority={eager ? "high" : "auto"}
+				decoding={eager ? "sync" : "async"}
+			/>
+		{/if}
 	</div>
 </button>
 

@@ -4,13 +4,14 @@
 	interface Props {
 		itemCount: number;
 		rootMargin?: string;
-		children: Snippet;
+		initiallyVisible?: boolean;
+		content: Snippet;
 	}
 
-	let { itemCount, rootMargin = '200px', children }: Props = $props();
+	let { itemCount, rootMargin = '200px', initiallyVisible = false, content }: Props = $props();
 
 	let sectionEl: HTMLElement;
-	let isVisible = $state(false);
+	let isVisible = $state(initiallyVisible);
 
 	$effect(() => {
 		if (!sectionEl) return;
@@ -31,7 +32,7 @@
 
 <div bind:this={sectionEl} class="lazy-section-wrapper">
 	{#if isVisible}
-		{@render children()}
+		{@render content()}
 	{:else}
 		<div class="skeleton-grid">
 			{#each { length: Math.min(itemCount, 12) } as _, i (i)}

@@ -18,6 +18,10 @@
 	);
 
 	let isFavorite = $state(data.isFavorite ?? false);
+	$effect(() => {
+		const fav = data.isFavorite ?? false;
+		if (isFavorite !== fav) isFavorite = fav;
+	});
 
 	// Sync from local cache when offline (no server fetch in component)
 	$effect(() => {
@@ -123,7 +127,7 @@
 	{:else}
 		<div class="empty-state">
 			<span class="empty-icon"><Palette size={48} weight="fill" /></span>
-			<h3>Tout est à jour !</h3>
+			<h2>Tout est à jour !</h2>
 			<p>Aucune œuvre disponible pour le moment. Visitez le catalogue pour explorer les mouvements artistiques.</p>
 			<a data-sveltekit-preload-data="hover" href="/catalogue" data-sveltekit-prefetch class="cta-link">Explorer le catalogue →</a>
 		</div>
@@ -158,8 +162,9 @@
 		letter-spacing: 0.08em;
 		padding: 0.35rem 0.8rem;
 		border-radius: 9999px;
-		background-color: var(--color-primary-light);
-		color: var(--color-primary);
+		background-color: var(--color-surface-elevated);
+		color: var(--color-text-primary);
+		border: 1px solid var(--color-border-subtle);
 		margin-bottom: 0.5rem;
 	}
 
@@ -201,11 +206,6 @@
 		color: var(--color-primary);
 	}
 
-	.empty-state h3 {
-		font-size: 1.5rem;
-		margin-bottom: 0.5rem;
-	}
-
 	.empty-state p {
 		color: var(--color-text-secondary);
 		margin-bottom: 1.5rem;
@@ -219,7 +219,7 @@
 		padding: 0.75rem 1.5rem;
 		border-radius: var(--radius-pill);
 		background-color: var(--color-primary);
-		color: oklch(0.99 0 0);
+		color: #000000;
 		font-weight: 700;
 		text-decoration: none;
 		transition: transform 0.15s ease, box-shadow 0.15s ease;

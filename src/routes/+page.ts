@@ -2,9 +2,10 @@ import type { PageLoad } from './$types';
 
 import { readFromLocalCache, saveToLocalCache } from '$lib/offline/storage';
 import type { Artwork, UserProgress, ContentArtwork, ActiveLessonView } from '$lib/types/database';
+import { sanitizeArtwork } from '$lib/utils/artworks';
 
 
-export const ssr = false; // Client-side rendering enabled for daily storage state logic
+// export const ssr = false; // Client-side rendering enabled for daily storage state logic
 
 /**
  * Calculates the next review date based on Leitner Box Level rules:
@@ -117,8 +118,9 @@ export const load: PageLoad = async ({ fetch }) => {
 	let lesson: ActiveLessonView | null = null;
 	if (selectedArtwork) {
 		const content = contentsMap[selectedArtwork.id];
+		const optimizedArtwork = sanitizeArtwork(selectedArtwork);
 		lesson = {
-			...selectedArtwork,
+			...optimizedArtwork,
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			nom_courant: (selectedArtwork as any).courants?.nom || 'Mouvement Artistique',
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any

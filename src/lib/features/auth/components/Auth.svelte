@@ -7,10 +7,18 @@
 	import { getOfflineQueueItems } from '$lib/offline/storage';
 
 	let isLogin = $state(true);
-	let email = '';
-	let password = '';
+	let email = $state('');
+	let password = $state('');
 	let loading = $state(false);
 	let errorMessage = $state('');
+
+	function handleEmailInput(e: Event) {
+		email = (e.currentTarget as HTMLInputElement).value;
+	}
+
+	function handlePasswordInput(e: Event) {
+		password = (e.currentTarget as HTMLInputElement).value;
+	}
 
 	async function migrateAnonymousData(userId: string) {
 		try {
@@ -95,7 +103,8 @@
 					<input
 						id="email"
 						type="email"
-						bind:value={email}
+						value={email}
+						oninput={handleEmailInput}
 						placeholder="nom@exemple.com"
 						required
 						disabled={loading}
@@ -110,7 +119,8 @@
 					<input
 						id="password"
 						type="password"
-						bind:value={password}
+						value={password}
+						oninput={handlePasswordInput}
 						placeholder="••••••••"
 						required
 						disabled={loading}

@@ -1,6 +1,6 @@
 <script lang="ts">
 	let isOnline = $state(true);
-	import { SvelteSet } from 'svelte/reactivity';
+
 	import type { PageData } from './$types';
 	import LazySection from '$lib/components/LazySection.svelte';
 	import CatalogArtworkCard from '$lib/features/artwork/components/CatalogArtworkCard.svelte';
@@ -12,7 +12,7 @@
 
 	let searchQuery = $state('');
 	let showFavoritesOnly = $state(false);
-	let selectedMovements = new SvelteSet<number>();
+	let selectedMovements = $state<number[]>([]);
 
 	let scrollY = $state(0);
 	let lastScrollY = $state(0);
@@ -28,13 +28,11 @@
 	});
 
 	function toggleMovement(id: number) {
-		const updated = new Set(selectedMovements);
-		if (updated.has(id)) {
-			updated.delete(id);
+		if (selectedMovements.includes(id)) {
+			selectedMovements = selectedMovements.filter(m => m !== id);
 		} else {
-			updated.add(id);
+			selectedMovements = [...selectedMovements, id];
 		}
-		selectedMovements = updated;
 	}
 
 	function toggleFavoritesFilter() {
@@ -82,7 +80,7 @@
 		artworks: ArtworkType[],
 		pSet: Set<number>,
 		favSet: Set<number>,
-		activeMovements: Set<number>,
+		activeMovements: number[],
 		query: string,
 		qLower: string,
 		showFavs: boolean
@@ -98,8 +96,8 @@
 		if (showFavs) {
 			filtered = filtered.filter(a => a.id && favSet.has(a.id));
 		}
-		if (activeMovements.size > 0) {
-			filtered = filtered.filter(a => a.id_courant && activeMovements.has(a.id_courant));
+		if (activeMovements.length > 0) {
+			filtered = filtered.filter(a => a.id_courant && activeMovements.includes(a.id_courant));
 		}
 		if (query.trim()) {
 			filtered = filtered.filter(
@@ -122,8 +120,8 @@
 		}
 
 		return Array.from(groups.values()).filter((g) => {
-			if (activeMovements.size > 0 && !activeMovements.has(g.movement.id)) return false;
-			return g.items.length > 0 || (!query.trim() && !showFavs && activeMovements.size === 0);
+			if (activeMovements.length > 0 && !activeMovements.includes(g.movement.id)) return false;
+			return g.items.length > 0 || (!query.trim() && !showFavs && activeMovements.length === 0);
 		});
 	}
 	let groupedMovements = $derived(computeGroupedMovements(data.movements, data.artworks, progressSet, favoritesSet, selectedMovements, searchQuery, normalizedQuery, showFavoritesOnly));
@@ -145,7 +143,7 @@
 	/>
 
 	<div class="movements-list" class:header-hidden={!headerVisible}>
-		{#each groupedMovements as group (group.movement.id)}
+		{#each groupedMovements as group, gIndex (group.movement.id)}
 			<section class="movement-section" style:--movement-color="var(--color-primary)">
 				<div class="movement-header sticky-subheader">
 					<div>
@@ -158,14 +156,15 @@
 				</div>
 
 				{#if group.items.length > 0}
-					<LazySection itemCount={group.items.length}>
-						{#snippet children()}
+					<LazySection itemCount={group.items.length} initiallyVisible={gIndex <= 1}>
+						{#snippet content()}
 							<div class="grid-catalog-minimal">
-								{#each group.items as art (art.id)}
+								{#each group.items as art, aIndex (art.id)}
 									<CatalogArtworkCard 
 										{art} 
 										isFavorite={favoritesSet.has(art.id)} 
 										isDiscovered={progressSet.has(art.id)} 
+										eager={gIndex === 0 && aIndex < 6}
 									/>
 								{/each}
 							</div>

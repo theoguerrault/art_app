@@ -66,7 +66,7 @@
 		font-weight: 700;
 		text-transform: uppercase;
 		letter-spacing: 0.05em;
-		color: var(--color-bg);
+		color: #000000;
 		margin-bottom: 0.75rem;
 		border: none;
 	}

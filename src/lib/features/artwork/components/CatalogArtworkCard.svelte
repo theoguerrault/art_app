@@ -6,23 +6,37 @@
 		art: any;
 		isFavorite: boolean;
 		isDiscovered: boolean;
+		eager?: boolean;
 	}
 
-	let { art, isFavorite, isDiscovered }: Props = $props();
+	let { art, isFavorite, isDiscovered, eager = false }: Props = $props();
 	
 	let loaded = $state(false);
 	
 	function handleLoad() {
 		loaded = true;
 	}
+
+	let displaySrc = $derived(
+		art.image_url_thumb?.includes('Special:FilePath') && !art.image_url_thumb.includes('?width=')
+			? `${art.image_url_thumb}?width=400`
+			: art.image_url_thumb
+	);
 </script>
+
+<svelte:head>
+	{#if eager && displaySrc}
+		<link rel="preload" as="image" href={displaySrc} fetchpriority="high" />
+	{/if}
+</svelte:head>
 
 <a href="/catalogue/{art.slug || art.id}" data-sveltekit-prefetch data-sveltekit-preload-data="hover" class="artwork-card-minimal" aria-label="Voir {art.titre}">
 	<div class="thumb-wrapper" class:loading={!loaded}>
 		<img 
-			src={art.image_url_thumb} 
+			src={displaySrc} 
 			alt={art.titre} 
-			loading="lazy" 
+			loading={eager ? "eager" : "lazy"}
+			fetchpriority={eager ? "high" : "auto"}
 			decoding="async"
 			onload={handleLoad}
 			class:loaded

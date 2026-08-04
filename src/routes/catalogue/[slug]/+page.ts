@@ -10,8 +10,6 @@ export interface GlossaryContent {
 	courant_description?: string;
 }
 
-export const ssr = false;
-
 export const load: PageLoad = async ({ params }) => {
 	const isOnline = typeof window !== 'undefined' ? navigator.onLine : true;
 	const slugOrId = params.slug;

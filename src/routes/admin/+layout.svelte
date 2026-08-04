@@ -2,7 +2,7 @@
   import { page } from '$app/stores';
   import type { Snippet } from 'svelte';
   
-  let { children }: { children: Snippet } = $props();
+  let props = $props() as { children: Snippet };
 </script>
 
 <div class="admin-layout">
@@ -21,7 +21,7 @@
   </aside>
 
   <main class="admin-content">
-    {@render children()}
+    {@render props.children()}
   </main>
 </div>
 

@@ -92,32 +92,6 @@
 	--shadow-sm: 0 1px 3px oklch(0.20 0.02 var(--artwork-hue) / 0.04);
 	--shadow-md: 0 4px 16px oklch(0.20 0.02 var(--artwork-hue) / 0.06);
 	--shadow-lg: 0 12px 32px oklch(0.20 0.02 var(--artwork-hue) / 0.08);
-	
-	/* Vibrant borders */
-	--color-border: color-mix(in srgb, #FA47FF 30%, transparent);
-	--color-border-subtle: color-mix(in srgb, #FA47FF 15%, transparent);
-
-	--color-text-primary: #FFFFFF;
-	--color-text-secondary: color-mix(in srgb, #FFFFFF 75%, transparent);
-	--color-text-muted: color-mix(in srgb, #FFFFFF 50%, transparent);
-
-	/* DS Colors */
-	--color-primary: #FA47FF; 
-	--color-primary-light: color-mix(in srgb, #FA47FF 20%, transparent);
-	--color-accent: #FFFD82; /* DS Yellow */
-	
-	--color-success: #52FFB8; /* DS Mint/Green */
-	--color-success-bg: color-mix(in srgb, #52FFB8 15%, transparent);
-	--color-error: #ED254E; /* DS Red */
-	--color-error-bg: color-mix(in srgb, #ED254E 15%, transparent);
-
-	--movement-theme-bg: oklch(0.25 0.10 var(--artwork-hue));
-	--movement-theme-border: oklch(0.75 0.25 var(--artwork-hue) / 0.5);
-	
-	/* Glow effects */
-	--shadow-sm: 0 0 10px color-mix(in srgb, #FA47FF 20%, transparent);
-	--shadow-md: 0 0 20px color-mix(in srgb, #FA47FF 30%, transparent);
-	--shadow-lg: 0 0 40px color-mix(in srgb, #FA47FF 40%, transparent);
 }
 
 @media (prefers-color-scheme: dark) {

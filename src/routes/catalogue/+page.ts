@@ -4,9 +4,11 @@ import { readFromLocalCache, saveToLocalCache } from '$lib/offline/storage';
 import type { Artwork, Movement, UserProgress } from '$lib/types/database';
 import { sanitizeArtworks } from '$lib/utils/artworks';
 
+// The catalogue is fully user-specific (progress, favorites). Disabling SSR
+// avoids a Supabase client cold-start that would block TTFB by several seconds.
 export const ssr = false;
 
-export const load: PageLoad = async () => {
+export const load: PageLoad = async ({ fetch }) => {
 	const isOnline = typeof window !== 'undefined' ? navigator.onLine : true;
 
 	let artworks: Partial<Artwork>[] = [];
@@ -37,7 +39,6 @@ export const load: PageLoad = async () => {
 		favoritesList = favCache ? favCache.data : [];
 	} else {
 		try {
-			// Query specific lightweight fields under 10 KB to optimize network payloads, limit to 20
 			const [artworksRes, movementsRes, progressRes, favoritesRes] = await Promise.all([
 				supabase.from('oeuvres').select('id, slug, id_courant, id_artiste, date_creation, image_url_thumb, aspect_ratio, artistes(artiste_translations(nom)), oeuvre_translations(titre)')
 					.eq('is_active', true)
