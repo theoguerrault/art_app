@@ -18,9 +18,13 @@
 	}
 
 	let displaySrc = $derived(
-		art.image_url_thumb?.includes('Special:FilePath') && !art.image_url_thumb.includes('?width=')
-			? `${art.image_url_thumb}?width=400`
-			: art.image_url_thumb
+		(() => {
+			const src = art.image_url_full || art.image_url_thumb;
+			if (src?.includes('Special:FilePath') && !src.includes('?width=')) {
+				return `${src}?width=400`;
+			}
+			return src;
+		})()
 	);
 </script>
 
@@ -30,11 +34,11 @@
 	{/if}
 </svelte:head>
 
-<a href="/catalogue/{art.slug || art.id}" data-sveltekit-prefetch data-sveltekit-preload-data="hover" class="artwork-card-minimal" aria-label="Voir {art.titre}">
+<a href="/catalogue/{art.slug || art.id}" data-sveltekit-prefetch data-sveltekit-preload-data="hover" class="artwork-card-minimal" aria-label="Voir {art.title}">
 	<div class="thumb-wrapper" class:loading={!loaded}>
 		<img 
 			src={displaySrc} 
-			alt={art.titre} 
+			alt={art.title} 
 			loading={eager ? "eager" : "lazy"}
 			fetchpriority={eager ? "high" : "auto"}
 			decoding="async"
@@ -55,8 +59,8 @@
 		</div>
 	</div>
 	<div class="art-info">
-		<h3 class="art-title">{art.titre}</h3>
-		<p class="art-artist">{art.artistes?.nom}</p>
+		<h3 class="art-title">{art.title}</h3>
+		<p class="art-artist">{art.artists?.name}</p>
 	</div>
 </a>
 
@@ -108,7 +112,7 @@
 	.thumb-wrapper img {
 		width: 100%;
 		height: 100%;
-		object-fit: cover;
+		object-fit: contain;
 		transition: transform 0.4s cubic-bezier(0.2, 0, 0, 1), opacity 0.3s ease;
 		opacity: 0;
 	}

@@ -104,7 +104,6 @@ async function fetchArticleForLang(
 
     return { summary, text, lang, thumbnailUrl, originalImageUrl };
   } catch (err) {
-    void('[WikipediaClient] Failed to fetch article for "%s" (%s):', title, lang, err);
     return null;
   }
 }

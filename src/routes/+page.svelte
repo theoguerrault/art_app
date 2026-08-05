@@ -39,7 +39,7 @@
 	async function toggleFavorite() {
 		if (!lesson) return;
 		isFavorite = !isFavorite;
-		const res = await apiClient.post('/api/favorites', { id_oeuvre: lesson.id });
+		const res = await apiClient.post('/api/favorites', { artwork_id: lesson.id });
 		if (!res.ok) {
 			isFavorite = !isFavorite;
 		} else {
@@ -56,27 +56,27 @@
 	let glossarySubtitle = $state('');
 	let glossaryContent = $state('');
 
-	function openGlossary(type: 'artiste' | 'courant') {
+	function openGlossary(type: 'artist' | 'movement') {
 		if (!lesson) return;
-		if (type === 'artiste' && lesson.glossary?.artiste_description) {
-			glossaryTitle = lesson.artistes?.nom || 'Artiste';
-			glossarySubtitle = 'Artiste';
-			glossaryContent = lesson.glossary.artiste_description;
+		if (type === 'artist' && lesson.glossary?.artist_description) {
+			glossaryTitle = lesson.artists?.name || 'Artist';
+			glossarySubtitle = 'Artist';
+			glossaryContent = lesson.glossary.artist_description;
 			glossaryOpen = true;
-		} else if (type === 'courant' && lesson.glossary?.courant_description) {
-			glossaryTitle = lesson.nom_courant;
+		} else if (type === 'movement' && lesson.glossary?.movement_description) {
+			glossaryTitle = lesson.movement_name;
 			glossarySubtitle = 'Mouvement Artistique';
-			glossaryContent = lesson.glossary.courant_description;
+			glossaryContent = lesson.glossary.movement_description;
 			glossaryOpen = true;
 		}
 	}
 
 	function handleOpenCourant() {
-		openGlossary('courant');
+		openGlossary('movement');
 	}
 
 	function handleOpenArtiste() {
-		openGlossary('artiste');
+		openGlossary('artist');
 	}
 
 	function extractHue(oklchToken: string | undefined): number {
@@ -119,9 +119,9 @@
 			/>
 			<ArtworkCard
 				artwork={lesson}
-				movementName={lesson.nom_courant}
+				movementName={lesson.movement_name}
 				oklchToken={lesson.oklch_token}
-				article={lesson.article_principal}
+				article={lesson.main_article}
 			/>
 		</section>
 	{:else}

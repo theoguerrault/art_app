@@ -68,7 +68,7 @@
 				data-id={movement.id}
 				onclick={handleToggleMovement}
 			>
-				{movement.nom}
+				{movement.name}
 			</button>
 		{/each}
 	</div>

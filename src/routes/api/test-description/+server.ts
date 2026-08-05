@@ -32,7 +32,7 @@ export async function GET() {
     markdownOutput += `## ${art.title} (${art.artist})\n\n`;
     if (result && result.portions) {
       markdownOutput += `**Article Principal:**\n\n${result.portions.join('\n\n')}\n\n`;
-      markdownOutput += `**Secrète:** ${result.anecdotes_secretes?.[0] || 'Aucune anecdote secrète'}\n\n`;
+      
     } else {
       markdownOutput += "Échec de la génération.\n\n";
     }

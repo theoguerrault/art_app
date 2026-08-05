@@ -4,10 +4,10 @@ import type { RequestEvent } from '@sveltejs/kit';
 
 export async function GET(_event: RequestEvent) {
   try {
-    const verifiedArtworks = await prisma.oeuvres.findMany({
+    const verifiedArtworks = await prisma.artworks.findMany({
       where: {
         is_active: true,
-        oeuvre_translations: {
+        artwork_translations: {
           some: {
             language_code: 'fr',
             verification_status: 'VERIFIED'
@@ -15,12 +15,12 @@ export async function GET(_event: RequestEvent) {
         }
       },
       include: {
-        oeuvre_translations: { where: { language_code: 'fr' } },
-        artistes: {
-          include: { artiste_translations: { where: { language_code: 'fr' } } }
+        artwork_translations: { where: { language_code: 'fr' } },
+        artists: {
+          include: { artist_translations: { where: { language_code: 'fr' } } }
         },
-        courants: {
-          include: { courant_translations: { where: { language_code: 'fr' } } }
+        movements: {
+          include: { movement_translations: { where: { language_code: 'fr' } } }
         }
       }
     });
@@ -29,30 +29,29 @@ export async function GET(_event: RequestEvent) {
     const artworks = verifiedArtworks.map(a => ({
       id: a.id,
       slug: a.slug,
-      id_courant: a.id_courant,
-      id_artiste: a.id_artiste,
-      titre: a.oeuvre_translations[0]?.titre || 'Inconnu',
-      date_creation: a.date_creation,
+      movement_id: a.movement_id,
+      artist_id: a.artist_id,
+      title: a.artwork_translations[0]?.title || 'Inconnu',
+      creation_date: a.creation_date,
       image_url_thumb: a.image_url_thumb,
       image_url_full: a.image_url_full,
       aspect_ratio: a.aspect_ratio,
-      artistes: { nom: a.artistes?.artiste_translations?.[0]?.nom || 'Inconnu' },
-      courants: { 
-        nom: a.courants?.courant_translations?.[0]?.nom || 'Inconnu',
-        oklch_token: a.courants?.oklch_token || 'var(--movement-theme)'
+      artists: { name: a.artists?.artist_translations?.[0]?.name || 'Inconnu' },
+      movements: { 
+        name: a.movements?.movement_translations?.[0]?.name || 'Inconnu',
+        oklch_token: a.movements?.oklch_token || 'var(--movement-theme)'
       }
     }));
 
     const mcqs = verifiedArtworks.map(a => ({
-      id_oeuvre: a.id,
-      article_principal: a.oeuvre_translations[0]?.article_principal,
-      qcm: a.oeuvre_translations[0]?.qcm,
-      verification_status: a.oeuvre_translations[0]?.verification_status
+      artwork_id: a.id,
+      main_article: a.artwork_translations[0]?.main_article,
+      
+      verification_status: a.artwork_translations[0]?.verification_status
     }));
 
     return json({ artworks, mcqs });
   } catch (err) {
-    void('Error fetching verified artworks:', err);
     return json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }

@@ -6,8 +6,8 @@ import type { Artwork, Movement, ContentArtwork, UserProgress, ActiveLessonView,
 import { sanitizeArtwork } from '$lib/utils/artworks';
 
 export interface GlossaryContent {
-	artiste_description?: string;
-	courant_description?: string;
+	artist_description?: string;
+	movement_description?: string;
 }
 
 export const load: PageLoad = async ({ params }) => {
@@ -26,53 +26,52 @@ export const load: PageLoad = async ({ params }) => {
 
 		if (artwork) {
 			const cachedMcqs: ContentArtwork[] = (await readFromLocalCache('cached_mcqs')) || [];
-			content = cachedMcqs.find((c) => c.id_oeuvre === artwork?.id) || null;
+			content = cachedMcqs.find((c) => c.artwork_id === artwork?.id) || null;
 
 			const cachedProgress: UserProgress[] = (await readFromLocalCache('user_progress_cache')) || [];
-			progress = cachedProgress.find((p) => p.id_oeuvre === artwork?.id) || null;
+			progress = cachedProgress.find((p) => p.artwork_id === artwork?.id) || null;
 		}
 	} else {
 		try {
 			// Query by slug or id
 			const isNumeric = /^\d+$/.test(slugOrId);
-			let query = supabase.from('oeuvres').select('*, artistes(artiste_translations(nom)), oeuvre_translations(titre)').eq('is_active', true);
+			let query = supabase.from('artworks').select('*, artists(artist_translations(name)), artwork_translations(title)').eq('is_active', true);
 			if (isNumeric) {
 				query = query.eq('id', parseInt(slugOrId, 10));
 			} else {
 				query = query.eq('slug', slugOrId);
 			}
 
-			const { data: artData } = await query.maybeSingle();
+			const { data: artData, error: dbErr } = await query.maybeSingle();
+			if (dbErr) console.error("Database error fetching artwork:", dbErr);
 
 			if (artData) {
 				const typedArtData = artData as RawArtwork;
-				if (typedArtData.oeuvre_translations?.[0]?.titre) {
-					typedArtData.titre = typedArtData.oeuvre_translations[0].titre;
+				if (typedArtData.artwork_translations?.[0]?.title) {
+					typedArtData.title = typedArtData.artwork_translations[0].title;
 				}
-				if (typedArtData.artistes) {
-					const artisteName = typedArtData.artistes.artiste_translations?.[0]?.nom;
+				if (typedArtData.artists) {
+					const artisteName = typedArtData.artists.artist_translations?.[0]?.name;
 					if (artisteName) {
-						typedArtData.artistes.nom = artisteName;
+						typedArtData.artists.name = artisteName;
 					}
 				}
 				artwork = sanitizeArtwork(artData);
 			} else {
-				const cachedArtworks: Artwork[] = (await readFromLocalCache('cached_artworks')) || [];
-				const found = cachedArtworks.find((a) => a.slug === slugOrId || a.id.toString() === slugOrId) || null;
-				artwork = found ? sanitizeArtwork(found) : null;
+				throw error(500, `Debug: artData is null for slugOrId='${slugOrId}', isNumeric=${isNumeric}, isOnline=${isOnline}`);
 			}
 
 			if (artwork) {
 				const [movRes, contRes, progRes, contArtisteRes, contCourantRes] = await Promise.all([
-					supabase.from('courants').select('id, slug, oklch_token, courant_translations(nom)').eq('id', artwork.id_courant).maybeSingle(),
-					supabase.from('oeuvre_translations').select('id_oeuvre, introduction, article_principal, article_portions, qcm, verification_status').eq('id_oeuvre', artwork.id).eq('language_code', 'fr').maybeSingle(),
-					supabase.from('user_artwork_progress').select('id_oeuvre, box_level, next_review_at').eq('id_oeuvre', artwork.id).maybeSingle(),
-					supabase.from('artiste_translations').select('id_artiste, description_courte').eq('id_artiste', artwork.id_artiste).eq('language_code', 'fr').eq('verification_status', 'VERIFIED').maybeSingle(),
-					supabase.from('courant_translations').select('id_courant, description_courte').eq('id_courant', artwork.id_courant).eq('language_code', 'fr').eq('verification_status', 'VERIFIED').maybeSingle()
+					supabase.from('movements').select('id, slug, oklch_token, movement_translations(name)').eq('id', artwork.movement_id).maybeSingle(),
+					supabase.from('artwork_translations').select('artwork_id, introduction, main_article, article_portions, verification_status').eq('artwork_id', artwork.id).eq('language_code', 'fr').maybeSingle(),
+					supabase.from('user_artwork_progress').select('artwork_id, box_level, next_review_at').eq('artwork_id', artwork.id).maybeSingle(),
+					supabase.from('artist_translations').select('artist_id, short_description').eq('artist_id', artwork.artist_id).eq('language_code', 'fr').eq('verification_status', 'VERIFIED').maybeSingle(),
+					supabase.from('movement_translations').select('movement_id, short_description').eq('movement_id', artwork.movement_id).eq('language_code', 'fr').eq('verification_status', 'VERIFIED').maybeSingle()
 				]);
 
 				if (movRes.data) {
-					movement = { ...(movRes.data as RawCourant), nom: (movRes.data as RawCourant).courant_translations?.[0]?.nom || (movRes.data as RawCourant).slug } as unknown as Movement;
+					movement = { ...(movRes.data as RawCourant), name: (movRes.data as RawCourant).movement_translations?.[0]?.name || (movRes.data as RawCourant).slug } as unknown as Movement;
 				} else {
 					movement = null;
 				}
@@ -81,27 +80,33 @@ export const load: PageLoad = async ({ params }) => {
 				
 				// Attached Glossary Content
 				artwork.glossary = {
-					artiste_description: ((contArtisteRes.data || {}) as Record<string, unknown>)?.description_courte as string || null,
-					courant_description: ((contCourantRes.data || {}) as Record<string, unknown>)?.description_courte as string || null
+					artist_description: ((contArtisteRes.data || {}) as Record<string, unknown>)?.short_description as string || null,
+					movement_description: ((contCourantRes.data || {}) as Record<string, unknown>)?.short_description as string || null
 				};
 
 				if (content) {
 					const cachedMcqs: ContentArtwork[] = (await readFromLocalCache('cached_mcqs')) || [];
-					const filtered = cachedMcqs.filter((c) => c.id_oeuvre !== artwork?.id);
-					filtered.push(content);
-					await saveToLocalCache('cached_mcqs', filtered);
+					// Filter out both the current artwork AND any corrupted items without artwork_id
+					const filtered = cachedMcqs.filter((c) => c && c.artwork_id && c.artwork_id !== artwork?.id);
+					// Ensure content itself has an artwork_id before pushing (maybeSingle() guarantees object, but just in case)
+					if (content.artwork_id) {
+						filtered.push(content);
+						try {
+							await saveToLocalCache('cached_mcqs', filtered);
+						} catch (e) {
+						}
+					}
 				}
 			}
 		} catch (err) {
-			void('[DetailLoad] Supabase query failed, checking cache:', err);
 			const cachedArtworks: Artwork[] = (await readFromLocalCache('cached_artworks')) || [];
 			const found = cachedArtworks.find((a) => a.slug === slugOrId || a.id.toString() === slugOrId) || null;
 			artwork = found ? sanitizeArtwork(found) : null;
 			if (artwork) {
 				const cachedMcqs: ContentArtwork[] = (await readFromLocalCache('cached_mcqs')) || [];
-				content = cachedMcqs.find((c) => c.id_oeuvre === artwork?.id) || null;
+				content = cachedMcqs.find((c) => c.artwork_id === artwork?.id) || null;
 				const cachedProgress: UserProgress[] = (await readFromLocalCache('user_progress_cache')) || [];
-				progress = cachedProgress.find((p) => p.id_oeuvre === artwork?.id) || null;
+				progress = cachedProgress.find((p) => p.artwork_id === artwork?.id) || null;
 			}
 		}
 	}
@@ -110,7 +115,7 @@ export const load: PageLoad = async ({ params }) => {
 		throw error(404, 'Artwork not found');
 	}
 
-	let fullArticle = content?.article_principal || '';
+	let fullArticle = content?.main_article || '';
 	if ((content as RawContentArtwork)?.introduction) {
 		fullArticle = `**${(content as RawContentArtwork).introduction}**\n\n${fullArticle}`;
 	}
@@ -126,19 +131,12 @@ export const load: PageLoad = async ({ params }) => {
 
 	const lesson: ActiveLessonView = {
 		...artwork,
-		nom_courant: movement?.nom || 'Mouvement Artistique',
+		movement_name: movement?.name || 'Mouvement Artistique',
 		oklch_token: movement?.oklch_token || 'var(--movement-theme)',
 		introduction: (content as RawContentArtwork)?.introduction || null,
 		verification_status: (content as RawContentArtwork)?.verification_status || null,
-		article_principal: fullArticle.trim() || 'Explorez l\'histoire profonde et la composition de cette pièce intemporelle.',
+		main_article: fullArticle.trim() || 'Explorez l\'histoire profonde et la composition de cette pièce intemporelle.',
 		article_portions: (content as RawContentArtwork)?.article_portions || [],
-		qcm: content?.qcm || {
-			question: `Quelle ère ou période artistique caractérise "${artwork.titre}" ?`,
-			options: [movement?.nom || 'Période historique', 'Surréalisme', 'Cubisme', 'Baroque'],
-			correctIndex: 0,
-			explanation: `"${artwork.titre}" par ${artwork.artistes?.nom || 'Inconnu'} illustre parfaitement ${movement?.nom || 'Période historique'}.`
-		},
-		mots_cles: content?.mots_cles || [],
 		glossary: artwork.glossary || {}
 	} as ActiveLessonView & { glossary?: GlossaryContent; article_portions?: { title?: string; text: string; type?: string }[] };
 

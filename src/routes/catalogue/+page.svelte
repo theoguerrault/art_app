@@ -39,11 +39,11 @@
 		showFavoritesOnly = !showFavoritesOnly;
 	}
 
-	function computeProgressSet(progressList: { id_oeuvre?: number; box_level?: number; consecutive_correct?: number }[]) {
+	function computeProgressSet(progressList: { artwork_id?: number; box_level?: number; consecutive_correct?: number }[]) {
 		const set = new Set<number>();
 		for (const p of progressList) {
-			if (p && p.id_oeuvre && (p.box_level > 1 || (p.consecutive_correct && p.consecutive_correct > 0))) {
-				set.add(p.id_oeuvre);
+			if (p && p.artwork_id != null && ((p.box_level ?? 0) > 1 || (p.consecutive_correct && (p.consecutive_correct ?? 0) > 0))) {
+				set.add(p.artwork_id);
 			}
 		}
 		return set;
@@ -72,8 +72,8 @@
 		};
 	});
 
-	type MovementType = { id: number; nom?: string; siecle?: string };
-	type ArtworkType = { id?: number; id_courant?: number; titre?: string; artistes?: { nom?: string } };
+	type MovementType = { id: number; name?: string; century?: string };
+	type ArtworkType = { id?: number; movement_id?: number; title?: string; artists?: { name?: string } };
 
 	function computeGroupedMovements(
 		movements: MovementType[],
@@ -97,19 +97,19 @@
 			filtered = filtered.filter(a => a.id && favSet.has(a.id));
 		}
 		if (activeMovements.length > 0) {
-			filtered = filtered.filter(a => a.id_courant && activeMovements.includes(a.id_courant));
+			filtered = filtered.filter(a => a.movement_id && activeMovements.includes(a.movement_id));
 		}
 		if (query.trim()) {
 			filtered = filtered.filter(
 				(a) =>
-					(a.titre && a.titre.toLowerCase().includes(qLower)) ||
-					(a.artistes?.nom && a.artistes.nom.toLowerCase().includes(qLower))
+					(a.title && a.title.toLowerCase().includes(qLower)) ||
+					(a.artists?.name && a.artists.name.toLowerCase().includes(qLower))
 			);
 		}
 
 		for (const art of filtered) {
-			if (art.id_courant === undefined) continue;
-			const grp = groups.get(art.id_courant);
+			if (art.movement_id === undefined) continue;
+			const grp = groups.get(art.movement_id);
 			if (grp) {
 				grp.totalCount++;
 				if (art.id && pSet.has(art.id)) {
@@ -121,7 +121,7 @@
 
 		return Array.from(groups.values()).filter((g) => {
 			if (activeMovements.length > 0 && !activeMovements.includes(g.movement.id)) return false;
-			return g.items.length > 0 || (!query.trim() && !showFavs && activeMovements.length === 0);
+			return g.items.length > 0;
 		});
 	}
 	let groupedMovements = $derived(computeGroupedMovements(data.movements, data.artworks, progressSet, favoritesSet, selectedMovements, searchQuery, normalizedQuery, showFavoritesOnly));
@@ -147,8 +147,8 @@
 			<section class="movement-section" style:--movement-color="var(--color-primary)">
 				<div class="movement-header sticky-subheader">
 					<div>
-						<h2 class="movement-title">{group.movement.nom}</h2>
-						<span class="movement-century">{group.movement.siecle || 'Ère historique'}</span>
+						<h2 class="movement-title">{group.movement.name}</h2>
+						<span class="movement-century">{group.movement.century || 'Ère historique'}</span>
 					</div>
 					<div class="progress-simple">
 						{group.discoveredCount}/{group.totalCount}
@@ -162,8 +162,8 @@
 								{#each group.items as art, aIndex (art.id)}
 									<CatalogArtworkCard 
 										{art} 
-										isFavorite={favoritesSet.has(art.id)} 
-										isDiscovered={progressSet.has(art.id)} 
+										isFavorite={favoritesSet.has(art.id as number)} 
+										isDiscovered={progressSet.has(art.id as number)} 
 										eager={gIndex === 0 && aIndex < 6}
 									/>
 								{/each}

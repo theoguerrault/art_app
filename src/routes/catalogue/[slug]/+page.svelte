@@ -41,7 +41,7 @@
 
 	async function toggleFavorite() {
 		isFavorite = !isFavorite; // Optimistic
-		const res = await apiClient.post('/api/favorites', { id_oeuvre: lesson.id });
+		const res = await apiClient.post('/api/favorites', { artwork_id: lesson.id });
 		if (!res.ok) {
 			isFavorite = !isFavorite; // Revert
 		} else {
@@ -54,33 +54,33 @@
 		}
 	}
 
-	function openGlossary(type: 'artiste' | 'courant') {
+	function openGlossary(type: 'artist' | 'movement') {
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		const lessonData = lesson as any;
-		if (type === 'artiste' && lessonData.glossary?.artiste_description) {
-			glossaryTitle = lesson.artistes?.nom || 'Artiste';
-			glossarySubtitle = 'Artiste';
-			glossaryContent = lessonData.glossary.artiste_description;
+		if (type === 'artist' && lessonData.glossary?.artist_description) {
+			glossaryTitle = lesson.artists?.name || 'Artist';
+			glossarySubtitle = 'Artist';
+			glossaryContent = lessonData.glossary.artist_description;
 			glossaryOpen = true;
-		} else if (type === 'courant' && lessonData.glossary?.courant_description) {
-			glossaryTitle = lesson.nom_courant;
+		} else if (type === 'movement' && lessonData.glossary?.movement_description) {
+			glossaryTitle = lesson.movement_name;
 			glossarySubtitle = 'Mouvement Artistique';
-			glossaryContent = lessonData.glossary.courant_description;
+			glossaryContent = lessonData.glossary.movement_description;
 			glossaryOpen = true;
 		}
 	}
 
 	function handleOpenCourant() {
-		openGlossary('courant');
+		openGlossary('movement');
 	}
 
 	function handleOpenArtiste() {
-		openGlossary('artiste');
+		openGlossary('artist');
 	}
 
 	let dynamicArticlePrincipal = $state<string | null>(null);
 	
-	let isContentEmpty = $derived(isMissingOrPlaceholder(dynamicArticlePrincipal || lesson.article_principal));
+	let isContentEmpty = $derived(isMissingOrPlaceholder(dynamicArticlePrincipal || lesson.main_article));
 
 
 	
@@ -127,7 +127,7 @@
 				const hue = extractHue(lesson.oklch_token);
 				document.documentElement.style.setProperty("--artwork-hue", hue.toString());
 
-				dynamicArticlePrincipal = !isMissingOrPlaceholder(lesson.article_principal) ? lesson.article_principal : null;
+				dynamicArticlePrincipal = !isMissingOrPlaceholder(lesson.main_article) ? lesson.main_article : null;
 				
 				// 2. Handle Description Fetch
 				if (dynamicArticlePrincipal === null && navigator.onLine) {
@@ -135,11 +135,9 @@
 					apiClient.request(`/api/artwork-description/${encodeURIComponent(lesson.slug)}`)
 						.then((res) => res.json())
 						.then((data) => {
-							if (data?.article_principal) dynamicArticlePrincipal = data.article_principal;
+							if (data?.main_article) dynamicArticlePrincipal = data.main_article;
 						})
-						.catch((err) => void('[DetailPage] Failed to fetch descriptions:', err))
-						.finally(() => {
-							isFetchingDescription = false;
+						.catch((err) => {
 						});
 				}
 			}
@@ -167,9 +165,9 @@
 	<section class="card-display">
 		<ArtworkCard
 			artwork={lesson}
-			movementName={lesson.nom_courant}
+			movementName={lesson.movement_name}
 			oklchToken={lesson.oklch_token}
-			article={dynamicArticlePrincipal || lesson.article_principal}
+			article={dynamicArticlePrincipal || lesson.main_article}
 			isEmpty={isContentEmpty}
 		/>
 	</section>
@@ -177,7 +175,7 @@
 	{#if isContentEmpty || lesson.verification_status !== 'VERIFIED'}
 		<div class="admin-quick-action">
 			<p>{isContentEmpty ? "Ce contenu n'est pas encore généré." : "Ce contenu est en attente de validation."}</p>
-			<a data-sveltekit-preload-data="hover" href={`/admin/oeuvres/${lesson.id}`} class="admin-text-link">
+			<a data-sveltekit-preload-data="hover" href={`/admin/artworks/${lesson.id}`} class="admin-text-link">
 				Éditer dans l'Admin →
 			</a>
 		</div>

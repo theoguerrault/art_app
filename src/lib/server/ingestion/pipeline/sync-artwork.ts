@@ -14,8 +14,8 @@ export async function syncArtworkEnrichment(artworkIdOrSlug: string | number) {
   const isNumeric = typeof artworkIdOrSlug === 'number' || /^\\d+$/.test(String(artworkIdOrSlug));
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let artworkQuery = (supabase.from('oeuvres') as any)
-    .select('*, courants(*), artistes(*)')
+  let artworkQuery = (supabase.from('artworks') as any)
+    .select('*, movements(*), artists(*)')
     .eq('is_active', true);
 
   if (isNumeric) {
@@ -27,23 +27,21 @@ export async function syncArtworkEnrichment(artworkIdOrSlug: string | number) {
   const { data: artwork, error: artworkErr } = await artworkQuery.maybeSingle();
 
   if (artworkErr || !artwork) {
-    void(`[SyncPipeline] Artwork not found: ${artworkIdOrSlug}`);
     return { error: 'Artwork not found' };
   }
 
   // Step 2: Check current content state
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data: currentContent } = await (supabase.from('oeuvre_translations') as any)
+  const { data: currentContent } = await (supabase.from('artwork_translations') as any)
     .select('*')
-    .eq('id_oeuvre', artwork.id)
+    .eq('artwork_id', artwork.id)
     .eq('language_code', 'fr')
     .maybeSingle();
 
-  const needsAnecdotes = !currentContent?.article_principal || currentContent.article_principal.includes('Découvrez');
+  const needsAnecdotes = !currentContent?.main_article || currentContent.main_article.includes('Découvrez');
   const needsQuiz = !currentContent?.qcm || currentContent.qcm.question.includes('Question placeholder');
 
   if (!needsAnecdotes && !needsQuiz) {
-    void(`[SyncPipeline] Artwork "${artwork.titre}" is already fully enriched.`);
     return { success: true, cached: true, content: currentContent };
   }
 
@@ -52,29 +50,27 @@ export async function syncArtworkEnrichment(artworkIdOrSlug: string | number) {
 
   // Step 3: Scrape & Generate Wikipedia Content
   if (needsAnecdotes) {
-    void(`[SyncPipeline] Artwork "${artwork.titre}" needs description, but automatic generation is disabled.`);
     if (!currentContent) {
-        updatePayload.article_principal = "";
+        updatePayload.main_article = "";
         updatePayload.verification_status = "PENDING";
     }
   }
 
   // Step 4: Generate Quiz
   if (needsQuiz) {
-    void(`[SyncPipeline] Generating Quiz via Gemini...`);
     try {
       // Map current DB artwork to ArtworkData interface expected by quiz generator
       const mappedArtworkForQuiz = {
         id: artwork.id,
-        title: artwork.titre,
-        artist_title: artwork.artistes?.nom || 'Inconnu',
-        date_display: artwork.date_creation,
+        title: artwork.title,
+        artist_title: artwork.artists?.name || 'Inconnu',
+        date_display: artwork.creation_date,
         medium_display: artwork.medium,
         dimensions: artwork.dimensions,
-        style_title: artwork.courants?.nom || null,
+        style_title: artwork.movements?.name || null,
         department_title: artwork.musee,
         place_of_origin: artwork.pays || null,
-        description_clean: currentContent?.article_principal || '',
+        description_clean: currentContent?.main_article || '',
         image_url_full: artwork.image_url_full,
         image_url_thumb: artwork.image_url_thumb,
         is_public_domain: true,
@@ -86,17 +82,16 @@ export async function syncArtworkEnrichment(artworkIdOrSlug: string | number) {
         updatePayload.qcm = generatedQuiz;
       } else if (!currentContent) {
         updatePayload.qcm = {
-          question: `Question placeholder pour "${artwork.titre}"`,
+          question: `Question placeholder pour "${artwork.title}"`,
           options: ["Option A", "Option B", "Option C", "Option D"],
           correctIndex: 0,
           explanation: "Ce QCM est en cours de création."
         };
       }
     } catch (err) {
-      void('[SyncPipeline] Failed to generate Quiz for "%s":', artwork.titre, err);
       if (!currentContent) {
         updatePayload.qcm = {
-          question: `Question placeholder pour "${artwork.titre}"`,
+          question: `Question placeholder pour "${artwork.title}"`,
           options: ["Option A", "Option B", "Option C", "Option D"],
           correctIndex: 0,
           explanation: "Ce QCM est en cours de création suite à une erreur."
@@ -113,12 +108,11 @@ export async function syncArtworkEnrichment(artworkIdOrSlug: string | number) {
     const { prisma } = await import('$lib/server/prisma');
 
     if (currentContent) {
-      void(`[SyncPipeline] Updating existing content for "${artwork.titre}"...`);
       try {
-        await prisma.oeuvre_translations.update({
+        await prisma.artwork_translations.update({
           where: { 
-            id_oeuvre_language_code: {
-              id_oeuvre: artwork.id,
+            artwork_id_language_code: {
+              artwork_id: artwork.id,
               language_code: 'fr'
             }
           },
@@ -126,22 +120,19 @@ export async function syncArtworkEnrichment(artworkIdOrSlug: string | number) {
         });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (updateErr: any) {
-        void(`[SyncPipeline] DB Update Error:`, updateErr);
         return { error: 'Failed to update DB', details: updateErr?.message || String(updateErr) };
       }
     } else {
-      void(`[SyncPipeline] Inserting new content for "${artwork.titre}"...`);
-      updatePayload.id_oeuvre = artwork.id;
+      updatePayload.artwork_id = artwork.id;
       updatePayload.language_code = 'fr';
       // Provide clean defaults if completely missing (no fake placeholders anymore, just null or empty arrays if allowed)
       try {
-        await prisma.oeuvre_translations.create({
+        await prisma.artwork_translations.create({
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           data: updatePayload as any
         });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (insertErr: any) {
-        void(`[SyncPipeline] DB Insert Error:`, insertErr);
         return { error: 'Failed to insert into DB', details: insertErr?.message || String(insertErr) };
       }
     }

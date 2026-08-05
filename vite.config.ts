@@ -49,16 +49,11 @@ export default defineConfig({
 			}
 		})
 	],
+	ssr: {
+		external: ['@prisma/client', '@google/genai']
+	},
 	build: {
-		rollupOptions: {
-			output: {
-				manualChunks: (id) => {
-					if (id.includes('@sveltejs') || id.includes('svelte')) return 'svelte';
-					if (id.includes('@prisma') || id.includes('prisma')) return 'prisma';
-					if (id.includes('@google')) return 'google';
-				}
-			}
-		}
+		chunkSizeWarningLimit: 2000
 	}
 });
 

@@ -10,17 +10,17 @@ export async function POST({ params, request }) {
     const { portionId } = await request.json();
     if (!portionId) return json({ error: 'Missing portionId' }, { status: 400 });
 
-    const artwork = await prisma.oeuvres.findUnique({
+    const artwork = await prisma.artworks.findUnique({
       where: { id },
-      include: { oeuvre_translations: { where: { language_code: 'fr' } } }
+      include: { artwork_translations: { where: { language_code: 'fr' } } }
     });
 
-    if (!artwork || !artwork.oeuvre_translations[0]) {
+    if (!artwork || !artwork.artwork_translations[0]) {
       return json({ error: 'Artwork or content not found' }, { status: 404 });
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const articlePortions = (artwork.oeuvre_translations[0].article_portions || []) as any[];
+    const articlePortions = (artwork.artwork_translations[0].article_portions || []) as any[];
     const updatedPortions = articlePortions.map(p => {
       if (p.id === portionId) {
         return {
@@ -34,7 +34,7 @@ export async function POST({ params, request }) {
     });
     
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const report = (artwork.oeuvre_translations[0].verification_report || {}) as any;
+    const report = (artwork.artwork_translations[0].verification_report || {}) as any;
     if (report && report.statements) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       report.statements = report.statements.map((s: any) => {
@@ -44,11 +44,11 @@ export async function POST({ params, request }) {
         return s;
       });
     }
-    report.global_score = calculateGlobalScore(report, updatedPortions, artwork.oeuvre_translations[0].introduction);
-    const globalStatus = calculateGlobalStatus(report, updatedPortions, artwork.oeuvre_translations[0].introduction);
+    report.global_score = calculateGlobalScore(report, updatedPortions, artwork.artwork_translations[0].introduction);
+    const globalStatus = calculateGlobalStatus(report, updatedPortions, artwork.artwork_translations[0].introduction);
 
-    const updated = await prisma.oeuvre_translations.update({
-      where: { id_oeuvre_language_code: { id_oeuvre: id, language_code: 'fr' } },
+    const updated = await prisma.artwork_translations.update({
+      where: { artwork_id_language_code: { artwork_id: id, language_code: 'fr' } },
       data: {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         article_portions: updatedPortions as any,
@@ -59,7 +59,6 @@ export async function POST({ params, request }) {
 
     return json({ success: true, content: updated });
   } catch (error: unknown) {
-    void('[API/admin/unvalidate-portion] Error:', error);
     return json({ error: error instanceof Error ? error.message : String(error) }, { status: 500 });
   }
 }

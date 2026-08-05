@@ -19,18 +19,18 @@ export const load: PageLoad = async ({ fetch }) => {
 	if (!isOnline) {
 		const fullArtworks: Artwork[] = sanitizeArtworks((await readFromLocalCache('cached_artworks')) || []);
 		const sortedArtworks = fullArtworks.sort((a, b) => {
-			if (a.id_courant !== b.id_courant) return (a.id_courant || 0) - (b.id_courant || 0);
-			return (a.date_creation || '') > (b.date_creation || '') ? 1 : -1;
+			if (a.movement_id !== b.movement_id) return (a.movement_id || 0) - (b.movement_id || 0);
+			return (a.creation_date || '') > (b.creation_date || '') ? 1 : -1;
 		});
 		artworks = sortedArtworks.map((a) => ({
 			id: a.id,
 			slug: a.slug,
-			id_courant: a.id_courant,
-			id_artiste: a.id_artiste,
-			titre: a.titre,
+			movement_id: a.movement_id,
+			artist_id: a.artist_id,
+			title: a.title,
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			artistes: a.artistes || ({ nom: 'Inconnu' } as any),
-			date_creation: a.date_creation,
+			artists: a.artists || ({ name: 'Inconnu' } as any),
+			creation_date: a.creation_date,
 			image_url_thumb: a.image_url_thumb || a.image_url_full,
 			aspect_ratio: a.aspect_ratio
 		}));
@@ -40,34 +40,34 @@ export const load: PageLoad = async ({ fetch }) => {
 	} else {
 		try {
 			const [artworksRes, movementsRes, progressRes, favoritesRes] = await Promise.all([
-				supabase.from('oeuvres').select('id, slug, id_courant, id_artiste, date_creation, image_url_thumb, aspect_ratio, artistes(artiste_translations(nom)), oeuvre_translations(titre)')
+				supabase.from('artworks').select('id, slug, movement_id, artist_id, creation_date, image_url_full, image_url_thumb, aspect_ratio, artists(artist_translations(name)), artwork_translations(title)')
 					.eq('is_active', true)
-					.order('id_courant', { ascending: true })
-					.order('date_creation', { ascending: true }),
-				supabase.from('courants').select('*, courant_translations(nom)').order('ordre_chronologique', { ascending: true }),
-				supabase.from('user_artwork_progress').select('id_oeuvre, box_level, consecutive_correct'),
+					.order('movement_id', { ascending: true })
+					.order('creation_date', { ascending: true }),
+				supabase.from('movements').select('*, movement_translations(name)').order('chronological_order', { ascending: true }),
+				supabase.from('user_artwork_progress').select('artwork_id, box_level, consecutive_correct'),
 				fetch('/api/favorites').then((res) => (res.ok ? res.json() : { favorites: [] }))
 			]);
 
 			if (artworksRes.data && artworksRes.data.length > 0) {
 				// eslint-disable-next-line @typescript-eslint/no-explicit-any
-				artworks = sanitizeArtworks(artworksRes.data.map((a: any) => ({ ...a, titre: a.oeuvre_translations?.[0]?.titre || 'Inconnu', artistes: { nom: a.artistes?.artiste_translations?.[0]?.nom || 'Inconnu' } })) as unknown as Partial<Artwork>[]);
+				artworks = sanitizeArtworks(artworksRes.data.map((a: any) => ({ ...a, title: a.artwork_translations?.[0]?.title || 'Inconnu', artists: { name: a.artists?.artist_translations?.[0]?.name || 'Inconnu' } })) as unknown as Partial<Artwork>[]);
 			} else {
 				const fullArtworks: Artwork[] = sanitizeArtworks((await readFromLocalCache('cached_artworks')) || []);
 				const sortedArtworks = fullArtworks.sort((a, b) => {
-					if (a.id_courant !== b.id_courant) return (a.id_courant || 0) - (b.id_courant || 0);
-					return (a.date_creation || '') > (b.date_creation || '') ? 1 : -1;
+					if (a.movement_id !== b.movement_id) return (a.movement_id || 0) - (b.movement_id || 0);
+					return (a.creation_date || '') > (b.creation_date || '') ? 1 : -1;
 				});
 				artworks = sortedArtworks.map((a) => ({
 					...a,
 					// eslint-disable-next-line @typescript-eslint/no-explicit-any
-					artistes: a.artistes || ({ nom: 'Inconnu' } as any)
+					artists: a.artists || ({ name: 'Inconnu' } as any)
 				}));
 			}
 
 			if (movementsRes.data) {
 				// eslint-disable-next-line @typescript-eslint/no-explicit-any
-				movements = movementsRes.data.map((m: any) => ({ ...m, nom: m.courant_translations?.[0]?.nom || 'Inconnu' }));
+				movements = movementsRes.data.map((m: any) => ({ ...m, name: m.movement_translations?.[0]?.name || 'Inconnu' }));
 			}
 
 			if (progressRes.data) {
@@ -85,18 +85,17 @@ export const load: PageLoad = async ({ fetch }) => {
 				favoritesList = favCache ? favCache.data : [];
 			}
 		} catch (err) {
-			void('[CatalogLoad] Supabase query error, falling back to cache:', err);
 			const fullArtworks: Artwork[] = sanitizeArtworks((await readFromLocalCache('cached_artworks')) || []);
 			const sortedArtworks = fullArtworks.sort((a, b) => {
-				if (a.id_courant !== b.id_courant) return (a.id_courant || 0) - (b.id_courant || 0);
-				return (a.date_creation || '') > (b.date_creation || '') ? 1 : -1;
+				if (a.movement_id !== b.movement_id) return (a.movement_id || 0) - (b.movement_id || 0);
+				return (a.creation_date || '') > (b.creation_date || '') ? 1 : -1;
 			});
 			artworks = sortedArtworks.map((a) => ({
 				...a,
 				// eslint-disable-next-line @typescript-eslint/no-explicit-any
-				artistes: a.artistes || ({ nom: 'Inconnu' } as any),
+				artists: a.artists || ({ name: 'Inconnu' } as any),
 				// eslint-disable-next-line @typescript-eslint/no-explicit-any
-				courants: (a as any).courants || { nom: 'Inconnu' }
+				movements: (a as any).movements || { name: 'Inconnu' }
 			}));
 			progressList = (await readFromLocalCache('user_progress_cache')) || [];
 			const favCache = await readFromLocalCache('user_favorites_cache', 'favorites');

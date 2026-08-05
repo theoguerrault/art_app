@@ -14,18 +14,18 @@
 </script>
 
 <div class="detail-header">
-	{#if artwork.glossary?.courant_description && onOpenCourant}
+	{#if artwork.glossary?.movement_description && onOpenCourant}
 		<button
 			type="button"
 			class="movement-tag clickable"
 			style:background-color={artwork.oklch_token}
 			onclick={onOpenCourant}
 		>
-			{artwork.nom_courant}
+			{artwork.movement_name}
 		</button>
 	{:else}
 		<span class="movement-tag" style:background-color={artwork.oklch_token}>
-			{artwork.nom_courant}
+			{artwork.movement_name}
 		</span>
 	{/if}
 	
@@ -40,15 +40,15 @@
 		</button>
 	</div>
 	
-	<h1 class="artwork-title">{artwork.titre}</h1>
+	<h1 class="artwork-title">{artwork.title}</h1>
 	
 	<p class="artwork-meta">
-		{#if artwork.glossary?.artiste_description && onOpenArtiste}
-			<button type="button" class="artist-link" onclick={onOpenArtiste}>{artwork.artistes?.nom}</button>
+		{#if artwork.glossary?.artist_description && onOpenArtiste}
+			<button type="button" class="artist-link" onclick={onOpenArtiste}>{artwork.artists?.name}</button>
 		{:else}
-			{artwork.artistes?.nom}
+			{artwork.artists?.name}
 		{/if}
-		({artwork.date_creation})
+		({artwork.creation_date})
 	</p>
 </div>
 

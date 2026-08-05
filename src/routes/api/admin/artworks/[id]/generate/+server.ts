@@ -10,11 +10,11 @@ export async function POST({ params }) {
   }
 
   try {
-    const artwork = await prisma.oeuvres.findUnique({
+    const artwork = await prisma.artworks.findUnique({
       where: { id },
       include: { 
-        artistes: { include: { artiste_translations: { where: { language_code: 'fr' } } } },
-        oeuvre_translations: { where: { language_code: 'fr' } }
+        artists: { include: { artist_translations: { where: { language_code: 'fr' } } } },
+        artwork_translations: { where: { language_code: 'fr' } }
       }
     });
 
@@ -22,8 +22,8 @@ export async function POST({ params }) {
       return json({ error: 'Artwork not found' }, { status: 404 });
     }
 
-    const titre = artwork.oeuvre_translations?.[0]?.titre || 'Inconnu';
-    const nomArtiste = artwork.artistes?.artiste_translations?.[0]?.nom || 'Inconnu';
+    const titre = artwork.artwork_translations?.[0]?.title || 'Inconnu';
+    const nomArtiste = artwork.artists?.artist_translations?.[0]?.name || 'Inconnu';
     const generatedContent = await generateArtworkContent(titre, nomArtiste);
 
     if (!generatedContent) {
@@ -39,20 +39,12 @@ export async function POST({ params }) {
       status: 'PENDING'
     }));
 
-    const anecdotePortions = (generatedContent.anecdotes_secretes || []).map((text: string, index: number) => ({
-      id: `p-${Date.now()}-anecdote-${index}`,
-      type: 'anecdote',
-      text,
-      status: 'PENDING'
-    }));
-
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const updatePayload: any = {
       introduction: generatedContent.introduction || null,
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      article_principal: (generatedContent.portions || []).map((p: any) => `### ${p.title}\n\n${p.content}`).join('\n\n') || "Contenu introuvable",
-      article_portions: [...articlePortions, ...anecdotePortions],
-      anecdotes_secretes: generatedContent.anecdotes_secretes || [],
+      main_article: (generatedContent.portions || []).map((p: any) => `### ${p.title}\n\n${p.content}`).join('\n\n') || "Contenu introuvable",
+      article_portions: [...articlePortions],
       verification_status: 'PENDING'
     };
 
@@ -62,21 +54,19 @@ export async function POST({ params }) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (updatePayload as any).verification_report = Prisma.JsonNull;
 
-    const updated = await prisma.oeuvre_translations.upsert({
-      where: { id_oeuvre_language_code: { id_oeuvre: id, language_code: 'fr' } },
+    const updated = await prisma.artwork_translations.upsert({
+      where: { artwork_id_language_code: { artwork_id: id, language_code: 'fr' } },
       update: updatePayload,
       create: {
-        id_oeuvre: id,
+        artwork_id: id,
         language_code: 'fr',
-        titre: titre,
-        qcm: { question: '?', options: [], correctIndex: 0, explanation: '' }, // default if creating from scratch
+        title: titre,
         ...updatePayload
       }
     });
 
     return json({ success: true, content: updated });
   } catch (error: unknown) {
-    void('[API/admin/generate] Error:', String(error));
 
     const errorMessage = error instanceof Error ? error.message : String(error);
     if (errorMessage.includes('Quota exceeded') || errorMessage.includes('429')) {

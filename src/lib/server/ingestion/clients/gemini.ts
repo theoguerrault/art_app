@@ -23,6 +23,7 @@ export interface GeminiRequestOptions {
   models?: string[];
   temperature?: number;
   apiKey?: string;
+  imageUrl?: string;
 }
 
 /**
@@ -41,8 +42,24 @@ export async function generateContentWithRetry<T = any>(options: GeminiRequestOp
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let lastError: any = null;
 
+  let inlineData: { data: string; mimeType: string } | undefined = undefined;
+  if (options.imageUrl) {
+    try {
+      const imgRes = await fetch(options.imageUrl);
+      if (!imgRes.ok) throw new Error(`Failed to fetch image from URL: ${imgRes.statusText}`);
+      const arrayBuffer = await imgRes.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
+      const mimeType = imgRes.headers.get('content-type') || 'image/jpeg';
+      inlineData = {
+        data: buffer.toString('base64'),
+        mimeType
+      };
+    } catch (e) {
+      throw new Error(`Could not fetch image to send to Gemini: ${e}`);
+    }
+  }
+
   for (const modelName of modelsToTry) {
-    void(`[GenAI] Sending request to Gemini (${modelName})...`);
     let attempts = 0;
     const maxRetriesPerModel = 2;
 
@@ -60,9 +77,18 @@ export async function generateContentWithRetry<T = any>(options: GeminiRequestOp
           config.responseSchema = options.responseSchema;
         }
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        let finalContents: any = options.userPrompt;
+        if (inlineData) {
+          finalContents = [
+            options.userPrompt,
+            { inlineData }
+          ];
+        }
+
         const response = await ai.models.generateContent({
           model: modelName,
-          contents: options.userPrompt,
+          contents: finalContents,
           config
         });
 
@@ -96,18 +122,15 @@ export async function generateContentWithRetry<T = any>(options: GeminiRequestOp
         const isValidationOrParsingError = errorMessage.includes('Failed to parse JSON');
 
         if (isModelNotFoundOrUnsupported) {
-          void(`[GenAI] ⚠️ Model "${modelName}" unavailable (${status || code}). Switching immediately to next model...`);
           break; // Break the retry loop, try next model
         }
 
         if ((isTransient || isValidationOrParsingError) && attempts < maxRetriesPerModel) {
           const delayMs = isTransient ? Math.pow(2, attempts) * 1000 : 500;
-          void(`[GenAI] ⚠️ Error on "${modelName}" (${errorMessage}) (attempt ${attempts}/${maxRetriesPerModel}). Retrying in ${delayMs / 1000}s...`);
           await new Promise(resolve => setTimeout(resolve, delayMs));
           continue;
         }
 
-        void(`[GenAI] ⚠️ Failed with model "${modelName}" (${errorMessage}). Switching to next fallback model...`);
         break; // Max retries reached for this model, move to next
       }
     }

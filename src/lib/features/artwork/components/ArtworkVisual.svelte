@@ -47,7 +47,7 @@
 				<source media="(min-width: 769px)" srcset={artwork.image_url_full} />
 				<img
 					src={artwork.image_url_full}
-					alt="{artwork.titre} par {artwork.artistes?.nom || 'Inconnu'}"
+					alt="{artwork.title} par {artwork.artists?.name || 'Inconnu'}"
 					loading={eager ? "eager" : "lazy"}
 					fetchpriority={eager ? "high" : "auto"}
 					decoding={eager ? "sync" : "async"}
@@ -56,7 +56,7 @@
 		{:else}
 			<img
 				src={artwork.image_url_full || artwork.image_url_thumb}
-				alt="{artwork.titre} par {artwork.artistes?.nom || 'Inconnu'}"
+				alt="{artwork.title} par {artwork.artists?.name || 'Inconnu'}"
 				loading={eager ? "eager" : "lazy"}
 				fetchpriority={eager ? "high" : "auto"}
 				decoding={eager ? "sync" : "async"}
@@ -79,7 +79,7 @@
 		</button>
 		<img
 			src={artwork.image_url_full || artwork.image_url_thumb}
-			alt="{artwork.titre} par {artwork.artistes?.nom || 'Inconnu'}"
+			alt="{artwork.title} par {artwork.artists?.name || 'Inconnu'}"
 			transition:scale={{ duration: 300, start: 0.95 }}
 		/>
 	</div>

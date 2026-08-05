@@ -2,7 +2,7 @@
 	import { goto } from '$app/navigation';
 
 	$effect(() => {
-		goto('/admin/oeuvres', { replaceState: true });
+		goto('/admin/artworks', { replaceState: true });
 	});
 </script>
 

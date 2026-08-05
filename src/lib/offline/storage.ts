@@ -8,8 +8,8 @@ export type CacheStoreName = 'cached_artworks' | 'cached_mcqs' | 'user_progress_
 export interface OfflineSyncQueueItem {
 	queue_id?: number;
 	user_id: string;
-	id_oeuvre?: number | null;
-	id_courant?: number | null;
+	artwork_id?: number | null;
+	movement_id?: number | null;
 	is_correct: boolean;
 	reponse_choisie: number;
 	score: number | null;
@@ -50,12 +50,12 @@ function getDB(): Promise<IDBDatabase> {
 
 			// Store 2: cached_mcqs (keyed by artwork id)
 			if (!db.objectStoreNames.contains('cached_mcqs')) {
-				db.createObjectStore('cached_mcqs', { keyPath: 'id_oeuvre' });
+				db.createObjectStore('cached_mcqs', { keyPath: 'artwork_id' });
 			}
 
-			// Store 3: user_progress_cache (keyed by id_oeuvre)
+			// Store 3: user_progress_cache (keyed by artwork_id)
 			if (!db.objectStoreNames.contains('user_progress_cache')) {
-				db.createObjectStore('user_progress_cache', { keyPath: 'id_oeuvre' });
+				db.createObjectStore('user_progress_cache', { keyPath: 'artwork_id' });
 			}
 
 			// Store 4: offline_sync_queue (autoIncrement queue_id)

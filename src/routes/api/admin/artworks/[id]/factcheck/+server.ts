@@ -11,36 +11,36 @@ export async function POST({ params }) {
   }
 
   try {
-    const artwork = await prisma.oeuvres.findUnique({
+    const artwork = await prisma.artworks.findUnique({
       where: { id },
       include: { 
-        oeuvre_translations: { where: { language_code: 'fr' } }, 
-        artistes: { include: { artiste_translations: { where: { language_code: 'fr' } } } } 
+        artwork_translations: { where: { language_code: 'fr' } }, 
+        artists: { include: { artist_translations: { where: { language_code: 'fr' } } } } 
       }
     });
 
-    if (!artwork || !artwork.oeuvre_translations[0]) {
+    if (!artwork || !artwork.artwork_translations[0]) {
       return json({ error: 'Artwork or content not found' }, { status: 404 });
     }
 
     // Extract text from the DB
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const dbPortions = (artwork.oeuvre_translations[0].article_portions || []) as any[];
+    const dbPortions = (artwork.artwork_translations[0].article_portions || []) as any[];
     let articlePortions = [...dbPortions];
     
     // Fallback if no portions exist (shouldn't happen with new generation logic)
-    if (articlePortions.length === 0 && artwork.oeuvre_translations[0].article_principal) {
+    if (articlePortions.length === 0 && artwork.artwork_translations[0].main_article) {
       articlePortions = [{
         id: `p-${Date.now()}-article`,
         type: 'article',
-        text: artwork.oeuvre_translations[0].article_principal,
+        text: artwork.artwork_translations[0].main_article,
         status: 'PENDING'
       }];
     }
 
     // Scrape wikipedia
-    const titre = artwork.oeuvre_translations[0].titre;
-    const nomArtiste = artwork.artistes?.artiste_translations?.[0]?.nom || 'Inconnu';
+    const titre = artwork.artwork_translations[0].title;
+    const nomArtiste = artwork.artists?.artist_translations?.[0]?.name || 'Inconnu';
     const wikiExtract = await scrapeWikipediaArticle(titre, nomArtiste, 'fr');
 
     if (!wikiExtract || !wikiExtract.text) {
@@ -80,8 +80,8 @@ export async function POST({ params }) {
       return portion;
     });
 
-    const existingTranslation = await prisma.oeuvre_translations.findUnique({
-      where: { id_oeuvre_language_code: { id_oeuvre: id, language_code: 'fr' } }
+    const existingTranslation = await prisma.artwork_translations.findUnique({
+      where: { artwork_id_language_code: { artwork_id: id, language_code: 'fr' } }
     });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const existingReport = (existingTranslation?.verification_report || {}) as any;
@@ -90,10 +90,10 @@ export async function POST({ params }) {
       ...report,                           // statements + global_score du factcheck actuel
       introduction: existingReport.introduction // on préserve le factcheck intro s'il existe
     };
-    mergedReport.global_score = calculateGlobalScore(mergedReport, updatedPortions, artwork.oeuvre_translations[0].introduction);
+    mergedReport.global_score = calculateGlobalScore(mergedReport, updatedPortions, artwork.artwork_translations[0].introduction);
 
-    const updated = await prisma.oeuvre_translations.update({
-      where: { id_oeuvre_language_code: { id_oeuvre: id, language_code: 'fr' } },
+    const updated = await prisma.artwork_translations.update({
+      where: { artwork_id_language_code: { artwork_id: id, language_code: 'fr' } },
       data: {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         verification_report: mergedReport as any,
@@ -105,7 +105,6 @@ export async function POST({ params }) {
 
     return json({ success: true, report, content: updated });
   } catch (error: unknown) {
-    void('[API/admin/factcheck] Error:', error);
     
     const errorMessage = error instanceof Error ? error.message : String(error);
     if (errorMessage.includes('Quota exceeded') || errorMessage.includes('429')) {

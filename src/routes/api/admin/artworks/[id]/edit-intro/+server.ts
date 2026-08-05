@@ -10,8 +10,8 @@ export async function POST({ params, request }) {
     const { introduction } = await request.json();
     if (introduction === undefined) return json({ error: 'Missing required field' }, { status: 400 });
 
-    const current = await prisma.oeuvre_translations.findUnique({
-      where: { id_oeuvre_language_code: { id_oeuvre: id, language_code: 'fr' } }
+    const current = await prisma.artwork_translations.findUnique({
+      where: { artwork_id_language_code: { artwork_id: id, language_code: 'fr' } }
     });
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -35,8 +35,8 @@ export async function POST({ params, request }) {
     const currentPortions = (current?.article_portions || []) as any[];
     report.global_score = calculateGlobalScore(report, currentPortions, introduction);
 
-    const updated = await prisma.oeuvre_translations.update({
-      where: { id_oeuvre_language_code: { id_oeuvre: id, language_code: 'fr' } },
+    const updated = await prisma.artwork_translations.update({
+      where: { artwork_id_language_code: { artwork_id: id, language_code: 'fr' } },
       data: {
         introduction,
         verification_report: report,
@@ -46,7 +46,6 @@ export async function POST({ params, request }) {
 
     return json({ success: true, content: updated });
   } catch (error: unknown) {
-    void('[API/admin/edit-intro] Error:', error);
     return json({ error: error instanceof Error ? error.message : String(error) }, { status: 500 });
   }
 }

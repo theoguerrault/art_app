@@ -29,7 +29,6 @@ export async function POST({ request, params }) {
         });
 
       if (uploadError) {
-        void('Upload error:', uploadError);
         return json({ error: 'Erreur lors de l\'upload de l\'image' }, { status: 500 });
       }
 
@@ -46,7 +45,7 @@ export async function POST({ request, params }) {
     }
 
     // Update database
-    const updated = await prisma.oeuvres.update({
+    const updated = await prisma.artworks.update({
       where: { id: parseInt(id) },
       data: {
         image_url_full: finalUrl,
@@ -54,9 +53,8 @@ export async function POST({ request, params }) {
       }
     });
 
-    return json({ success: true, url: finalUrl, oeuvre: updated });
+    return json({ success: true, url: finalUrl, artwork: updated });
   } catch (err: unknown) {
-    void(err);
     return json({ error: err instanceof Error ? err.message : 'Erreur serveur' }, { status: 500 });
   }
 }

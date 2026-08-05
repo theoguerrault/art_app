@@ -38,7 +38,8 @@ export const load: PageLoad = async ({ fetch }) => {
 						await saveToLocalCache('cached_mcqs', mcqs);
 					}
 				}
-			}).catch(err => void('Background cache failed:', err));
+			}).catch(err => {
+			});
 
 			// Fetch daily lesson from server
 			const res = await fetch('/api/daily-artwork');
@@ -47,7 +48,6 @@ export const load: PageLoad = async ({ fetch }) => {
 				return { lesson, isOffline: false };
 			}
 		} catch (err) {
-			void('[TodayLoad] Error fetching online daily artwork, falling back to cache:', err);
 		}
 	}
 
@@ -61,12 +61,12 @@ export const load: PageLoad = async ({ fetch }) => {
 
 	const progressMap = new Map<number, UserProgress>();
 	for (const p of progressList) {
-		progressMap.set(p.id_oeuvre, p);
+		progressMap.set(p.artwork_id, p);
 	}
 
 	const contentsMap: Record<number, ContentArtwork> = {};
 	for (const mcq of cachedMcqs) {
-		if (mcq && mcq.id_oeuvre) contentsMap[mcq.id_oeuvre] = mcq;
+		if (mcq && mcq.artwork_id) contentsMap[mcq.artwork_id] = mcq;
 	}
 
 	let selectedArtwork: Artwork | null = null;
@@ -85,7 +85,7 @@ export const load: PageLoad = async ({ fetch }) => {
 		});
 
 		if (dueItems.length > 0) {
-			dueItems.sort((a, b) => {
+			dueItems.sort((a: any, b: any) => {
 				const pa = progressMap.get(a.id);
 				const pb = progressMap.get(b.id);
 				const timeA = pa?.next_review_at ? new Date(pa.next_review_at).getTime() : 0;
@@ -122,23 +122,10 @@ export const load: PageLoad = async ({ fetch }) => {
 		lesson = {
 			...optimizedArtwork,
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			nom_courant: (selectedArtwork as any).courants?.nom || 'Mouvement Artistique',
+			movement_name: (selectedArtwork as any).movements?.name || 'Mouvement Artistique',
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			oklch_token: (selectedArtwork as any).courants?.oklch_token || 'var(--movement-theme)',
-			article_principal: content?.article_principal || 'Explorez l\'histoire remarquable et la composition de ce chef-d\'œuvre intemporel.',
-			qcm: content?.qcm || {
-				question: `Quel mouvement artistique ou période est le mieux représenté par "${selectedArtwork.titre}" ?`,
-				options: [
-					// eslint-disable-next-line @typescript-eslint/no-explicit-any
-					(selectedArtwork as any).courants?.nom || 'Impressionnisme',
-					'Expressionnisme abstrait',
-					'Néoclassicisme',
-					'Surréalisme'
-				],
-				correctIndex: 0,
-				// eslint-disable-next-line @typescript-eslint/no-explicit-any
-				explanation: `"${selectedArtwork.titre}" créé par ${selectedArtwork.artistes?.nom || 'Inconnu'} est un exemple fondamental de ${(selectedArtwork as any).courants?.nom || 'Impressionnisme'}.`
-			}
+			oklch_token: (selectedArtwork as any).movements?.oklch_token || 'var(--movement-theme)',
+			main_article: content?.main_article || 'Explorez l\'histoire remarquable et la composition de ce chef-d\'œuvre intemporel.'
 		};
 	}
 

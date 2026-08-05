@@ -6,17 +6,17 @@ export async function POST({ params }) {
   if (isNaN(id)) return json({ error: 'Invalid ID' }, { status: 400 });
 
   try {
-    const artwork = await prisma.oeuvres.findUnique({
+    const artwork = await prisma.artworks.findUnique({
       where: { id },
-      include: { oeuvre_translations: { where: { language_code: 'fr' } } }
+      include: { artwork_translations: { where: { language_code: 'fr' } } }
     });
 
-    if (!artwork || !artwork.oeuvre_translations[0]) {
+    if (!artwork || !artwork.artwork_translations[0]) {
       return json({ error: 'Artwork not found' }, { status: 404 });
     }
 
-    const updated = await prisma.oeuvre_translations.update({
-      where: { id_oeuvre_language_code: { id_oeuvre: id, language_code: 'fr' } },
+    const updated = await prisma.artwork_translations.update({
+      where: { artwork_id_language_code: { artwork_id: id, language_code: 'fr' } },
       data: {
         verification_status: 'PENDING_VALIDATION'
       }
@@ -24,7 +24,6 @@ export async function POST({ params }) {
 
     return json({ success: true, content: updated });
   } catch (error: unknown) {
-    void('[API/admin/unvalidate] Error:', error);
     return json({ error: error instanceof Error ? error.message : String(error) }, { status: 500 });
   }
 }

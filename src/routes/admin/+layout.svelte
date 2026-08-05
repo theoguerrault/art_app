@@ -1,27 +1,25 @@
 <script lang="ts">
   import { page } from '$app/stores';
-  import type { Snippet } from 'svelte';
-  
-  let props = $props() as { children: Snippet };
+  let { children } = $props();
 </script>
 
 <div class="admin-layout">
   <aside class="admin-sidebar">
     <nav class="sidebar-nav">
-      <a data-sveltekit-preload-data="hover" href="/admin/oeuvres" data-sveltekit-prefetch class="nav-item" class:active={$page.url.pathname.startsWith('/admin/oeuvres')}>
+      <a data-sveltekit-preload-data="hover" href="/admin/artworks" data-sveltekit-prefetch class="nav-item" class:active={$page.url.pathname.startsWith('/admin/artworks')}>
         <span>Œuvres</span>
       </a>
-      <a data-sveltekit-preload-data="hover" href="/admin/artistes" data-sveltekit-prefetch class="nav-item" class:active={$page.url.pathname.startsWith('/admin/artistes')}>
-        <span>Artistes</span>
+      <a data-sveltekit-preload-data="hover" href="/admin/artists" data-sveltekit-prefetch class="nav-item" class:active={$page.url.pathname.startsWith('/admin/artists')}>
+        <span>Artists</span>
       </a>
-      <a data-sveltekit-preload-data="hover" href="/admin/courants" data-sveltekit-prefetch class="nav-item" class:active={$page.url.pathname.startsWith('/admin/courants')}>
+      <a data-sveltekit-preload-data="hover" href="/admin/movements" data-sveltekit-prefetch class="nav-item" class:active={$page.url.pathname.startsWith('/admin/movements')}>
         <span>Mouvements</span>
       </a>
     </nav>
   </aside>
 
   <main class="admin-content">
-    {@render props.children()}
+    {@render children()}
   </main>
 </div>
 

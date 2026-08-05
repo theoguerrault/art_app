@@ -20,7 +20,6 @@ export interface ContentPortion {
 export interface GeneratedArtworkContent {
   introduction?: string;
   portions: { title: string; content: string; }[];
-  anecdotes_secretes?: string[];
 }
 
 
@@ -48,7 +47,7 @@ RÈGLES ABSOLUES :
 1. N'INTERPELLE JAMAIS le lecteur (interdit d'utiliser "vous", "tu", "Savez-vous que", etc.).
 2. NON-RÉPÉTITION STRICTE : Aucune information de l'"introduction" ne doit être répétée dans les "portions" de l'article. De plus, chaque "portion" doit être exclusive : ne répète jamais dans une portion ce qui a déjà été dit dans une autre.`;
 
-  const userPrompt = `Pourquoi l'oeuvre "${title}"${artist ? ` par ${artist}` : ''} est-elle connue ?`;
+  const userPrompt = `Pourquoi l'artwork "${title}"${artist ? ` par ${artist}` : ''} est-elle connue ?`;
 
   const responseSchema = {
     type: Type.OBJECT,
@@ -67,14 +66,13 @@ RÈGLES ABSOLUES :
           },
           required: ["title", "content"]
         },
-        description: "Pourquoi l'oeuvre est elle connue."
+        description: "Pourquoi l'artwork est elle connue."
       }
     },
     required: ['introduction', 'portions']
   };
 
   try {
-    void(`[DescriptionService] Generating storytelling content for "${title}"...`);
     const result = await generateContentWithRetry<GeneratedArtworkContent>({
       systemInstruction,
       userPrompt,
@@ -84,7 +82,6 @@ RÈGLES ABSOLUES :
     });
     return result;
   } catch (err) {
-    void('[DescriptionService] Failed generating content for "%s":', title, err);
     throw err;
   }
 }
@@ -142,7 +139,6 @@ RÈGLES ABSOLUES :
   };
 
   try {
-    void(`[DescriptionService] Fact-checking content for "${title}" against Wikipedia...`);
     const report = await generateContentWithRetry<FactCheckReport>({
       systemInstruction,
       userPrompt,
@@ -153,7 +149,6 @@ RÈGLES ABSOLUES :
 
     return report;
   } catch (err) {
-    void('[DescriptionService] Failed fact-checking for "%s":', title, err);
     return null;
   }
 }
@@ -197,7 +192,6 @@ Mission : Réécris le paragraphe original en corrigeant ces erreurs en te basan
   };
 
   try {
-    void(`[DescriptionService] Auto-correcting portion for "${title}"...`);
     const result = await generateContentWithRetry<{ corrected_text: string }>({
       systemInstruction,
       userPrompt,
@@ -208,7 +202,6 @@ Mission : Réécris le paragraphe original en corrigeant ces erreurs en te basan
 
     return result?.corrected_text || null;
   } catch (err) {
-    void('[DescriptionService] Failed auto-correcting portion for "%s":', title, err);
     return null;
   }
 }
@@ -227,7 +220,6 @@ export async function regenerateArtworkIntroduction(title: string, artist: strin
   };
 
   try {
-    void(`[DescriptionService] Regenerating intro for "${title}"...`);
     const result = await generateContentWithRetry<{ introduction: string }>({
       systemInstruction,
       userPrompt,
@@ -237,7 +229,6 @@ export async function regenerateArtworkIntroduction(title: string, artist: strin
     });
     return result?.introduction || null;
   } catch (err) {
-    void('[DescriptionService] Failed regenerating intro for "%s":', title, err);
     return null;
   }
 }

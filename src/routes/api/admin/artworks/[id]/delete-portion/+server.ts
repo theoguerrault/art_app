@@ -11,30 +11,27 @@ export async function POST({ params, request }) {
   try {
     const { portionId } = await request.json();
 
-    const artwork = await prisma.oeuvres.findUnique({
+    const artwork = await prisma.artworks.findUnique({
       where: { id },
-      include: { oeuvre_translations: { where: { language_code: 'fr' } } }
+      include: { artwork_translations: { where: { language_code: 'fr' } } }
     });
 
-    if (!artwork || !artwork.oeuvre_translations || !artwork.oeuvre_translations[0]) {
+    if (!artwork || !artwork.artwork_translations || !artwork.artwork_translations[0]) {
       return json({ error: 'Artwork not found' }, { status: 404 });
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let updatedPortions = artwork.oeuvre_translations[0].article_portions as any[] || [];
+    let updatedPortions = artwork.artwork_translations[0].article_portions as any[] || [];
     
     // Filter out the deleted portion
     updatedPortions = updatedPortions.filter(p => p.id !== portionId);
 
-    // Rebuild article_principal and anecdotes_secretes
+    // Rebuild main_article and anecdotes_secretes
     const newArticlePrincipal = updatedPortions
       .filter(p => !p.type || p.type === 'article')
       .map(p => `### ${p.title || 'Partie'}\n\n${p.text}`)
       .join('\n\n');
 
-    const newAnecdotes = updatedPortions
-      .filter(p => p.type === 'anecdote')
-      .map(p => p.text);
 
     // Update global status
     const hasFalse = updatedPortions.some(p => p.status === 'FALSE');
@@ -44,19 +41,18 @@ export async function POST({ params, request }) {
     else if (hasUnverified) globalStatus = 'PENDING_VALIDATION';
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const report = (artwork.oeuvre_translations[0].verification_report || {}) as any;
+    const report = (artwork.artwork_translations[0].verification_report || {}) as any;
     if (report && report.statements) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       report.statements = report.statements.filter((s: any) => s.id !== portionId);
     }
-    report.global_score = calculateGlobalScore(report, updatedPortions, artwork.oeuvre_translations[0].introduction);
+    report.global_score = calculateGlobalScore(report, updatedPortions, artwork.artwork_translations[0].introduction);
 
-    const updated = await prisma.oeuvre_translations.update({
-      where: { id_oeuvre_language_code: { id_oeuvre: id, language_code: 'fr' } },
+    const updated = await prisma.artwork_translations.update({
+      where: { artwork_id_language_code: { artwork_id: id, language_code: 'fr' } },
       data: {
         article_portions: updatedPortions,
-        article_principal: newArticlePrincipal,
-        anecdotes_secretes: newAnecdotes,
+        main_article: newArticlePrincipal,
         verification_report: report,
         verification_status: globalStatus
       }
@@ -64,7 +60,6 @@ export async function POST({ params, request }) {
 
     return json({ success: true, content: updated });
   } catch (error: unknown) {
-    void('[API/admin/delete-portion] Error:', error);
     return json({ error: error instanceof Error ? error.message : String(error) }, { status: 500 });
   }
 }

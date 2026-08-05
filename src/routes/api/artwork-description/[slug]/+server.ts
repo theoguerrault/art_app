@@ -28,12 +28,11 @@ export const GET: RequestHandler = async ({ params }) => {
 		// Map to expected shape
 		return json({
 			detailed_description: result.content?.detailed_description,
-			article_principal: result.content?.article_principal,
+			main_article: result.content?.main_article,
 			anecdotes_secretes: result.content?.anecdotes_secretes,
 			source: result.updated?.includes('detailed_description') ? 'generated' : 'cache'
 		});
 	} catch (err: unknown) {
-		void('[/api/artwork-description] Error for slug "%s":', slug, err);
 		return json(
 			{ error: 'Failed to get artwork description', details: err instanceof Error ? err.message : String(err) },
 			{ status: 500 }

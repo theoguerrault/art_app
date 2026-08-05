@@ -83,20 +83,21 @@ export function sanitizeArtwork<T extends Partial<Artwork>>(art: T): T {
 	};
 
 	// Parse Markdown on the server to avoid shipping `marked` library to the client
-	if (sanitized.introduction) {
-		sanitized.introduction = parseMarkdown(sanitized.introduction);
+	const anySanitized = sanitized as any;
+	if (anySanitized.introduction) {
+		anySanitized.introduction = parseMarkdown(anySanitized.introduction);
 	}
-	if (sanitized.article_principal) {
-		sanitized.article_principal = parseMarkdown(sanitized.article_principal);
+	if (anySanitized.main_article) {
+		anySanitized.main_article = parseMarkdown(anySanitized.main_article);
 	}
-	if (sanitized.portions && Array.isArray(sanitized.portions)) {
-		sanitized.portions = sanitized.portions.map(p => ({
+	if (anySanitized.portions && Array.isArray(anySanitized.portions)) {
+		anySanitized.portions = anySanitized.portions.map((p: any) => ({
 			...p,
 			text: p.text ? parseMarkdown(p.text) : p.text
 		}));
 	}
 
-	return sanitized;
+	return anySanitized as T;
 }
 
 export function sanitizeArtworks<T extends Partial<Artwork>>(artworks: T[] | null | undefined): T[] {

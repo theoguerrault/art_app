@@ -5,7 +5,7 @@ let isSyncing = false;
 
 /**
  * Iterates through all items pending in the offline synchronization queue and pushes them
- * to Supabase (`historique_reponses` and `user_artwork_progress`).
+ * to Supabase (`user_artwork_progress`).
  * If an item successfully syncs, it is purged from IndexedDB (`offline_sync_queue`).
  * If Supabase returns an error (e.g., 5xx server error or connection loss), the record remains
  * in the queue to be retried on the next flush.
@@ -30,43 +30,23 @@ export async function flushOfflineQueue(): Promise<{ successCount: number; failC
 			if (item.queue_id === undefined) continue;
 
 			try {
-				// 1. Insert into `historique_reponses`
-				// eslint-disable-next-line @typescript-eslint/no-explicit-any
-				const { error: insertError } = await (supabase.from('historique_reponses') as any).insert({
-					user_id: item.user_id,
-					id_oeuvre: item.id_oeuvre ?? null,
-					id_courant: item.id_courant ?? null,
-					is_correct: item.is_correct,
-					reponse_choisie: item.reponse_choisie,
-					score: item.score ?? null,
-					encounter_type: item.encounter_type,
-					answered_at: item.answered_at
-				});
-
-				if (insertError) {
-					void('[OfflineSync] Supabase error inserting historique_reponses:', insertError);
-					failCount++;
-					continue; // Retain in queue for next retry
-				}
-
-				// 2. Upsert into `user_artwork_progress` if `id_oeuvre` is provided
-				if (item.id_oeuvre !== undefined && item.id_oeuvre !== null) {
+				// 2. Upsert into `user_artwork_progress` if `artwork_id` is provided
+				if (item.artwork_id !== undefined && item.artwork_id !== null) {
 					// eslint-disable-next-line @typescript-eslint/no-explicit-any
 					const { error: upsertError } = await (supabase.from('user_artwork_progress') as any).upsert(
 						{
 							user_id: item.user_id,
-							id_oeuvre: item.id_oeuvre,
+							artwork_id: item.artwork_id,
 							box_level: item.box_level ?? (item.is_correct ? 2 : 1),
 							consecutive_correct: item.consecutive_correct ?? (item.is_correct ? 1 : 0),
 							next_review_at: item.next_review_at ?? new Date(Date.now() + 86400000).toISOString(),
 							last_score: item.score ?? null,
 							updated_at: new Date().toISOString()
 						},
-						{ onConflict: 'user_id, id_oeuvre' }
+						{ onConflict: 'user_id, artwork_id' }
 					);
 
 					if (upsertError) {
-						void('[OfflineSync] Supabase error upserting user_artwork_progress:', upsertError);
 						// Note: if upsert fails, we don't remove from queue so both can be retried safely or logged
 						failCount++;
 						continue;
@@ -77,7 +57,6 @@ export async function flushOfflineQueue(): Promise<{ successCount: number; failC
 				await removeFromOfflineQueue(item.queue_id);
 				successCount++;
 			} catch (err) {
-				void('[OfflineSync] Exception during sync processing item:', err);
 				failCount++;
 			}
 		}

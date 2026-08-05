@@ -5,9 +5,7 @@
 	import { onNavigate } from '$app/navigation';
 
 	import { page } from '$app/state';
-	import type { Snippet } from 'svelte';
-
-	let props = $props() as { children: Snippet };
+	let { children } = $props();
 
 	onNavigate((navigation) => {
 		if (!document.startViewTransition || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -27,7 +25,7 @@
 </svelte:head>
 
 <main class={page.url.pathname.startsWith('/admin') ? 'app-shell-admin' : 'app-shell-main'}>
-	{@render props.children()}
+	{@render children()}
 </main>
 
 <OfflineBanner />

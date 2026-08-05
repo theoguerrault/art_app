@@ -28,3 +28,4 @@ When I correct you or you learn something new, update the list below:
 - Whenever modifying schemas, APIs, or architecture, verify and update the corresponding documentation in `/doc/`
 - Always consult `/doc/01_product/ui_design_system.md` before making any UI, layout or CSS changes
 - Before any commit, you must run `npm run doctor` and ensure the score is at least 90, prioritizing the fix of any critical problems
+- Never ignore doctor suggestions or diagnostics using comments or baseline.js. Always try to fix them.

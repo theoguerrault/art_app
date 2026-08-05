@@ -18,10 +18,10 @@ export async function GET(_event: RequestEvent) {
     // Get all verified artworks with their relations (with cache)
     let verifiedArtworks = cachedVerifiedArtworks;
     if (!verifiedArtworks || now.getTime() - cacheTimestamp > CACHE_TTL) {
-      verifiedArtworks = await prisma.oeuvres.findMany({
+      verifiedArtworks = await prisma.artworks.findMany({
         where: {
           is_active: true,
-          oeuvre_translations: {
+          artwork_translations: {
             some: {
               language_code: 'fr',
               verification_status: 'VERIFIED'
@@ -29,12 +29,12 @@ export async function GET(_event: RequestEvent) {
           }
         },
         include: {
-          oeuvre_translations: { where: { language_code: 'fr' } },
-          artistes: {
-            include: { artiste_translations: { where: { language_code: 'fr' } } }
+          artwork_translations: { where: { language_code: 'fr' } },
+          artists: {
+            include: { artist_translations: { where: { language_code: 'fr' } } }
           },
-          courants: {
-            include: { courant_translations: { where: { language_code: 'fr' } } }
+          movements: {
+            include: { movement_translations: { where: { language_code: 'fr' } } }
           }
         }
       });
@@ -54,14 +54,14 @@ export async function GET(_event: RequestEvent) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const progressMap = new Map<number, any>();
     for (const p of progressList) {
-      progressMap.set(p.id_oeuvre, p);
+      progressMap.set(p.artwork_id, p);
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let selectedArtwork: any = null;
 
     // Priority 1: Check Leitner items due outside 7-day cooldown
-    const dueItems = verifiedArtworks.filter((art) => {
+    const dueItems = verifiedArtworks.filter((art: any) => {
       const p = progressMap.get(art.id);
       if (!p) return false;
       const isDue = p.next_review_at && p.next_review_at <= now;
@@ -70,7 +70,7 @@ export async function GET(_event: RequestEvent) {
     });
 
     if (dueItems.length > 0) {
-      dueItems.sort((a, b) => {
+      dueItems.sort((a: any, b: any) => {
         const pa = progressMap.get(a.id);
         const pb = progressMap.get(b.id);
         const timeA = pa?.next_review_at ? pa.next_review_at.getTime() : 0;
@@ -82,7 +82,7 @@ export async function GET(_event: RequestEvent) {
 
     // Priority 2: Undiscovered artwork
     if (!selectedArtwork) {
-      const undiscovered = verifiedArtworks.filter((art) => {
+      const undiscovered = verifiedArtworks.filter((art: any) => {
         const p = progressMap.get(art.id);
         return !p || !p.last_presented_daily_at;
       });
@@ -108,38 +108,38 @@ export async function GET(_event: RequestEvent) {
 
     if (selectedArtwork) {
       const optimizedArtwork = sanitizeArtwork(selectedArtwork);
-      const translation = selectedArtwork.oeuvre_translations[0];
-      const movementTranslation = selectedArtwork.courants?.courant_translations?.[0];
-      const artistTranslation = selectedArtwork.artistes?.artiste_translations?.[0];
+      const translation = selectedArtwork.artwork_translations[0];
+      const movementTranslation = selectedArtwork.movements?.movement_translations?.[0];
+      const artistTranslation = selectedArtwork.artists?.artist_translations?.[0];
 
       // Format as ActiveLessonView
       const lesson = {
         id: selectedArtwork.id,
         slug: selectedArtwork.slug,
-        id_courant: selectedArtwork.id_courant,
-        id_artiste: selectedArtwork.id_artiste,
-        titre: translation?.titre || 'Inconnu',
-        date_creation: selectedArtwork.date_creation,
+        movement_id: selectedArtwork.movement_id,
+        artist_id: selectedArtwork.artist_id,
+        title: translation?.title || 'Inconnu',
+        creation_date: selectedArtwork.creation_date,
         image_url_thumb: optimizedArtwork.image_url_thumb,
         image_url_full: optimizedArtwork.image_url_full,
         aspect_ratio: selectedArtwork.aspect_ratio,
-        artistes: { nom: artistTranslation?.nom || 'Inconnu' },
-        nom_courant: movementTranslation?.nom || 'Mouvement Artistique',
-        oklch_token: selectedArtwork.courants?.oklch_token || 'var(--movement-theme)',
+        artists: { name: artistTranslation?.name || 'Inconnu' },
+        movement_name: movementTranslation?.name || 'Mouvement Artistique',
+        oklch_token: selectedArtwork.movements?.oklch_token || 'var(--movement-theme)',
         verification_status: translation?.verification_status || null,
         introduction: translation?.introduction || null,
         article_portions: translation?.article_portions || [],
-        article_principal: translation?.article_principal || "Explorez l'histoire remarquable et la composition de ce chef-d'œuvre intemporel.",
+        main_article: translation?.main_article || "Explorez l'histoire remarquable et la composition de ce chef-d'œuvre intemporel.",
         qcm: translation?.qcm || {
-          question: `Quel mouvement artistique ou période est le mieux représenté par "${translation?.titre || 'cette oeuvre'}" ?`,
+          question: `Quel mouvement artistique ou période est le mieux représenté par "${translation?.title || 'cette artwork'}" ?`,
           options: [
-            movementTranslation?.nom || 'Impressionnisme',
+            movementTranslation?.name || 'Impressionnisme',
             'Expressionnisme abstrait',
             'Néoclassicisme',
             'Surréalisme'
           ],
           correctIndex: 0,
-          explanation: `"${translation?.titre || 'Cette oeuvre'}" créé par ${artistTranslation?.nom || 'Inconnu'} est un exemple fondamental de ${movementTranslation?.nom || 'Impressionnisme'}.`
+          explanation: `"${translation?.title || 'Cette artwork'}" créé par ${artistTranslation?.name || 'Inconnu'} est un exemple fondamental de ${movementTranslation?.name || 'Impressionnisme'}.`
         }
       };
       
@@ -149,7 +149,6 @@ export async function GET(_event: RequestEvent) {
     return json({ lesson: null });
 
   } catch (err) {
-    void('Error in daily artwork API:', err);
     return json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }

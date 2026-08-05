@@ -12,7 +12,7 @@
 	const tabs: TabItem[] = [
 		{ href: '/', label: 'Aujourd\'hui', icon: PaintBrush },
 		{ href: '/catalogue', label: 'Catalogue', icon: Books },
-		{ href: '/admin/oeuvres', label: 'Admin', icon: ShieldStar },
+		{ href: '/admin/artworks', label: 'Admin', icon: ShieldStar },
 		{ href: '/settings', label: 'Paramètres', icon: Gear }
 	];
 

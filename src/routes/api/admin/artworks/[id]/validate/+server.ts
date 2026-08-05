@@ -16,19 +16,19 @@ export async function POST({ params, request }) {
 
     const { portionId } = body;
 
-    const artwork = await prisma.oeuvres.findUnique({
+    const artwork = await prisma.artworks.findUnique({
       where: { id },
-      include: { oeuvre_translations: { where: { language_code: 'fr' } } }
+      include: { artwork_translations: { where: { language_code: 'fr' } } }
     });
 
-    if (!artwork || !artwork.oeuvre_translations[0]) {
+    if (!artwork || !artwork.artwork_translations[0]) {
       return json({ error: 'Artwork not found' }, { status: 404 });
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const report = (artwork.oeuvre_translations[0].verification_report || {}) as any;
+    const report = (artwork.artwork_translations[0].verification_report || {}) as any;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const articlePortions = (artwork.oeuvre_translations[0].article_portions || []) as any[];
+    const articlePortions = (artwork.artwork_translations[0].article_portions || []) as any[];
 
     if (report && report.statements) {
       if (portionId) {
@@ -45,7 +45,7 @@ export async function POST({ params, request }) {
       }
     }
 
-    report.global_score = calculateGlobalScore(report, articlePortions, artwork.oeuvre_translations[0].introduction);
+    report.global_score = calculateGlobalScore(report, articlePortions, artwork.artwork_translations[0].introduction);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const hasFalse = report?.statements?.some((s: any) => s.status === 'FALSE') || false;
@@ -56,8 +56,8 @@ export async function POST({ params, request }) {
     if (hasFalse) globalStatus = 'FALSE';
     else if (hasUnverified) globalStatus = 'PENDING_VALIDATION';
 
-    const updated = await prisma.oeuvre_translations.update({
-      where: { id_oeuvre_language_code: { id_oeuvre: id, language_code: 'fr' } },
+    const updated = await prisma.artwork_translations.update({
+      where: { artwork_id_language_code: { artwork_id: id, language_code: 'fr' } },
       data: {
         verification_report: report,
         verification_status: globalStatus
@@ -66,7 +66,6 @@ export async function POST({ params, request }) {
 
     return json({ success: true, content: updated });
   } catch (error: unknown) {
-    void('[API/admin/validate] Error:', error);
     return json({ error: error instanceof Error ? error.message : String(error) }, { status: 500 });
   }
 }

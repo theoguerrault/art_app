@@ -25,9 +25,9 @@
 	}: ArtworkCardProps = $props();
 
 	const lessonData = {
-		get nom_courant() { return (artwork as ActiveLessonView).nom_courant; },
+		get movement_name() { return (artwork as ActiveLessonView).movement_name; },
 		get oklch_token() { return (artwork as ActiveLessonView).oklch_token; },
-		get article_principal() { return (artwork as ActiveLessonView).article_principal; },
+		get main_article() { return (artwork as ActiveLessonView).main_article; },
 		get introduction() { return (artwork as ActiveLessonView).introduction; },
 		get article_portions() { return (artwork as ActiveLessonView).article_portions; }
 	};
@@ -35,7 +35,7 @@
 	let displayMovementName = $derived(
 		movementName !== 'Historical Art'
 			? movementName
-			: (lessonData.nom_courant || 'Art Historique')
+			: (lessonData.movement_name || 'Art Historique')
 	);
 
 	let displayOklchToken = $derived(
@@ -46,10 +46,10 @@
 
 	let displayAnecdote = $derived(
 		article ||
-			(lessonData.article_principal
+			(lessonData.main_article
 				? (lessonData.introduction 
-					? `**${lessonData.introduction}**\n\n${lessonData.article_principal}` 
-					: lessonData.article_principal)
+					? `**${lessonData.introduction}**\n\n${lessonData.main_article}` 
+					: lessonData.main_article)
 				: 'Découvrez l\'histoire captivante et l\'essence historique de ce chef-d\'œuvre.')
 	);
 
@@ -86,7 +86,7 @@
 	</div>
 {:else if showInsight}
 	<ArtworkInsight 
-		artworkTitle={`${artwork.titre} - ${artwork.artistes?.nom || 'Inconnu'} (${artwork.date_creation})`}
+		artworkTitle={`${artwork.title} - ${artwork.artists?.name || 'Inconnu'} (${artwork.creation_date})`}
 		introduction={lessonData.introduction ?? undefined}
 		portions={lessonData.article_portions || []}
 		articlePrincipal={displayAnecdote} 

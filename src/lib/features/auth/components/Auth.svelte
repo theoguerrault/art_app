@@ -32,7 +32,6 @@
 				await flushOfflineQueue();
 			}
 		} catch (err) {
-			void('[Auth] Failed to migrate anonymous data:', err);
 		}
 	}
 

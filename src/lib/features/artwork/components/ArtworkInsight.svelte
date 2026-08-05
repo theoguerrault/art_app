@@ -21,7 +21,6 @@
 	}
 
 	let articlePortions = $derived(filterPortions(portions, null));
-	let anecdotePortions = $derived(filterPortions(portions, 'anecdote'));
 
 	/**
 	 * Lightweight client-side HTML sanitizer.
@@ -103,21 +102,6 @@
 		</div>
 	{/if}
 
-	{#if anecdotePortions.length > 0}
-		<div class="analysis-section anecdotes-section">
-			<h2 class="section-subtitle">ANECDOTES</h2>
-			<div class="portions-list">
-				{#each anecdotePortions as portion, index (portion.id || index)}
-					<div class="portion-item">
-						{#if portion.title}
-							<h3 class="portion-title">{portion.title}</h3>
-						{/if}
-						<div class="markdown-content" use:html={portion.text}></div>
-					</div>
-				{/each}
-			</div>
-		</div>
-	{/if}
 </div>
 
 <style>

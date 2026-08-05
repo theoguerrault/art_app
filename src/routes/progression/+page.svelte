@@ -9,15 +9,6 @@
 		document.documentElement.style.setProperty('--artwork-hue', '220');
 	});
 
-	// Calculate overall statistics
-	let totalAnswers = $derived(data.historyList.length);
-	
-	function computeCorrectAnswers(history: { is_correct: boolean }[]) {
-		return history.reduce((n, h) => n + (h.is_correct ? 1 : 0), 0);
-	}
-	let correctAnswers = $derived(computeCorrectAnswers(data.historyList));
-	let successPercentage = $derived(totalAnswers > 0 ? Math.round((correctAnswers / totalAnswers) * 100) : 0);
-
 	// Calculate box distribution
 	function computeBoxDistribution(progressList: { box_level?: number }[]) {
 		const counts = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
@@ -31,14 +22,14 @@
 
 	// Mastery by movement
 	function computeMovementMastery(
-		movements: { id: number; nom: string; oklch_token?: string }[],
-		progressList: { id_oeuvre: number; box_level?: number }[],
+		movements: { id: number; name: string; oklch_token?: string }[],
+		progressList: { artwork_id: number; box_level?: number }[],
 		artworkToMovement: Record<number, number>
 	) {
 		return (movements || []).map((m) => {
 			// Find progress for this movement
 			const itemsInMovement = progressList.filter((p) => {
-				return artworkToMovement[p.id_oeuvre] === m.id;
+				return artworkToMovement[p.artwork_id] === m.id;
 			});
 			const avgBox =
 				itemsInMovement.length > 0
@@ -47,7 +38,7 @@
 			const percentage = Math.min(100, Math.round(((avgBox - 1) / 4) * 100));
 			return {
 				id: m.id,
-				nom: m.nom,
+				name: m.name,
 				oklch_token: m.oklch_token || 'var(--color-primary)',
 				masteryPercentage: percentage,
 				avgBox: avgBox.toFixed(1)
@@ -63,16 +54,8 @@
 		<p class="page-subtitle">Suivez la rétention de votre mémoire à long terme à travers le système Leitner à 5 boîtes.</p>
 	</header>
 
-	{#if totalAnswers > 0 || data.progressList.length > 0}
+	{#if data.progressList.length > 0}
 		<section class="overview-cards">
-			<div class="stat-card">
-				<span class="stat-icon"><Target size={38} weight="fill" /></span>
-				<div class="stat-content">
-					<span class="stat-value">{successPercentage}%</span>
-					<span class="stat-label">Précision QCM ({correctAnswers}/{totalAnswers})</span>
-				</div>
-			</div>
-
 			<div class="stat-card">
 				<span class="stat-icon"><Package size={38} weight="fill" /></span>
 				<div class="stat-content">
@@ -90,7 +73,7 @@
 				{#each movementMastery as m, i (i)}
 					<div class="movement-bar-item">
 						<div class="bar-top">
-							<span class="movement-name">{m.nom}</span>
+							<span class="movement-name">{m.name}</span>
 							<span class="movement-percent">{m.masteryPercentage}% Maîtrise (Boîte Moy. {m.avgBox})</span>
 						</div>
 						<div class="progress-track">
