@@ -36,12 +36,16 @@
 	.specs-bar {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 1.25rem;
-		padding: 0.85rem 1.75rem;
-		background-color: var(--color-surface-elevated);
-		border-bottom: 1px solid var(--color-border-subtle);
-		font-size: 0.88rem;
+		justify-content: center;
+		align-items: center;
+		gap: 1rem 1.5rem;
+		padding: 0.65rem 1.35rem;
+		background-color: var(--color-surface);
+		border: 1px solid var(--color-border-subtle);
+		border-radius: 9999px;
+		font-size: 0.85rem;
 		color: var(--color-text-secondary);
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 	}
 
 	.spec-item {

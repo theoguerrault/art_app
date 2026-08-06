@@ -10,7 +10,7 @@ export interface GlossaryContent {
 	movement_description?: string;
 }
 
-export const load: PageLoad = async ({ params }) => {
+export const load: PageLoad = async ({ params, fetch }) => {
 	const isOnline = typeof window !== 'undefined' ? navigator.onLine : true;
 	const slugOrId = params.slug;
 
@@ -70,7 +70,7 @@ export const load: PageLoad = async ({ params }) => {
 					supabase.from('user_artwork_progress').select('artwork_id, box_level, next_review_at').eq('artwork_id', artwork.id).maybeSingle(),
 					supabase.from('artist_translations').select('artist_id, short_description').eq('artist_id', artwork.artist_id).eq('language_code', 'fr').eq('verification_status', 'VERIFIED').maybeSingle(),
 					supabase.from('movement_translations').select('movement_id, short_description').eq('movement_id', artwork.movement_id).eq('language_code', 'fr').eq('verification_status', 'VERIFIED').maybeSingle(),
-					fetch('/api/reactions').then((r) => r.ok ? r.json() : { likes: [], dislikes: [] })
+					fetch('/api/reactions').then((r) => r.ok ? r.json() : { likes: [], dislikes: [] }).catch(() => ({ likes: [], dislikes: [] }))
 				]);
 
 

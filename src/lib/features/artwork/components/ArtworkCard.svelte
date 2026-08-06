@@ -98,14 +98,14 @@
 		width: 100%;
 		max-width: 100%;
 		margin: 0 auto;
-		background-color: var(--color-surface);
-		border-radius: var(--radius-xl);
-		border: 1.5px solid var(--movement-color, var(--color-border));
-		box-shadow: var(--shadow-md);
-		overflow: hidden;
+		background: transparent;
+		border: none;
+		box-shadow: none;
+		overflow: visible;
 		display: flex;
 		flex-direction: column;
-		transition: box-shadow 0.2s ease, border-color 0.2s ease;
+		align-items: center;
+		gap: 1.25rem;
 	}
 
 
