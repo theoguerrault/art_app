@@ -1,0 +1,1514 @@
+[
+  {
+    "original_name": "carel-fabritius",
+    "slug": "carel-fabritius",
+    "fr_name": "Carel Fabritius",
+    "en_name": "Carel Fabritius",
+    "fr_description": "Peintre néerlandais du Siècle d'or, élève de Rembrandt, connu pour son usage subtil de la lumière.",
+    "en_description": "Dutch Golden Age painter, pupil of Rembrandt, known for his subtle use of light.",
+    "dates": "1622–1654"
+  },
+  {
+    "original_name": "johannes-vermeer",
+    "slug": "johannes-vermeer",
+    "fr_name": "Johannes Vermeer",
+    "en_name": "Johannes Vermeer",
+    "fr_description": "Maître néerlandais célèbre pour ses scènes d'intérieur intimes et sa maîtrise inégalée de la lumière.",
+    "en_description": "Dutch master famous for his intimate interior scenes and unparalleled mastery of light.",
+    "dates": "1632–1675"
+  },
+  {
+    "original_name": "rembrandt",
+    "slug": "rembrandt",
+    "fr_name": "Rembrandt",
+    "en_name": "Rembrandt",
+    "fr_description": "Un des plus grands peintres de l'histoire, célèbre pour ses portraits profonds et son clair-obscur dramatique.",
+    "en_description": "One of history's greatest painters, famous for his profound portraits and dramatic chiaroscuro.",
+    "dates": "1606–1669"
+  },
+  {
+    "original_name": "anonyme-grece-antique",
+    "slug": "anonyme-grece-antique",
+    "fr_name": "Anonyme (Grèce antique)",
+    "en_name": "Anonyme (Grèce antique)",
+    "fr_description": "Artistes non identifiés de la Grèce antique ayant réalisé des sculptures et céramiques fondatrices.",
+    "en_description": "Unidentified artists of ancient Greece who created foundational sculptures and ceramics.",
+    "dates": "Antiquité"
+  },
+  {
+    "original_name": "anonyme-egypte-antique",
+    "slug": "anonyme-egypte-antique",
+    "fr_name": "Anonyme (Égypte antique)",
+    "en_name": "Anonyme (Égypte antique)",
+    "fr_description": "Artisans égyptiens ayant créé des œuvres monumentales et funéraires pour la royauté.",
+    "en_description": "Egyptian artisans who created monumental and funerary works for royalty.",
+    "dates": "Antiquité"
+  },
+  {
+    "original_name": "ai-weiwei",
+    "slug": "ai-weiwei",
+    "fr_name": "Ai Weiwei",
+    "en_name": "Ai Weiwei",
+    "fr_description": "Artiste contemporain et militant chinois renommé pour ses installations provocatrices.",
+    "en_description": "Contemporary Chinese artist and activist renowned for his provocative installations.",
+    "dates": "1957–"
+  },
+  {
+    "original_name": "anselm-kiefer",
+    "slug": "anselm-kiefer",
+    "fr_name": "Anselm Kiefer",
+    "en_name": "Anselm Kiefer",
+    "fr_description": "Peintre et sculpteur allemand explorant la mémoire historique, le mythe et la matière.",
+    "en_description": "German painter and sculptor exploring historical memory, myth, and materiality.",
+    "dates": "1945–"
+  },
+  {
+    "original_name": "damien-hirst",
+    "slug": "damien-hirst",
+    "fr_name": "Damien Hirst",
+    "en_name": "Damien Hirst",
+    "fr_description": "Artiste britannique majeur des Young British Artists, connu pour ses œuvres sur la mort et la science.",
+    "en_description": "Major British artist of the YBAs, known for his works on death and science.",
+    "dates": "1965–"
+  },
+  {
+    "original_name": "fernando-botero",
+    "slug": "fernando-botero",
+    "fr_name": "Fernando Botero",
+    "en_name": "Fernando Botero",
+    "fr_description": "Artiste colombien célèbre pour ses personnages aux proportions exagérées et volumineuses.",
+    "en_description": "Colombian artist famous for his characters with exaggerated, voluminous proportions.",
+    "dates": "1932–2023"
+  },
+  {
+    "original_name": "francis-bacon",
+    "slug": "francis-bacon",
+    "fr_name": "Francis Bacon",
+    "en_name": "Francis Bacon",
+    "fr_description": "Peintre figuratif britannique connu pour ses images crues, troublantes et émotionnellement chargées.",
+    "en_description": "British figurative painter known for his raw, unsettling, and emotionally charged imagery.",
+    "dates": "1909–1992"
+  },
+  {
+    "original_name": "gerhard-richter",
+    "slug": "gerhard-richter",
+    "fr_name": "Gerhard Richter",
+    "en_name": "Gerhard Richter",
+    "fr_description": "Artiste allemand majeur maîtrisant à la fois l'abstraction gestuelle et le photoréalisme flou.",
+    "en_description": "Major German artist mastering both gestural abstraction and blurred photorealism.",
+    "dates": "1932–"
+  },
+  {
+    "original_name": "jeff-koons",
+    "slug": "jeff-koons",
+    "fr_name": "Jeff Koons",
+    "en_name": "Jeff Koons",
+    "fr_description": "Artiste contemporain américain célèbre pour ses sculptures pop reproduisant des objets banals.",
+    "en_description": "American contemporary artist famous for his pop sculptures reproducing banal objects.",
+    "dates": "1955–"
+  },
+  {
+    "original_name": "lucian-freud",
+    "slug": "lucian-freud",
+    "fr_name": "Lucian Freud",
+    "en_name": "Lucian Freud",
+    "fr_description": "Peintre britannique réputé pour ses portraits réalistes, charnels et psychologiquement intenses.",
+    "en_description": "British painter renowned for his realistic, fleshy, and psychologically intense portraits.",
+    "dates": "1922–2011"
+  },
+  {
+    "original_name": "marina-abramovic",
+    "slug": "marina-abramovic",
+    "fr_name": "Marina Abramović",
+    "en_name": "Marina Abramović",
+    "fr_description": "Pionnière de l'art performance, explorant les limites du corps et de l'esprit humains.",
+    "en_description": "Pioneer of performance art, exploring the limits of the human body and mind.",
+    "dates": "1946–"
+  },
+  {
+    "original_name": "niki-de-saint-phalle",
+    "slug": "niki-de-saint-phalle",
+    "fr_name": "Niki de Saint Phalle",
+    "en_name": "Niki de Saint Phalle",
+    "fr_description": "Artiste franco-américaine célèbre pour ses Nanas colorées et ses installations monumentales.",
+    "en_description": "French-American artist famous for her colorful Nanas and monumental installations.",
+    "dates": "1930–2002"
+  },
+  {
+    "original_name": "takashi-murakami",
+    "slug": "takashi-murakami",
+    "fr_name": "Takashi Murakami",
+    "en_name": "Takashi Murakami",
+    "fr_description": "Artiste contemporain japonais créateur du mouvement Superflat mêlant pop culture et art traditionnel.",
+    "en_description": "Japanese contemporary artist, creator of the Superflat movement blending pop culture and traditional art.",
+    "dates": "1962–"
+  },
+  {
+    "original_name": "yayoi-kusama",
+    "slug": "yayoi-kusama",
+    "fr_name": "Yayoi Kusama",
+    "en_name": "Yayoi Kusama",
+    "fr_description": "Artiste japonaise célèbre pour ses installations immersives et son utilisation obsessionnelle des pois.",
+    "en_description": "Japanese artist famous for her immersive installations and obsessive use of polka dots.",
+    "dates": "1929–"
+  },
+  {
+    "original_name": "arnold-bocklin",
+    "slug": "arnold-bocklin",
+    "fr_name": "Arnold Böcklin",
+    "en_name": "Arnold Böcklin",
+    "fr_description": "Peintre symboliste suisse connu pour ses paysages mystérieux et allégoriques.",
+    "en_description": "Swiss Symbolist painter known for his mysterious and allegorical landscapes.",
+    "dates": "1827–1901"
+  },
+  {
+    "original_name": "gustav-klimt",
+    "slug": "gustav-klimt",
+    "fr_name": "Gustav Klimt",
+    "en_name": "Gustav Klimt",
+    "fr_description": "Figure majeure de la Sécession viennoise, célèbre pour ses peintures symbolistes ornées de feuilles d'or.",
+    "en_description": "Major figure of the Vienna Secession, famous for his Symbolist paintings adorned with gold leaf.",
+    "dates": "1862–1918"
+  },
+  {
+    "original_name": "gustave-moreau",
+    "slug": "gustave-moreau",
+    "fr_name": "Gustave Moreau",
+    "en_name": "Gustave Moreau",
+    "fr_description": "Peintre symboliste français reconnu pour ses visions oniriques et mythologiques complexes.",
+    "en_description": "French Symbolist painter recognized for his complex dreamlike and mythological visions.",
+    "dates": "1826–1898"
+  },
+  {
+    "original_name": "artemisia-gentileschi",
+    "slug": "artemisia-gentileschi",
+    "fr_name": "Artemisia Gentileschi",
+    "en_name": "Artemisia Gentileschi",
+    "fr_description": "Peintre baroque italienne majeure, célèbre pour ses compositions dramatiques et ses figures féminines fortes.",
+    "en_description": "Major Italian Baroque painter, famous for her dramatic compositions and strong female figures.",
+    "dates": "1593–1656"
+  },
+  {
+    "original_name": "diego-velazquez",
+    "slug": "diego-velazquez",
+    "fr_name": "Diego Vélasquez",
+    "en_name": "Diego Velázquez",
+    "fr_description": "Maître absolu du Siècle d'or espagnol, célèbre pour ses portraits royaux et sa touche virtuose.",
+    "en_description": "Absolute master of the Spanish Golden Age, famous for his royal portraits and virtuoso brushwork.",
+    "dates": "1599–1660"
+  },
+  {
+    "original_name": "gian-lorenzo-bernini",
+    "slug": "gian-lorenzo-bernini",
+    "fr_name": "Le Bernin",
+    "en_name": "Gian Lorenzo Bernini",
+    "fr_description": "Sculpteur et architecte italien de génie, figure centrale de l'art baroque à Rome.",
+    "en_description": "Genius Italian sculptor and architect, central figure of Baroque art in Rome.",
+    "dates": "1598–1680"
+  },
+  {
+    "original_name": "caravaggio",
+    "slug": "caravaggio",
+    "fr_name": "Le Caravage",
+    "en_name": "Caravaggio",
+    "fr_description": "Révolutionnaire du baroque italien, connu pour son ténébrisme radical et son réalisme cru.",
+    "en_description": "Revolutionary of the Italian Baroque, known for his radical tenebrism and raw realism.",
+    "dates": "1571–1610"
+  },
+  {
+    "original_name": "peter-paul-rubens",
+    "slug": "peter-paul-rubens",
+    "fr_name": "Pierre Paul Rubens",
+    "en_name": "Peter Paul Rubens",
+    "fr_description": "Maître flamand du baroque, réputé pour ses compositions dynamiques, sensuelles et colorées.",
+    "en_description": "Flemish Baroque master, renowned for his dynamic, sensual, and colorful compositions.",
+    "dates": "1577–1640"
+  },
+  {
+    "original_name": "jean-antoine-watteau",
+    "slug": "jean-antoine-watteau",
+    "fr_name": "Antoine Watteau",
+    "en_name": "Jean-Antoine Watteau",
+    "fr_description": "Peintre français initiateur du style rococo et des « fêtes galantes » élégantes et mélancoliques.",
+    "en_description": "French painter who initiated the Rococo style and elegant, melancholic 'fêtes galantes'.",
+    "dates": "1684–1721"
+  },
+  {
+    "original_name": "bartolome-esteban-murillo",
+    "slug": "bartolome-esteban-murillo",
+    "fr_name": "Bartolomé Esteban Murillo",
+    "en_name": "Bartolomé Esteban Murillo",
+    "fr_description": "Peintre baroque espagnol célèbre pour ses œuvres religieuses douces et ses scènes de genre d'enfants.",
+    "en_description": "Spanish Baroque painter famous for his gentle religious works and genre scenes of children.",
+    "dates": "1617–1682"
+  },
+  {
+    "original_name": "francisco-de-zurbaran",
+    "slug": "francisco-de-zurbaran",
+    "fr_name": "Francisco de Zurbarán",
+    "en_name": "Francisco de Zurbarán",
+    "fr_description": "Peintre baroque espagnol maître du clair-obscur, réputé pour ses sujets religieux austères.",
+    "en_description": "Spanish Baroque painter, master of chiaroscuro, renowned for his austere religious subjects.",
+    "dates": "1598–1664"
+  },
+  {
+    "original_name": "francois-boucher",
+    "slug": "francois-boucher",
+    "fr_name": "François Boucher",
+    "en_name": "François Boucher",
+    "fr_description": "Artiste rococo français connu pour ses scènes pastorales mythologiques voluptueuses et décoratives.",
+    "en_description": "French Rococo artist known for his voluptuous and decorative mythological pastoral scenes.",
+    "dates": "1703–1770"
+  },
+  {
+    "original_name": "georges-de-la-tour",
+    "slug": "georges-de-la-tour",
+    "fr_name": "Georges de La Tour",
+    "en_name": "Georges de La Tour",
+    "fr_description": "Peintre baroque français célèbre pour ses scènes nocturnes illuminées à la bougie.",
+    "en_description": "French Baroque painter famous for his candlelit nocturnal scenes.",
+    "dates": "1593–1652"
+  },
+  {
+    "original_name": "hyacinthe-rigaud",
+    "slug": "hyacinthe-rigaud",
+    "fr_name": "Hyacinthe Rigaud",
+    "en_name": "Hyacinthe Rigaud",
+    "fr_description": "Portraitiste majeur de la cour de Louis XIV, maître de l'apparat et de la majesté.",
+    "en_description": "Major portraitist of the court of Louis XIV, master of pageantry and majesty.",
+    "dates": "1659–1743"
+  },
+  {
+    "original_name": "jean-honore-fragonard",
+    "slug": "jean-honore-fragonard",
+    "fr_name": "Jean-Honoré Fragonard",
+    "en_name": "Jean-Honoré Fragonard",
+    "fr_description": "Maître du rococo français, célèbre pour sa peinture virtuose et ses thèmes légers et érotiques.",
+    "en_description": "Master of French Rococo, famous for his virtuoso painting and light, erotic themes.",
+    "dates": "1732–1806"
+  },
+  {
+    "original_name": "elisabeth-louise-vigee-le-brun",
+    "slug": "elisabeth-louise-vigee-le-brun",
+    "fr_name": "Élisabeth Vigée Le Brun",
+    "en_name": "Élisabeth Louise Vigée Le Brun",
+    "fr_description": "Portraitiste de renom de Marie-Antoinette, célèbre pour son style naturel et expressif.",
+    "en_description": "Renowned portraitist of Marie Antoinette, famous for her natural and expressive style.",
+    "dates": "1755–1842"
+  },
+  {
+    "original_name": "constantin-brancusi",
+    "slug": "constantin-brancusi",
+    "fr_name": "Constantin Brâncuși",
+    "en_name": "Constantin Brâncuși",
+    "fr_description": "Pionnier de la sculpture abstraite, épurant les formes pour en extraire l'essence spirituelle.",
+    "en_description": "Pioneer of abstract sculpture, purifying forms to extract their spiritual essence.",
+    "dates": "1876–1957"
+  },
+  {
+    "original_name": "georges-braque",
+    "slug": "georges-braque",
+    "fr_name": "Georges Braque",
+    "en_name": "Georges Braque",
+    "fr_description": "Peintre français et co-fondateur du cubisme, explorant la géométrie et la fragmentation de l'espace.",
+    "en_description": "French painter and co-founder of Cubism, exploring geometry and the fragmentation of space.",
+    "dates": "1882–1963"
+  },
+  {
+    "original_name": "henri-matisse",
+    "slug": "henri-matisse",
+    "fr_name": "Henri Matisse",
+    "en_name": "Henri Matisse",
+    "fr_description": "Figure de proue du fauvisme, célèbre pour son utilisation fluide et audacieuse de la couleur.",
+    "en_description": "Leading figure of Fauvism, famous for his fluid and bold use of color.",
+    "dates": "1869–1954"
+  },
+  {
+    "original_name": "juan-gris",
+    "slug": "juan-gris",
+    "fr_name": "Juan Gris",
+    "en_name": "Juan Gris",
+    "fr_description": "Maître du cubisme synthétique, connu pour ses compositions rigoureusement structurées et harmonieuses.",
+    "en_description": "Master of Synthetic Cubism, known for his rigorously structured and harmonious compositions.",
+    "dates": "1887–1927"
+  },
+  {
+    "original_name": "marc-chagall",
+    "slug": "marc-chagall",
+    "fr_name": "Marc Chagall",
+    "en_name": "Marc Chagall",
+    "fr_description": "Peintre inclassable mêlant folklore juif, surréalisme et couleurs poétiques.",
+    "en_description": "Unclassifiable painter blending Jewish folklore, Surrealism, and poetic colors.",
+    "dates": "1887–1985"
+  },
+  {
+    "original_name": "marcel-duchamp",
+    "slug": "marcel-duchamp",
+    "fr_name": "Marcel Duchamp",
+    "en_name": "Marcel Duchamp",
+    "fr_description": "Artiste iconoclaste ayant révolutionné l'art moderne avec l'invention du ready-made.",
+    "en_description": "Iconoclastic artist who revolutionized modern art with the invention of the readymade.",
+    "dates": "1887–1968"
+  },
+  {
+    "original_name": "pablo-picasso",
+    "slug": "pablo-picasso",
+    "fr_name": "Pablo Picasso",
+    "en_name": "Pablo Picasso",
+    "fr_description": "L'un des artistes les plus célèbres et prolifiques de l'histoire, co-fondateur du cubisme et pionnier absolu de l'art moderne.",
+    "en_description": "One of the most famous and prolific artists in history, co-founder of Cubism and absolute pioneer of modern art.",
+    "dates": "1881–1973"
+  },
+  {
+    "original_name": "piet-mondrian",
+    "slug": "piet-mondrian",
+    "fr_name": "Piet Mondrian",
+    "en_name": "Piet Mondrian",
+    "fr_description": "Pionnier de l'art abstrait, connu pour ses compositions géométriques en couleurs primaires.",
+    "en_description": "Pioneer of abstract art, known for his geometric compositions in primary colors.",
+    "dates": "1872–1944"
+  },
+  {
+    "original_name": "fernand-leger",
+    "slug": "fernand-leger",
+    "fr_name": "Fernand Léger",
+    "en_name": "Fernand Léger",
+    "fr_description": "Peintre cubiste français ayant développé un style unique inspiré par la machine et la vie moderne.",
+    "en_description": "French Cubist painter who developed a unique style inspired by machines and modern life.",
+    "dates": "1881–1955"
+  },
+  {
+    "original_name": "giacomo-balla",
+    "slug": "giacomo-balla",
+    "fr_name": "Giacomo Balla",
+    "en_name": "Giacomo Balla",
+    "fr_description": "Peintre futuriste italien cherchant à représenter dynamiquement le mouvement et la lumière.",
+    "en_description": "Italian Futurist painter seeking to dynamically represent movement and light.",
+    "dates": "1871–1958"
+  },
+  {
+    "original_name": "kazimir-malevich",
+    "slug": "kazimir-malevich",
+    "fr_name": "Kasimir Malevitch",
+    "en_name": "Kazimir Malevich",
+    "fr_description": "Fondateur du suprématisme, pionnier de l'abstraction géométrique pure et radicale.",
+    "en_description": "Founder of Suprematism, pioneer of pure and radical geometric abstraction.",
+    "dates": "1879–1935"
+  },
+  {
+    "original_name": "paul-klee",
+    "slug": "paul-klee",
+    "fr_name": "Paul Klee",
+    "en_name": "Paul Klee",
+    "fr_description": "Artiste abstrait à la croisée de l'expressionnisme et du surréalisme, passionné par la théorie des couleurs.",
+    "en_description": "Abstract artist at the crossroads of Expressionism and Surrealism, passionate about color theory.",
+    "dates": "1879–1940"
+  },
+  {
+    "original_name": "robert-delaunay",
+    "slug": "robert-delaunay",
+    "fr_name": "Robert Delaunay",
+    "en_name": "Robert Delaunay",
+    "fr_description": "Co-fondateur de l'orphisme, peignant des formes circulaires abstraites et très colorées.",
+    "en_description": "Co-founder of Orphism, painting highly colorful and abstract circular forms.",
+    "dates": "1885–1941"
+  },
+  {
+    "original_name": "sonia-delaunay",
+    "slug": "sonia-delaunay",
+    "fr_name": "Sonia Delaunay",
+    "en_name": "Sonia Delaunay",
+    "fr_description": "Artiste multidisciplinaire pionnière de l'art abstrait simultané et du design textile moderne.",
+    "en_description": "Multidisciplinary artist pioneering simultaneous abstract art and modern textile design.",
+    "dates": "1885–1979"
+  },
+  {
+    "original_name": "umberto-boccioni",
+    "slug": "umberto-boccioni",
+    "fr_name": "Umberto Boccioni",
+    "en_name": "Umberto Boccioni",
+    "fr_description": "Figure majeure du futurisme, traduisant l'énergie et le mouvement de la vie urbaine moderne.",
+    "en_description": "Major figure of Futurism, translating the energy and movement of modern urban life.",
+    "dates": "1882–1916"
+  },
+  {
+    "original_name": "giorgio-de-chirico",
+    "slug": "giorgio-de-chirico",
+    "fr_name": "Giorgio De Chirico",
+    "en_name": "Giorgio de Chirico",
+    "fr_description": "Fondateur de la peinture métaphysique, célèbre pour ses paysages urbains oniriques et mélancoliques.",
+    "en_description": "Founder of metaphysical painting, famous for his dreamlike and melancholic urban landscapes.",
+    "dates": "1888–1978"
+  },
+  {
+    "original_name": "joan-miro",
+    "slug": "joan-miro",
+    "fr_name": "Joan Miró",
+    "en_name": "Joan Miró",
+    "fr_description": "Peintre surréaliste espagnol créant un univers poétique de signes et de couleurs pures.",
+    "en_description": "Spanish Surrealist painter creating a poetic universe of signs and pure colors.",
+    "dates": "1893–1983"
+  },
+  {
+    "original_name": "leonora-carrington",
+    "slug": "leonora-carrington",
+    "fr_name": "Leonora Carrington",
+    "en_name": "Leonora Carrington",
+    "fr_description": "Peintre surréaliste britannico-mexicaine explorant un monde magique, occulte et personnel.",
+    "en_description": "British-Mexican Surrealist painter exploring a magical, occult, and personal world.",
+    "dates": "1917–2011"
+  },
+  {
+    "original_name": "man-ray",
+    "slug": "man-ray",
+    "fr_name": "Man Ray",
+    "en_name": "Man Ray",
+    "fr_description": "Artiste d'avant-garde américain, figure majeure de la photographie dadaïste et surréaliste.",
+    "en_description": "American avant-garde artist, major figure in Dadaist and Surrealist photography.",
+    "dates": "1890–1976"
+  },
+  {
+    "original_name": "max-ernst",
+    "slug": "max-ernst",
+    "fr_name": "Max Ernst",
+    "en_name": "Max Ernst",
+    "fr_description": "Peintre et sculpteur allemand, pionnier de Dada et du surréalisme, inventeur du frottage.",
+    "en_description": "German painter and sculptor, pioneer of Dada and Surrealism, inventor of frottage.",
+    "dates": "1891–1976"
+  },
+  {
+    "original_name": "rene-magritte",
+    "slug": "rene-magritte",
+    "fr_name": "René Magritte",
+    "en_name": "René Magritte",
+    "fr_description": "Maître du surréalisme belge, célèbre pour ses images philosophiques détournant le quotidien.",
+    "en_description": "Master of Belgian Surrealism, famous for his philosophical images subverting the everyday.",
+    "dates": "1898–1967"
+  },
+  {
+    "original_name": "salvador-dali",
+    "slug": "salvador-dali",
+    "fr_name": "Salvador Dalí",
+    "en_name": "Salvador Dalí",
+    "fr_description": "Icône du surréalisme, célèbre pour sa méthode paranoïaque-critique et ses visions oniriques frappantes.",
+    "en_description": "Icon of Surrealism, famous for his paranoiac-critical method and striking dreamlike visions.",
+    "dates": "1904–1989"
+  },
+  {
+    "original_name": "yves-tanguy",
+    "slug": "yves-tanguy",
+    "fr_name": "Yves Tanguy",
+    "en_name": "Yves Tanguy",
+    "fr_description": "Peintre surréaliste français connu pour ses vastes paysages irréels peuplés de formes biomorphiques.",
+    "en_description": "French Surrealist painter known for his vast, unreal landscapes populated by biomorphic forms.",
+    "dates": "1900–1955"
+  },
+  {
+    "original_name": "edvard-munch",
+    "slug": "edvard-munch",
+    "fr_name": "Edvard Munch",
+    "en_name": "Edvard Munch",
+    "fr_description": "Pionnier de l'expressionnisme, explorant l'angoisse psychologique, la maladie et la mélancolie humaine.",
+    "en_description": "Pioneer of Expressionism, exploring psychological anguish, illness, and human melancholy.",
+    "dates": "1863–1944"
+  },
+  {
+    "original_name": "ernst-ludwig-kirchner",
+    "slug": "ernst-ludwig-kirchner",
+    "fr_name": "Ernst Ludwig Kirchner",
+    "en_name": "Ernst Ludwig Kirchner",
+    "fr_description": "Fondateur du groupe Die Brücke, célèbre pour ses scènes urbaines expressionnistes et tendues.",
+    "en_description": "Founder of the Die Brücke group, famous for his tense and expressionistic urban scenes.",
+    "dates": "1880–1938"
+  },
+  {
+    "original_name": "franz-marc",
+    "slug": "franz-marc",
+    "fr_name": "Franz Marc",
+    "en_name": "Franz Marc",
+    "fr_description": "Cofondateur du Cavalier Bleu, peintre expressionniste célèbre pour ses représentations d'animaux colorés.",
+    "en_description": "Co-founder of the Blue Rider, Expressionist painter famous for his colorful animal depictions.",
+    "dates": "1880–1916"
+  },
+  {
+    "original_name": "wassily-kandinsky",
+    "slug": "wassily-kandinsky",
+    "fr_name": "Vassily Kandinsky",
+    "en_name": "Wassily Kandinsky",
+    "fr_description": "Théoricien de l'art et pionnier de la peinture abstraite, voyant des correspondances entre forme, couleur et musique.",
+    "en_description": "Art theorist and pioneer of abstract painting, seeing connections between form, color, and music.",
+    "dates": "1866–1944"
+  },
+  {
+    "original_name": "barnett-newman",
+    "slug": "barnett-newman",
+    "fr_name": "Barnett Newman",
+    "en_name": "Barnett Newman",
+    "fr_description": "Figure du Color Field painting, célèbre pour ses toiles monochromes divisées par des lignes verticales (zips).",
+    "en_description": "Figure of Color Field painting, famous for his monochrome canvases divided by vertical lines (zips).",
+    "dates": "1905–1970"
+  },
+  {
+    "original_name": "dan-flavin",
+    "slug": "dan-flavin",
+    "fr_name": "Dan Flavin",
+    "en_name": "Dan Flavin",
+    "fr_description": "Pionnier de l'art minimal, célèbre pour ses installations lumineuses créées avec des tubes fluorescents.",
+    "en_description": "Pioneer of Minimal art, famous for his light installations created with fluorescent tubes.",
+    "dates": "1933–1996"
+  },
+  {
+    "original_name": "donald-judd",
+    "slug": "donald-judd",
+    "fr_name": "Donald Judd",
+    "en_name": "Donald Judd",
+    "fr_description": "Théoricien et artiste majeur du minimalisme, créant des structures géométriques répétitives spécifiques (Specific Objects).",
+    "en_description": "Major theorist and artist of Minimalism, creating repetitive geometric structures (Specific Objects).",
+    "dates": "1928–1994"
+  },
+  {
+    "original_name": "jackson-pollock",
+    "slug": "jackson-pollock",
+    "fr_name": "Jackson Pollock",
+    "en_name": "Jackson Pollock",
+    "fr_description": "Figure mythique de l'expressionnisme abstrait, célèbre pour sa technique révolutionnaire du dripping.",
+    "en_description": "Mythical figure of Abstract Expressionism, famous for his revolutionary dripping technique.",
+    "dates": "1912–1956"
+  },
+  {
+    "original_name": "mark-rothko",
+    "slug": "mark-rothko",
+    "fr_name": "Mark Rothko",
+    "en_name": "Mark Rothko",
+    "fr_description": "Maitre du Color Field painting, créant des toiles aux larges aplats de couleur incitant à la méditation.",
+    "en_description": "Master of Color Field painting, creating canvases with large color fields inviting meditation.",
+    "dates": "1903–1970"
+  },
+  {
+    "original_name": "pierre-soulages",
+    "slug": "pierre-soulages",
+    "fr_name": "Pierre Soulages",
+    "en_name": "Pierre Soulages",
+    "fr_description": "Maître français de l'Outrenoir, explorant la lumière à travers la texture de la peinture noire épaisse.",
+    "en_description": "French master of Outrenoir, exploring light through the texture of thick black paint.",
+    "dates": "1919–2022"
+  },
+  {
+    "original_name": "willem-de-kooning",
+    "slug": "willem-de-kooning",
+    "fr_name": "Willem de Kooning",
+    "en_name": "Willem de Kooning",
+    "fr_description": "Peintre de l'expressionnisme abstrait, connu pour ses séries d'Action painting vigoureuses mêlant figuration et abstraction.",
+    "en_description": "Abstract Expressionist painter, known for his vigorous Action painting series blending figuration and abstraction.",
+    "dates": "1904–1997"
+  },
+  {
+    "original_name": "yves-klein",
+    "slug": "yves-klein",
+    "fr_name": "Yves Klein",
+    "en_name": "Yves Klein",
+    "fr_description": "Artiste visionnaire français, célèbre pour ses performances et son utilisation exclusive d'un bleu profond (IKB).",
+    "en_description": "Visionary French artist, famous for his performances and exclusive use of a deep blue (IKB).",
+    "dates": "1928–1962"
+  },
+  {
+    "original_name": "amedeo-modigliani",
+    "slug": "amedeo-modigliani",
+    "fr_name": "Amedeo Modigliani",
+    "en_name": "Amedeo Modigliani",
+    "fr_description": "Peintre de l'École de Paris, célèbre pour ses portraits et nus aux visages allongés et à l'élégance mélancolique.",
+    "en_description": "Painter of the School of Paris, famous for his portraits and nudes with elongated faces and melancholic elegance.",
+    "dates": "1884–1920"
+  },
+  {
+    "original_name": "andre-derain",
+    "slug": "andre-derain",
+    "fr_name": "André Derain",
+    "en_name": "André Derain",
+    "fr_description": "Cofondateur du fauvisme, célèbre pour ses paysages éclatants et son retour ultérieur au classicisme.",
+    "en_description": "Co-founder of Fauvism, famous for his vibrant landscapes and subsequent return to classicism.",
+    "dates": "1880–1954"
+  },
+  {
+    "original_name": "chaim-soutine",
+    "slug": "chaim-soutine",
+    "fr_name": "Chaïm Soutine",
+    "en_name": "Chaïm Soutine",
+    "fr_description": "Peintre expressionniste à la touche torturée, connu pour ses paysages tumultueux et ses carcasses de bœuf.",
+    "en_description": "Expressionist painter with a tortured brushstroke, known for his tumultuous landscapes and beef carcasses.",
+    "dates": "1893–1943"
+  },
+  {
+    "original_name": "egon-schiele",
+    "slug": "egon-schiele",
+    "fr_name": "Egon Schiele",
+    "en_name": "Egon Schiele",
+    "fr_description": "Peintre autrichien majeur, célèbre pour ses portraits psychologiques intenses, ses lignes brisées et son érotisme brut.",
+    "en_description": "Major Austrian painter, famous for his intense psychological portraits, broken lines, and raw eroticism.",
+    "dates": "1890–1918"
+  },
+  {
+    "original_name": "georges-rouault",
+    "slug": "georges-rouault",
+    "fr_name": "Georges Rouault",
+    "en_name": "Georges Rouault",
+    "fr_description": "Peintre fauve et expressionniste français, au style marqué par le vitrail et des thématiques spirituelles profondes.",
+    "en_description": "French Fauvist and Expressionist painter, with a style marked by stained glass and deep spiritual themes.",
+    "dates": "1871–1958"
+  },
+  {
+    "original_name": "kathe-kollwitz",
+    "slug": "kathe-kollwitz",
+    "fr_name": "Käthe Kollwitz",
+    "en_name": "Käthe Kollwitz",
+    "fr_description": "Artiste allemande profondément humaniste, illustrant la pauvreté, la guerre et le deuil à travers le dessin et la gravure.",
+    "en_description": "Deeply humanist German artist, illustrating poverty, war, and grief through drawing and engraving.",
+    "dates": "1867–1945"
+  },
+  {
+    "original_name": "maurice-de-vlaminck",
+    "slug": "maurice-de-vlaminck",
+    "fr_name": "Maurice de Vlaminck",
+    "en_name": "Maurice de Vlaminck",
+    "fr_description": "Figure du fauvisme, peignant avec des couleurs pures et une passion véhémente inspirée par Van Gogh.",
+    "en_description": "Figure of Fauvism, painting with pure colors and a vehement passion inspired by Van Gogh.",
+    "dates": "1876–1958"
+  },
+  {
+    "original_name": "oskar-kokoschka",
+    "slug": "oskar-kokoschka",
+    "fr_name": "Oskar Kokoschka",
+    "en_name": "Oskar Kokoschka",
+    "fr_description": "Peintre expressionniste autrichien, renommé pour ses portraits psychologiques à la touche agitée.",
+    "en_description": "Austrian Expressionist painter, renowned for his psychological portraits with agitated brushwork.",
+    "dates": "1886–1980"
+  },
+  {
+    "original_name": "parmigianino",
+    "slug": "parmigianino",
+    "fr_name": "Parmigianino",
+    "en_name": "Parmigianino",
+    "fr_description": "Maître du maniérisme italien, connu pour l'élégance raffinée et les proportions allongées de ses figures.",
+    "en_description": "Master of Italian Mannerism, known for the refined elegance and elongated proportions of his figures.",
+    "dates": "1503–1540"
+  },
+  {
+    "original_name": "leonardo-da-vinci",
+    "slug": "leonardo-da-vinci",
+    "fr_name": "Léonard de Vinci",
+    "en_name": "Leonardo da Vinci",
+    "fr_description": "L'archétype de l'homme de la Renaissance, peintre de génie, ingénieur, et maître incontesté du sfumato.",
+    "en_description": "The archetype of the Renaissance man, genius painter, engineer, and undisputed master of sfumato.",
+    "dates": "1452–1519"
+  },
+  {
+    "original_name": "michel-ange",
+    "slug": "michel-ange",
+    "fr_name": "Michel-Ange",
+    "en_name": "Michel-Ange",
+    "fr_description": "Sculpteur, peintre et architecte divin, figure centrale de la Haute Renaissance au génie tourmenté.",
+    "en_description": "Divine sculptor, painter, and architect, central figure of the High Renaissance with a tormented genius.",
+    "dates": "1475–1564"
+  },
+  {
+    "original_name": "raphael",
+    "slug": "raphael",
+    "fr_name": "Raphaël",
+    "en_name": "Raphaël",
+    "fr_description": "Peintre de la Haute Renaissance incarnant la perfection classique, la grâce, l'harmonie et l'équilibre.",
+    "en_description": "High Renaissance painter embodying classical perfection, grace, harmony, and balance.",
+    "dates": "1483–1520"
+  },
+  {
+    "original_name": "titian",
+    "slug": "titian",
+    "fr_name": "Titien",
+    "en_name": "Titian",
+    "fr_description": "Maitre absolu de l'école vénitienne, révolutionnaire par son utilisation expressive de la couleur et de la matière.",
+    "en_description": "Absolute master of the Venetian school, revolutionary in his expressive use of color and texture.",
+    "dates": "c. 1488–1576"
+  },
+  {
+    "original_name": "pierre-auguste-renoir",
+    "slug": "pierre-auguste-renoir",
+    "fr_name": "Auguste Renoir",
+    "en_name": "Pierre-Auguste Renoir",
+    "fr_description": "Peintre impressionniste célébrant la beauté joyeuse, les scènes de loisir parisien et les figures féminines douces.",
+    "en_description": "Impressionist painter celebrating joyous beauty, Parisian leisure scenes, and gentle female figures.",
+    "dates": "1841–1919"
+  },
+  {
+    "original_name": "berthe-morisot",
+    "slug": "berthe-morisot",
+    "fr_name": "Berthe Morisot",
+    "en_name": "Berthe Morisot",
+    "fr_description": "Une des fondatrices de l'impressionnisme, reconnue pour sa touche délicate et ses scènes de la vie intime des femmes.",
+    "en_description": "One of the founders of Impressionism, recognized for her delicate touch and scenes of women's intimate lives.",
+    "dates": "1841–1895"
+  },
+  {
+    "original_name": "camille-pissarro",
+    "slug": "camille-pissarro",
+    "fr_name": "Camille Pissarro",
+    "en_name": "Camille Pissarro",
+    "fr_description": "Figure paternelle de l'impressionnisme, fasciné par la vie rurale, la nature et les effets de lumière urbains.",
+    "en_description": "Father figure of Impressionism, fascinated by rural life, nature, and urban light effects.",
+    "dates": "1830–1903"
+  },
+  {
+    "original_name": "claude-monet",
+    "slug": "claude-monet",
+    "fr_name": "Claude Monet",
+    "en_name": "Claude Monet",
+    "fr_description": "Le chef de file de l'impressionnisme, obsédé par la capture de la lumière et ses variations atmosphériques éphémères.",
+    "en_description": "The leader of Impressionism, obsessed with capturing light and its fleeting atmospheric variations.",
+    "dates": "1840–1926"
+  },
+  {
+    "original_name": "edgar-degas",
+    "slug": "edgar-degas",
+    "fr_name": "Edgar Degas",
+    "en_name": "Edgar Degas",
+    "fr_description": "Impressionniste singulier, maître du mouvement, fasciné par le ballet, les courses de chevaux et les cadrages modernes.",
+    "en_description": "Singular Impressionist, master of movement, fascinated by ballet, horse races, and modern framing.",
+    "dates": "1834–1917"
+  },
+  {
+    "original_name": "gustave-caillebotte",
+    "slug": "gustave-caillebotte",
+    "fr_name": "Gustave Caillebotte",
+    "en_name": "Gustave Caillebotte",
+    "fr_description": "Peintre et mécène impressionniste, au style réaliste audacieux capturant la modernité du nouveau Paris haussmannien.",
+    "en_description": "Impressionist painter and patron, with a bold realist style capturing the modernity of the new Haussmannian Paris.",
+    "dates": "1848–1894"
+  },
+  {
+    "original_name": "edouard-manet",
+    "slug": "edouard-manet",
+    "fr_name": "Édouard Manet",
+    "en_name": "Édouard Manet",
+    "fr_description": "Pionnier de la peinture moderne, transition essentielle entre le réalisme et l'impressionnisme, créant des œuvres scandaleuses.",
+    "en_description": "Pioneer of modern painting, essential transition between Realism and Impressionism, creating scandalous works.",
+    "dates": "1832–1883"
+  },
+  {
+    "original_name": "alfred-sisley",
+    "slug": "alfred-sisley",
+    "fr_name": "Alfred Sisley",
+    "en_name": "Alfred Sisley",
+    "fr_description": "Peintre impressionniste se consacrant presque exclusivement au paysage, avec une grande poésie et une touche subtile.",
+    "en_description": "Impressionist painter devoted almost exclusively to landscapes, with great poetry and a subtle touch.",
+    "dates": "1839–1899"
+  },
+  {
+    "original_name": "henri-de-toulouse-lautrec",
+    "slug": "henri-de-toulouse-lautrec",
+    "fr_name": "Henri de Toulouse-Lautrec",
+    "en_name": "Henri de Toulouse-Lautrec",
+    "fr_description": "Post-impressionniste et affichiste génial, chroniqueur mordant de la vie nocturne et bohème de Montmartre.",
+    "en_description": "Post-Impressionist and brilliant poster artist, biting chronicler of Montmartre's bohemian nightlife.",
+    "dates": "1864–1901"
+  },
+  {
+    "original_name": "mary-cassatt",
+    "slug": "mary-cassatt",
+    "fr_name": "Mary Cassatt",
+    "en_name": "Mary Cassatt",
+    "fr_description": "Artiste américaine liée aux impressionnistes, célèbre pour ses représentations tendres des relations maternelles.",
+    "en_description": "American artist tied to the Impressionists, famous for her tender depictions of maternal relationships.",
+    "dates": "1844–1926"
+  },
+  {
+    "original_name": "paul-cezanne",
+    "slug": "paul-cezanne",
+    "fr_name": "Paul Cézanne",
+    "en_name": "Paul Cézanne",
+    "fr_description": "Le père de l'art moderne, structurant la nature par la couleur et des formes géométriques pour atteindre la solidité.",
+    "en_description": "The father of modern art, structuring nature through color and geometric forms to achieve solidity.",
+    "dates": "1839–1906"
+  },
+  {
+    "original_name": "paul-signac",
+    "slug": "paul-signac",
+    "fr_name": "Paul Signac",
+    "en_name": "Paul Signac",
+    "fr_description": "Théoricien et peintre majeur du néo-impressionnisme (pointillisme), utilisant des touches de couleurs pures juxtaposées.",
+    "en_description": "Theorist and major painter of Neo-Impressionism (Pointillism), using juxtaposed touches of pure colors.",
+    "dates": "1863–1935"
+  },
+  {
+    "original_name": "vincent-van-gogh",
+    "slug": "vincent-van-gogh",
+    "fr_name": "Vincent van Gogh",
+    "en_name": "Vincent van Gogh",
+    "fr_description": "Génie post-impressionniste, traduisant son intense émotion spirituelle par des couleurs vibrantes et une touche tourbillonnante.",
+    "en_description": "Post-Impressionist genius, translating his intense spiritual emotion through vibrant colors and a swirling touch.",
+    "dates": "1853–1890"
+  },
+  {
+    "original_name": "cimabue",
+    "slug": "cimabue",
+    "fr_name": "Cimabue",
+    "en_name": "Cimabue",
+    "fr_description": "Peintre pré-Renaissance florentin, amorçant la transition de l'art byzantin rigide vers un naturalisme plus humain.",
+    "en_description": "Florentine pre-Renaissance painter, initiating the transition from rigid Byzantine art to a more human naturalism.",
+    "dates": "c. 1240–1302"
+  },
+  {
+    "original_name": "giotto",
+    "slug": "giotto",
+    "fr_name": "Giotto",
+    "en_name": "Giotto",
+    "fr_description": "Le père de la peinture occidentale, introduisant le réalisme, le volume et l'émotion spatiale dans l'art gothique.",
+    "en_description": "The father of Western painting, introducing realism, volume, and spatial emotion into Gothic art.",
+    "dates": "c. 1267–1337"
+  },
+  {
+    "original_name": "jean-fouquet",
+    "slug": "jean-fouquet",
+    "fr_name": "Jean Fouquet",
+    "en_name": "Jean Fouquet",
+    "fr_description": "Grand maître de l'enluminure et de la peinture française, mêlant tradition flamande et innovations italiennes.",
+    "en_description": "Great master of French illumination and painting, blending Flemish tradition with Italian innovations.",
+    "dates": "c. 1420–1481"
+  },
+  {
+    "original_name": "francisco-goya",
+    "slug": "francisco-goya",
+    "fr_name": "Francisco de Goya",
+    "en_name": "Francisco Goya",
+    "fr_description": "Artiste espagnol inclassable, témoin visionnaire de son époque allant des commandes royales aux troublantes peintures noires.",
+    "en_description": "Unclassifiable Spanish artist, visionary witness of his time ranging from royal commissions to unsettling Black Paintings.",
+    "dates": "1746–1828"
+  },
+  {
+    "original_name": "ilya-repin",
+    "slug": "ilya-repin",
+    "fr_name": "Ilia Répine",
+    "en_name": "Ilya Repin",
+    "fr_description": "Maître du réalisme russe, dépeignant l'histoire, l'âme de son peuple et ses luttes sociales avec une grande profondeur psychologique.",
+    "en_description": "Master of Russian Realism, depicting history, the soul of his people, and their social struggles with great psychological depth.",
+    "dates": "1844–1930"
+  },
+  {
+    "original_name": "ivan-aivazovsky",
+    "slug": "ivan-aivazovsky",
+    "fr_name": "Ivan Aïvazovski",
+    "en_name": "Ivan Aivazovsky",
+    "fr_description": "Peintre romantique russe arménien, considéré comme l'un des plus grands maîtres de la peinture de marine au monde.",
+    "en_description": "Russian-Armenian Romantic painter, considered one of the greatest masters of marine art in the world.",
+    "dates": "1817–1900"
+  },
+  {
+    "original_name": "jacques-louis-david",
+    "slug": "jacques-louis-david",
+    "fr_name": "Jacques-Louis David",
+    "en_name": "Jacques-Louis David",
+    "fr_description": "Chef de file incontesté du néoclassicisme, peintre engagé glorifiant l'héroïsme de la Révolution et de l'Empire.",
+    "en_description": "Undisputed leader of Neoclassicism, committed painter glorifying the heroism of the Revolution and the Empire.",
+    "dates": "1748–1825"
+  },
+  {
+    "original_name": "john-martin",
+    "slug": "john-martin",
+    "fr_name": "John Martin",
+    "en_name": "John Martin",
+    "fr_description": "Peintre romantique anglais, célèbre pour ses vastes paysages apocalyptiques et théâtraux inspirés de la Bible.",
+    "en_description": "English Romantic painter, famous for his vast apocalyptic and theatrical landscapes inspired by the Bible.",
+    "dates": "1789–1854"
+  },
+  {
+    "original_name": "theodore-chasseriau",
+    "slug": "theodore-chasseriau",
+    "fr_name": "Théodore Chassériau",
+    "en_name": "Théodore Chassériau",
+    "fr_description": "Peintre romantique français, tentant une synthèse subtile entre le dessin classique d'Ingres et la couleur de Delacroix.",
+    "en_description": "French Romantic painter, attempting a subtle synthesis between Ingres's classical drawing and Delacroix's color.",
+    "dates": "1819–1856"
+  },
+  {
+    "original_name": "william-blake",
+    "slug": "william-blake",
+    "fr_name": "William Blake",
+    "en_name": "William Blake",
+    "fr_description": "Poète, peintre et graveur visionnaire anglais, créant un univers mythologique singulier, onirique et mystique.",
+    "en_description": "English visionary poet, painter, and engraver, creating a singular, dreamlike, and mystical mythological universe.",
+    "dates": "1757–1827"
+  },
+  {
+    "original_name": "andreas-gursky",
+    "slug": "andreas-gursky",
+    "fr_name": "Andreas Gursky",
+    "en_name": "Andreas Gursky",
+    "fr_description": "Photographe contemporain allemand, célèbre pour ses paysages architecturaux vertigineux à très grande échelle.",
+    "en_description": "German contemporary photographer, famous for his dizzying architectural landscapes on a massive scale.",
+    "dates": "1955–"
+  },
+  {
+    "original_name": "cindy-sherman",
+    "slug": "cindy-sherman",
+    "fr_name": "Cindy Sherman",
+    "en_name": "Cindy Sherman",
+    "fr_description": "Photographe américaine majeure, explorant l'identité et les stéréotypes féminins à travers l'autoportrait mis en scène.",
+    "en_description": "Major American photographer, exploring female identity and stereotypes through staged self-portraits.",
+    "dates": "1954–"
+  },
+  {
+    "original_name": "diane-arbus",
+    "slug": "diane-arbus",
+    "fr_name": "Diane Arbus",
+    "en_name": "Diane Arbus",
+    "fr_description": "Photographe documentaire américaine renommée pour ses portraits intimes et troublants de marginaux et de personnes atypiques.",
+    "en_description": "American documentary photographer renowned for her intimate and unsettling portraits of marginalized and atypical people.",
+    "dates": "1923–1971"
+  },
+  {
+    "original_name": "dorothea-lange",
+    "slug": "dorothea-lange",
+    "fr_name": "Dorothea Lange",
+    "en_name": "Dorothea Lange",
+    "fr_description": "Photojournaliste documentaire, figure emblématique de la Grande Dépression, immortalisant la dignité des travailleurs migrants.",
+    "en_description": "Documentary photojournalist, iconic figure of the Great Depression, immortalizing the dignity of migrant workers.",
+    "dates": "1895–1965"
+  },
+  {
+    "original_name": "henri-cartier-bresson",
+    "slug": "henri-cartier-bresson",
+    "fr_name": "Henri Cartier-Bresson",
+    "en_name": "Henri Cartier-Bresson",
+    "fr_description": "Le père du photojournalisme moderne, maître de l'instant décisif, capturant la géométrie et la poésie du quotidien.",
+    "en_description": "The father of modern photojournalism, master of the decisive moment, capturing the geometry and poetry of everyday life.",
+    "dates": "1908–2004"
+  },
+  {
+    "original_name": "robert-doisneau",
+    "slug": "robert-doisneau",
+    "fr_name": "Robert Doisneau",
+    "en_name": "Robert Doisneau",
+    "fr_description": "Photographe humaniste français, célèbre pour ses images tendres, poétiques et souvent amusantes de la vie parisienne.",
+    "en_description": "French humanist photographer, famous for his tender, poetic, and often amusing images of Parisian life.",
+    "dates": "1912–1994"
+  },
+  {
+    "original_name": "andy-warhol",
+    "slug": "andy-warhol",
+    "fr_name": "Andy Warhol",
+    "en_name": "Andy Warhol",
+    "fr_description": "L'icône absolue du Pop Art, transformant des biens de consommation et des célébrités en œuvres d'art sérigraphiées.",
+    "en_description": "The absolute icon of Pop Art, transforming consumer goods and celebrities into silkscreened artworks.",
+    "dates": "1928–1987"
+  },
+  {
+    "original_name": "roy-lichtenstein",
+    "slug": "roy-lichtenstein",
+    "fr_name": "Roy Lichtenstein",
+    "en_name": "Roy Lichtenstein",
+    "fr_description": "Artiste majeur du Pop Art, célèbre pour ses toiles monumentales inspirées de l'esthétique et des trames de la bande dessinée.",
+    "en_description": "Major Pop Art artist, famous for his monumental canvases inspired by the aesthetics and Ben-Day dots of comic books.",
+    "dates": "1923–1997"
+  },
+  {
+    "original_name": "bridget-riley",
+    "slug": "bridget-riley",
+    "fr_name": "Bridget Riley",
+    "en_name": "Bridget Riley",
+    "fr_description": "Figure majeure de l'Op Art, créant des peintures optiques complexes générant des illusions intenses de mouvement vibratoire.",
+    "en_description": "Major figure of Op Art, creating complex optical paintings generating intense illusions of vibratory movement.",
+    "dates": "1931–"
+  },
+  {
+    "original_name": "david-hockney",
+    "slug": "david-hockney",
+    "fr_name": "David Hockney",
+    "en_name": "David Hockney",
+    "fr_description": "Peintre pop britannique, célèbre pour ses paysages californiens lumineux, ses piscines et ses doubles portraits intimistes.",
+    "en_description": "British Pop painter, famous for his luminous Californian landscapes, swimming pools, and intimate double portraits.",
+    "dates": "1937–"
+  },
+  {
+    "original_name": "victor-vasarely",
+    "slug": "victor-vasarely",
+    "fr_name": "Victor Vasarely",
+    "en_name": "Victor Vasarely",
+    "fr_description": "Le père de l'Op Art, créant des effets optiques cinétiques par l'assemblage précis de formes géométriques colorées.",
+    "en_description": "The father of Op Art, creating kinetic optical effects through the precise assembly of colorful geometric forms.",
+    "dates": "1906–1997"
+  },
+  {
+    "original_name": "georges-seurat",
+    "slug": "georges-seurat",
+    "fr_name": "Georges Seurat",
+    "en_name": "Georges Seurat",
+    "fr_description": "Inventeur du pointillisme, structurant rigoureusement la lumière et la composition par de minuscules points de couleur pure.",
+    "en_description": "Inventor of Pointillism, rigorously structuring light and composition through tiny dots of pure color.",
+    "dates": "1859–1891"
+  },
+  {
+    "original_name": "paul-gauguin",
+    "slug": "paul-gauguin",
+    "fr_name": "Paul Gauguin",
+    "en_name": "Paul Gauguin",
+    "fr_description": "Pionnier post-impressionniste, fuyant la civilisation occidentale pour trouver une vérité sauvage et colorée à Tahiti.",
+    "en_description": "Post-Impressionist pioneer, fleeing Western civilization to find a wild and colorful truth in Tahiti.",
+    "dates": "1848–1903"
+  },
+  {
+    "original_name": "fra-angelico",
+    "slug": "fra-angelico",
+    "fr_name": "Fra Angelico",
+    "en_name": "Fra Angelico",
+    "fr_description": "Moine peintre de la Première Renaissance, infusant une profonde spiritualité et une lumière divine dans ses fresques claires.",
+    "en_description": "Monk painter of the Early Renaissance, infusing profound spirituality and divine light into his clear frescoes.",
+    "dates": "c. 1395–1455"
+  },
+  {
+    "original_name": "sandro-botticelli",
+    "slug": "sandro-botticelli",
+    "fr_name": "Sandro Botticelli",
+    "en_name": "Sandro Botticelli",
+    "fr_description": "Maitre florentin à la grâce poétique inégalée, célèbre pour ses grandes mythologies élégantes à la cour des Médicis.",
+    "en_description": "Florentine master of unmatched poetic grace, famous for his elegant large mythologies at the Medici court.",
+    "dates": "c. 1445–1510"
+  },
+  {
+    "original_name": "gustave-courbet",
+    "slug": "gustave-courbet",
+    "fr_name": "Gustave Courbet",
+    "en_name": "Gustave Courbet",
+    "fr_description": "Le chef de file du réalisme français, rejetant l'académisme pour peindre la rudesse matérielle et sociale de son temps.",
+    "en_description": "The leader of French Realism, rejecting academicism to paint the material and social harshness of his time.",
+    "dates": "1819–1877"
+  },
+  {
+    "original_name": "jean-francois-millet",
+    "slug": "jean-francois-millet",
+    "fr_name": "Jean-François Millet",
+    "en_name": "Jean-François Millet",
+    "fr_description": "Peintre réaliste de l'École de Barbizon, ennoblissant la vie paysanne et le travail acharné de la terre avec solennité.",
+    "en_description": "Realist painter of the Barbizon School, ennobling peasant life and the hard work of the land with solemnity.",
+    "dates": "1814–1875"
+  },
+  {
+    "original_name": "andrew-wyeth",
+    "slug": "andrew-wyeth",
+    "fr_name": "Andrew Wyeth",
+    "en_name": "Andrew Wyeth",
+    "fr_description": "Peintre réaliste américain, célèbre pour son style méticuleux dépeignant les paysages ruraux avec une mélancolie austère.",
+    "en_description": "American Realist painter, famous for his meticulous style depicting rural landscapes with austere melancholy.",
+    "dates": "1917–2009"
+  },
+  {
+    "original_name": "edward-hopper",
+    "slug": "edward-hopper",
+    "fr_name": "Edward Hopper",
+    "en_name": "Edward Hopper",
+    "fr_description": "Le maître de la solitude américaine urbaine, peignant des scènes silencieuses aux lumières cinématographiques et mystérieuses.",
+    "en_description": "The master of urban American solitude, painting silent scenes with mysterious cinematic lighting.",
+    "dates": "1882–1967"
+  },
+  {
+    "original_name": "grant-wood",
+    "slug": "grant-wood",
+    "fr_name": "Grant Wood",
+    "en_name": "Grant Wood",
+    "fr_description": "Figure du régionalisme, célèbre pour ses portraits emblématiques de la vie rurale du Midwest américain, au style net.",
+    "en_description": "Figure of Regionalism, famous for his iconic portraits of American Midwest rural life in a crisp style.",
+    "dates": "1891–1942"
+  },
+  {
+    "original_name": "dante-gabriel-rossetti",
+    "slug": "dante-gabriel-rossetti",
+    "fr_name": "Dante Gabriel Rossetti",
+    "en_name": "Dante Gabriel Rossetti",
+    "fr_description": "Cofondateur de la confrérie préraphaélite, mêlant romantisme sombre, beauté féminine idéalisée et thèmes poétiques.",
+    "en_description": "Co-founder of the Pre-Raphaelite Brotherhood, blending dark Romanticism, idealized female beauty, and poetic themes.",
+    "dates": "1828–1882"
+  },
+  {
+    "original_name": "fernand-khnopff",
+    "slug": "fernand-khnopff",
+    "fr_name": "Fernand Khnopff",
+    "en_name": "Fernand Khnopff",
+    "fr_description": "Peintre symboliste belge majeur, créant un univers troublant, mystique et aristocratique peuplé de figures androgynes.",
+    "en_description": "Major Belgian Symbolist painter, creating a mysterious, mystical, and aristocratic universe populated by androgynous figures.",
+    "dates": "1858–1921"
+  },
+  {
+    "original_name": "john-everett-millais",
+    "slug": "john-everett-millais",
+    "fr_name": "John Everett Millais",
+    "en_name": "John Everett Millais",
+    "fr_description": "Prodige de la peinture préraphaélite, reconnu pour son observation minutieuse et quasi-photographique de la nature.",
+    "en_description": "Prodigy of Pre-Raphaelite painting, recognized for his meticulous and almost photographic observation of nature.",
+    "dates": "1829–1896"
+  },
+  {
+    "original_name": "john-william-waterhouse",
+    "slug": "john-william-waterhouse",
+    "fr_name": "John William Waterhouse",
+    "en_name": "John William Waterhouse",
+    "fr_description": "Peintre anglais à la lisière du préraphaélisme, célèbre pour ses somptueuses toiles inspirées de la mythologie et de la légende arthurienne.",
+    "en_description": "English painter on the edge of Pre-Raphaelitism, famous for his sumptuous canvases inspired by mythology and Arthurian legend.",
+    "dates": "1849–1917"
+  },
+  {
+    "original_name": "odilon-redon",
+    "slug": "odilon-redon",
+    "fr_name": "Odilon Redon",
+    "en_name": "Odilon Redon",
+    "fr_description": "Génie visionnaire du symbolisme, créant des fusains obscurs et des peintures éclatantes explorant le monde des rêves et de l'âme.",
+    "en_description": "Visionary genius of Symbolism, creating dark charcoals and vibrant paintings exploring the world of dreams and the soul.",
+    "dates": "1840–1916"
+  },
+  {
+    "original_name": "pierre-puvis-de-chavannes",
+    "slug": "pierre-puvis-de-chavannes",
+    "fr_name": "Pierre Puvis de Chavannes",
+    "en_name": "Pierre Puvis de Chavannes",
+    "fr_description": "Peintre muraliste symboliste, célèbre pour ses vastes compositions allégoriques aux teintes douces, mates et silencieuses.",
+    "en_description": "Symbolist mural painter, famous for his vast allegorical compositions with soft, matte, and silent tones.",
+    "dates": "1824–1898"
+  },
+  {
+    "original_name": "william-holman-hunt",
+    "slug": "william-holman-hunt",
+    "fr_name": "William Holman Hunt",
+    "en_name": "William Holman Hunt",
+    "fr_description": "Cofondateur du préraphaélisme, se distinguant par son extrême souci du détail et ses sujets moraux ou religieux intenses.",
+    "en_description": "Co-founder of Pre-Raphaelitism, distinguished by his extreme attention to detail and intense moral or religious subjects.",
+    "dates": "1827–1910"
+  },
+  {
+    "original_name": "albrecht-durer",
+    "slug": "albrecht-durer",
+    "fr_name": "Albrecht Dürer",
+    "en_name": "Albrecht Dürer",
+    "fr_description": "Le génie universel de la Renaissance nordique, maître insurpassable de la gravure, combinant observation naturaliste et théorie italienne.",
+    "en_description": "The universal genius of the Northern Renaissance, unsurpassable master of engraving, combining naturalistic observation and Italian theory.",
+    "dates": "1471–1528"
+  },
+  {
+    "original_name": "el-greco",
+    "slug": "el-greco",
+    "fr_name": "Le Greco",
+    "en_name": "El Greco",
+    "fr_description": "Maitre de la Renaissance espagnole, célèbre pour ses compositions visionnaires mystiques, ses couleurs acides et ses figures étirées.",
+    "en_description": "Master of the Spanish Renaissance, famous for his mystical visionary compositions, acidic colors, and elongated figures.",
+    "dates": "1541–1614"
+  },
+  {
+    "original_name": "jacopo-tintoretto",
+    "slug": "jacopo-tintoretto",
+    "fr_name": "Le Tintoret",
+    "en_name": "Jacopo Tintoretto",
+    "fr_description": "Maitre du maniérisme vénitien, renommé pour son énergie frénétique, ses perspectives audacieuses et ses contrastes de lumière dramatiques.",
+    "en_description": "Master of Venetian Mannerism, renowned for his frenetic energy, bold perspectives, and dramatic light contrasts.",
+    "dates": "1518–1594"
+  },
+  {
+    "original_name": "lucas-cranach-the-elder",
+    "slug": "lucas-cranach-the-elder",
+    "fr_name": "Lucas Cranach l'Ancien",
+    "en_name": "Lucas Cranach the Elder",
+    "fr_description": "Peintre majeur de la Renaissance allemande, proche de Luther, célèbre pour ses nus graciles et ses portraits de cour expressifs.",
+    "en_description": "Major painter of the German Renaissance, close to Luther, famous for his slender nudes and expressive court portraits.",
+    "dates": "1472–1553"
+  },
+  {
+    "original_name": "matthias-grunewald",
+    "slug": "matthias-grunewald",
+    "fr_name": "Matthias Grünewald",
+    "en_name": "Matthias Grünewald",
+    "fr_description": "Maitre de la Renaissance allemande, célèbre pour son Retable d'Issenheim illustrant la souffrance du Christ avec un expressionnisme brutal.",
+    "en_description": "German Renaissance master, famous for his Isenheim Altarpiece illustrating Christ's suffering with brutal expressionism.",
+    "dates": "c. 1470–1528"
+  },
+  {
+    "original_name": "paolo-veronese",
+    "slug": "paolo-veronese",
+    "fr_name": "Paul Véronèse",
+    "en_name": "Paolo Veronese",
+    "fr_description": "Peintre majeur de l'école vénitienne, célébrant l'opulence, les somptueux festins architecturaux et la théâtralité colorée.",
+    "en_description": "Major painter of the Venetian school, celebrating opulence, sumptuous architectural feasts, and colorful theatricality.",
+    "dates": "1528–1588"
+  },
+  {
+    "original_name": "hans-holbein-the-younger",
+    "slug": "hans-holbein-the-younger",
+    "fr_name": "Hans Holbein le Jeune",
+    "en_name": "Hans Holbein the Younger",
+    "fr_description": "L'un des plus grands portraitistes de la Renaissance, célèbre pour son réalisme objectif et sa précision clinique à la cour d'Angleterre.",
+    "en_description": "One of the greatest Renaissance portraitists, famous for his objective realism and clinical precision at the English court.",
+    "dates": "c. 1497–1543"
+  },
+  {
+    "original_name": "jan-van-eyck",
+    "slug": "jan-van-eyck",
+    "fr_name": "Jan van Eyck",
+    "en_name": "Jan van Eyck",
+    "fr_description": "L'un des fondateurs de la peinture flamande, révolutionnant la peinture à l'huile pour atteindre un naturalisme minutieux et lumineux.",
+    "en_description": "One of the founders of Early Netherlandish painting, revolutionizing oil painting to achieve meticulous and luminous naturalism.",
+    "dates": "c. 1390–1441"
+  },
+  {
+    "original_name": "hieronymus-bosch",
+    "slug": "hieronymus-bosch",
+    "fr_name": "Jérôme Bosch",
+    "en_name": "Hieronymus Bosch",
+    "fr_description": "Peintre visionnaire flamand unique, créateur d'un univers moralisateur foisonnant de démons et de symbolisme cauchemardesque.",
+    "en_description": "Unique visionary Flemish painter, creator of a moralizing universe teeming with demons and nightmarish symbolism.",
+    "dates": "c. 1450–1516"
+  },
+  {
+    "original_name": "pieter-brueghel-the-elder",
+    "slug": "pieter-brueghel-the-elder",
+    "fr_name": "Pieter Brueghel l'Ancien",
+    "en_name": "Pieter Brueghel the Elder",
+    "fr_description": "Génie de la Renaissance flamande, célèbre pour ses vastes paysages panoramiques et ses scènes paysannes riches en proverbes.",
+    "en_description": "Genius of the Flemish Renaissance, famous for his vast panoramic landscapes and peasant scenes rich in proverbs.",
+    "dates": "c. 1525–1569"
+  },
+  {
+    "original_name": "caspar-david-friedrich",
+    "slug": "caspar-david-friedrich",
+    "fr_name": "Caspar David Friedrich",
+    "en_name": "Caspar David Friedrich",
+    "fr_description": "Le chef de file du romantisme allemand, peignant la grandeur sublime et écrasante de la nature face à la solitude spirituelle humaine.",
+    "en_description": "The leader of German Romanticism, painting the sublime and overwhelming grandeur of nature facing human spiritual solitude.",
+    "dates": "1774–1840"
+  },
+  {
+    "original_name": "eugene-delacroix",
+    "slug": "eugene-delacroix",
+    "fr_name": "Eugène Delacroix",
+    "en_name": "Eugène Delacroix",
+    "fr_description": "L'incarnation du romantisme français, célèbre pour sa touche fougueuse, son coloris vibrant et ses sujets dramatiques ou exotiques.",
+    "en_description": "The incarnation of French Romanticism, famous for his fiery brushwork, vibrant coloring, and dramatic or exotic subjects.",
+    "dates": "1798–1863"
+  },
+  {
+    "original_name": "j-m-w-turner",
+    "slug": "j-m-w-turner",
+    "fr_name": "William Turner",
+    "en_name": "J. M. W. Turner",
+    "fr_description": "Le peintre de la lumière, génie du romantisme anglais, dont les paysages tourbillonnants annoncent l'abstraction et l'impressionnisme.",
+    "en_description": "The painter of light, genius of English Romanticism, whose swirling landscapes foreshadow abstraction and Impressionism.",
+    "dates": "1775–1851"
+  },
+  {
+    "original_name": "jean-auguste-dominique-ingres",
+    "slug": "jean-auguste-dominique-ingres",
+    "fr_name": "Jean-Auguste Dominique Ingres",
+    "en_name": "Jean-Auguste-Dominique Ingres",
+    "fr_description": "Maître du néoclassicisme français, défenseur acharné du dessin pur, célèbre pour ses portraits à la perfection lisse et glacée.",
+    "en_description": "Master of French Neoclassicism, fierce defender of pure drawing, famous for his flawlessly smooth and icy portraits.",
+    "dates": "1780–1867"
+  },
+  {
+    "original_name": "henry-fuseli",
+    "slug": "henry-fuseli",
+    "fr_name": "Johann Heinrich Füssli",
+    "en_name": "Henry Fuseli",
+    "fr_description": "Artiste romantique visionnaire, peignant un monde fantastique, sombre et macabre inspiré du théâtre shakespearien et du folklore.",
+    "en_description": "Visionary Romantic artist, painting a dark, macabre fantasy world inspired by Shakespearean theater and folklore.",
+    "dates": "1741–1825"
+  },
+  {
+    "original_name": "theodore-gericault",
+    "slug": "theodore-gericault",
+    "fr_name": "Théodore Géricault",
+    "en_name": "Théodore Géricault",
+    "fr_description": "Pionnier du romantisme français, dont le Radeau de La Méduse mêle réalisme brutal de la mort et composition héroïque moderne.",
+    "en_description": "Pioneer of French Romanticism, whose Raft of the Medusa blends brutal realism of death with modern heroic composition.",
+    "dates": "1791–1824"
+  },
+  {
+    "original_name": "banksy",
+    "slug": "banksy",
+    "fr_name": "Banksy",
+    "en_name": "Banksy",
+    "fr_description": "Artiste de rue anonyme britannique devenu une icône mondiale grâce à ses pochoirs subversifs, satiriques et politiquement engagés.",
+    "en_description": "Anonymous British street artist who became a global icon through his subversive, satirical, and politically engaged stencils.",
+    "dates": "1974–"
+  },
+  {
+    "original_name": "jr",
+    "slug": "jr",
+    "fr_name": "JR",
+    "en_name": "JR",
+    "fr_description": "Artiste contemporain français collant d'immenses portraits photographiques dans l'espace public pour donner une voix aux anonymes.",
+    "en_description": "French contemporary artist pasting immense photographic portraits in public spaces to give a voice to everyday people.",
+    "dates": "1983–"
+  },
+  {
+    "original_name": "jean-michel-basquiat",
+    "slug": "jean-michel-basquiat",
+    "fr_name": "Jean-Michel Basquiat",
+    "en_name": "Jean-Michel Basquiat",
+    "fr_description": "Comète du monde de l'art new-yorkais, passant du graffiti à la peinture néo-expressionniste, mêlant poésie, critique sociale et anatomie.",
+    "en_description": "Comet of the NY art world, moving from graffiti to Neo-Expressionist painting, blending poetry, social critique, and anatomy.",
+    "dates": "1960–1988"
+  },
+  {
+    "original_name": "kaws",
+    "slug": "kaws",
+    "fr_name": "Kaws",
+    "en_name": "KAWS",
+    "fr_description": "Artiste et designer majeur mêlant pop art, culture commerciale et street art, rendu célèbre par son personnage iconique Companion.",
+    "en_description": "Major artist and designer blending pop art, commercial culture, and street art, made famous by his iconic Companion character.",
+    "dates": "1974–"
+  },
+  {
+    "original_name": "keith-haring",
+    "slug": "keith-haring",
+    "fr_name": "Keith Haring",
+    "en_name": "Keith Haring",
+    "fr_description": "Icône de la culture pop des années 80, célèbre pour son style de dessin continu et rythmé véhiculant des messages sociaux dans le métro.",
+    "en_description": "Icon of 80s pop culture, famous for his continuous and rhythmic drawing style conveying social messages in the subway.",
+    "dates": "1958–1990"
+  },
+  {
+    "original_name": "shepard-fairey-obey",
+    "slug": "shepard-fairey-obey",
+    "fr_name": "Shepard Fairey (Obey)",
+    "en_name": "Shepard Fairey (Obey)",
+    "fr_description": "Artiste urbain et affichiste engagé, créateur de l'iconique campagne Hope, mêlant esthétique de la propagande et culture skate.",
+    "en_description": "Urban artist and committed poster designer, creator of the iconic Hope campaign, blending propaganda aesthetics and skate culture.",
+    "dates": "1970–"
+  },
+  {
+    "original_name": "frida-kahlo",
+    "slug": "frida-kahlo",
+    "fr_name": "Frida Kahlo",
+    "en_name": "Frida Kahlo",
+    "fr_description": "Artiste mexicaine mythique, transmutant sa souffrance physique et sa fierté identitaire dans des autoportraits surréalistes intenses.",
+    "en_description": "Mythical Mexican artist, transmuting her physical suffering and cultural pride into intense Surrealist self-portraits.",
+    "dates": "1907–1954"
+  },
+  {
+    "original_name": "katsushika-hokusai",
+    "slug": "katsushika-hokusai",
+    "fr_name": "Hokusai",
+    "en_name": "Katsushika Hokusai",
+    "fr_description": "Maitre absolu de l'estampe ukiyo-e, célèbre pour ses Trente-six vues du mont Fuji et son observation virtuose de la nature.",
+    "en_description": "Absolute master of ukiyo-e woodblock prints, famous for his Thirty-six Views of Mount Fuji and virtuoso observation of nature.",
+    "dates": "1760–1849"
+  },
+  {
+    "original_name": "kitagawa-utamaro",
+    "slug": "kitagawa-utamaro",
+    "fr_name": "Utamaro",
+    "en_name": "Kitagawa Utamaro",
+    "fr_description": "Un des plus grands artistes de l'ukiyo-e, célèbre pour ses superbes portraits psychologiques de femmes aux traits raffinés (bijinga).",
+    "en_description": "One of the greatest ukiyo-e artists, famous for his superb psychological portraits of beautiful women with refined features (bijinga).",
+    "dates": "c. 1753–1806"
+  },
+  {
+    "original_name": "utagawa-hiroshige",
+    "slug": "utagawa-hiroshige",
+    "fr_name": "Hiroshige",
+    "en_name": "Utagawa Hiroshige",
+    "fr_description": "Le dernier grand maître de l'ukiyo-e, dont les paysages atmosphériques poétiques ont profondément influencé les impressionnistes.",
+    "en_description": "The last great master of ukiyo-e, whose poetic atmospheric landscapes profoundly influenced the Impressionists.",
+    "dates": "1797–1858"
+  },
+  {
+    "original_name": "auguste-rodin",
+    "slug": "auguste-rodin",
+    "fr_name": "Auguste Rodin",
+    "en_name": "Auguste Rodin",
+    "fr_description": "",
+    "en_description": "",
+    "dates": "1840-1917"
+  },
+  {
+    "original_name": "louise-bourgeois",
+    "slug": "louise-bourgeois",
+    "fr_name": "Louise Bourgeois",
+    "en_name": "Louise Bourgeois",
+    "fr_description": "",
+    "en_description": "",
+    "dates": "1911-2010"
+  },
+  {
+    "original_name": "tamara-de-lempicka",
+    "slug": "tamara-de-lempicka",
+    "fr_name": "Tamara de Lempicka",
+    "en_name": "Tamara de Lempicka",
+    "fr_description": "",
+    "en_description": "",
+    "dates": "1898-1980"
+  },
+  {
+    "original_name": "kazimir-malevitch",
+    "slug": "kazimir-malevitch",
+    "fr_name": "Kazimir Malevitch",
+    "en_name": "Kazimir Malevich",
+    "fr_description": "",
+    "en_description": "",
+    "dates": "1879-1935"
+  },
+  {
+    "original_name": "georgia-okeeffe",
+    "slug": "georgia-okeeffe",
+    "fr_name": "Georgia O'Keeffe",
+    "en_name": "Georgia O'Keeffe",
+    "fr_description": "",
+    "en_description": "",
+    "dates": "1887-1986"
+  },
+  {
+    "original_name": "jasper-johns",
+    "slug": "jasper-johns",
+    "fr_name": "Jasper Johns",
+    "en_name": "Jasper Johns",
+    "fr_description": "",
+    "en_description": "",
+    "dates": "1930-"
+  },
+  {
+    "original_name": "claes-oldenburg",
+    "slug": "claes-oldenburg",
+    "fr_name": "Claes Oldenburg",
+    "en_name": "Claes Oldenburg",
+    "fr_description": "",
+    "en_description": "",
+    "dates": "1929-2022"
+  },
+  {
+    "original_name": "ansel-adams",
+    "slug": "ansel-adams",
+    "fr_name": "Ansel Adams",
+    "en_name": "Ansel Adams",
+    "fr_description": "",
+    "en_description": "",
+    "dates": "1902-1984"
+  },
+  {
+    "original_name": "steve-mccurry",
+    "slug": "steve-mccurry",
+    "fr_name": "Steve McCurry",
+    "en_name": "Steve McCurry",
+    "fr_description": "",
+    "en_description": "",
+    "dates": "1950-"
+  },
+  {
+    "original_name": "sebastiao-salgado",
+    "slug": "sebastiao-salgado",
+    "fr_name": "Sebastião Salgado",
+    "en_name": "Sebastião Salgado",
+    "fr_description": "",
+    "en_description": "",
+    "dates": "1944-"
+  },
+  {
+    "original_name": "richard-hamilton",
+    "slug": "richard-hamilton",
+    "fr_name": "Richard Hamilton",
+    "en_name": "Richard Hamilton",
+    "fr_description": "",
+    "en_description": "",
+    "dates": "1922-2011"
+  }
+]

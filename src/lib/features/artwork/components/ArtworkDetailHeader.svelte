@@ -48,7 +48,11 @@
 		{:else}
 			{artwork.artists?.name}
 		{/if}
-		({artwork.creation_date})
+		{#if artwork.creation_date && artwork.creation_date !== 'Inconnu' && artwork.creation_date !== 'inconnue' && artwork.creation_date !== 'Inconnue'}
+			({artwork.creation_date})
+		{:else if artwork.artists?.dates}
+			({artwork.artists.dates})
+		{/if}
 	</p>
 </div>
 

@@ -58,13 +58,15 @@
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		const lessonData = lesson as any;
 		if (type === 'artist' && lessonData.glossary?.artist_description) {
-			glossaryTitle = lesson.artists?.name || 'Artist';
-			glossarySubtitle = 'Artist';
+			glossaryTitle = lesson.artists?.name || 'Artiste';
+			const dates = lesson.artists?.dates || lessonData.glossary?.artist_dates;
+			glossarySubtitle = dates ? `Artiste • ${dates}` : 'Artiste';
 			glossaryContent = lessonData.glossary.artist_description;
 			glossaryOpen = true;
 		} else if (type === 'movement' && lessonData.glossary?.movement_description) {
 			glossaryTitle = lesson.movement_name;
-			glossarySubtitle = 'Mouvement Artistique';
+			const century = lessonData.movement_century || lessonData.glossary?.movement_century;
+			glossarySubtitle = century ? `Mouvement Artistique • ${century}` : 'Mouvement Artistique';
 			glossaryContent = lessonData.glossary.movement_description;
 			glossaryOpen = true;
 		}

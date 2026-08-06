@@ -35,7 +35,7 @@ export const load: PageLoad = async ({ params }) => {
 		try {
 			// Query by slug or id
 			const isNumeric = /^\d+$/.test(slugOrId);
-			let query = supabase.from('artworks').select('*, artists(artist_translations(name)), artwork_translations(title)').eq('is_active', true);
+			let query = supabase.from('artworks').select('*, artists(dates, artist_translations(name)), artwork_translations(title)').eq('is_active', true);
 			if (isNumeric) {
 				query = query.eq('id', parseInt(slugOrId, 10));
 			} else {
@@ -56,14 +56,14 @@ export const load: PageLoad = async ({ params }) => {
 						typedArtData.artists.name = artisteName;
 					}
 				}
-				artwork = sanitizeArtwork(artData);
+				artwork = sanitizeArtwork(typedArtData) as Artwork;
 			} else {
 				throw error(500, `Debug: artData is null for slugOrId='${slugOrId}', isNumeric=${isNumeric}, isOnline=${isOnline}`);
 			}
 
 			if (artwork) {
 				const [movRes, contRes, progRes, contArtisteRes, contCourantRes] = await Promise.all([
-					supabase.from('movements').select('id, slug, oklch_token, movement_translations(name)').eq('id', artwork.movement_id).maybeSingle(),
+					supabase.from('movements').select('id, slug, century, oklch_token, movement_translations(name)').eq('id', artwork.movement_id).maybeSingle(),
 					supabase.from('artwork_translations').select('artwork_id, introduction, main_article, article_portions, verification_status').eq('artwork_id', artwork.id).eq('language_code', 'fr').maybeSingle(),
 					supabase.from('user_artwork_progress').select('artwork_id, box_level, next_review_at').eq('artwork_id', artwork.id).maybeSingle(),
 					supabase.from('artist_translations').select('artist_id, short_description').eq('artist_id', artwork.artist_id).eq('language_code', 'fr').eq('verification_status', 'VERIFIED').maybeSingle(),
@@ -81,7 +81,9 @@ export const load: PageLoad = async ({ params }) => {
 				// Attached Glossary Content
 				artwork.glossary = {
 					artist_description: ((contArtisteRes.data || {}) as Record<string, unknown>)?.short_description as string || null,
-					movement_description: ((contCourantRes.data || {}) as Record<string, unknown>)?.short_description as string || null
+					movement_description: ((contCourantRes.data || {}) as Record<string, unknown>)?.short_description as string || null,
+					artist_dates: artwork.artists?.dates || null,
+					movement_century: movement?.century || null
 				};
 
 				if (content) {
@@ -132,6 +134,7 @@ export const load: PageLoad = async ({ params }) => {
 	const lesson: ActiveLessonView = {
 		...artwork,
 		movement_name: movement?.name || 'Mouvement Artistique',
+		movement_century: movement?.century || null,
 		oklch_token: movement?.oklch_token || 'var(--movement-theme)',
 		introduction: (content as RawContentArtwork)?.introduction || null,
 		verification_status: (content as RawContentArtwork)?.verification_status || null,

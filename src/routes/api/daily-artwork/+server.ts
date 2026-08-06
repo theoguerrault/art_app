@@ -123,13 +123,23 @@ export async function GET(_event: RequestEvent) {
         image_url_thumb: optimizedArtwork.image_url_thumb,
         image_url_full: optimizedArtwork.image_url_full,
         aspect_ratio: selectedArtwork.aspect_ratio,
-        artists: { name: artistTranslation?.name || 'Inconnu' },
+        artists: {
+          name: artistTranslation?.name || 'Inconnu',
+          dates: selectedArtwork.artists?.dates || null
+        },
         movement_name: movementTranslation?.name || 'Mouvement Artistique',
+        movement_century: selectedArtwork.movements?.century || null,
         oklch_token: selectedArtwork.movements?.oklch_token || 'var(--movement-theme)',
         verification_status: translation?.verification_status || null,
         introduction: translation?.introduction || null,
         article_portions: translation?.article_portions || [],
         main_article: translation?.main_article || "Explorez l'histoire remarquable et la composition de ce chef-d'œuvre intemporel.",
+        glossary: {
+          artist_description: artistTranslation?.short_description || null,
+          movement_description: movementTranslation?.short_description || null,
+          artist_dates: selectedArtwork.artists?.dates || null,
+          movement_century: selectedArtwork.movements?.century || null
+        },
         qcm: translation?.qcm || {
           question: `Quel mouvement artistique ou période est le mieux représenté par "${translation?.title || 'cette artwork'}" ?`,
           options: [

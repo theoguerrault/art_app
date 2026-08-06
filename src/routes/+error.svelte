@@ -7,7 +7,7 @@
 	<p>{page.error?.message ?? 'An unknown error occurred.'}</p>
     <pre class="error-details">
         {JSON.stringify(page.error, null, 2)}
-        {page.error?.stack || ''}
+        {(page.error as any)?.stack || ''}
     </pre>
 	<a href="/" data-sveltekit-prefetch data-sveltekit-preload-data="hover">Return to home</a>
 </div>

@@ -19,12 +19,12 @@ export const POST: RequestHandler = async ({ params }) => {
 			return json({ error: 'Artwork introuvable' }, { status: 404 });
 		}
 
-		if (!artwork.image_url_full) {
-			return json({ error: "L'œuvre n'a pas d'image enregistrée à analyser." }, { status: 400 });
-		}
-
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		const typedArtwork = artwork as any;
+
+		if (!typedArtwork.image_url_full) {
+			return json({ error: "L'œuvre n'a pas d'image enregistrée à analyser." }, { status: 400 });
+		}
 		const title = typedArtwork.artwork_translations?.[0]?.title || 'Titre inconnu';
 		const artistName = typedArtwork.artists?.artist_translations?.[0]?.name || 'Artiste inconnu';
 
@@ -52,7 +52,7 @@ export const POST: RequestHandler = async ({ params }) => {
 		const result = await generateContentWithRetry({
 			systemInstruction,
 			userPrompt,
-			imageUrl: artwork.image_url_full,
+			imageUrl: typedArtwork.image_url_full,
 			responseSchema,
 			temperature: 0.2 // Low temp for factual check
 		});

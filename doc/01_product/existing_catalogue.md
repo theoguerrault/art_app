@@ -88,7 +88,9 @@ This file lists the artistic movements, artists, and artworks currently present 
 ## 18. photograph
 
 ## 19. Pop Art
-*   **Roy Lichtenstein** : *Drowning Girl*
+*   **Andy Warhol** : *Marilyn Diptych*, *Eight Elvises*, *Gold Marilyn Monroe*, *Campbell's Soup Cans*
+*   **David Hockney** : *A Bigger Splash*, *Mr and Mrs Clark and Percy*, *Portrait of an Artist (Pool with Two Figures)*
+*   **Roy Lichtenstein** : *Drowning Girl*, *Hopeless*, *Look Mickey*, *Whaam!*
 
 ## 20. Op Art
 
@@ -146,6 +148,12 @@ This file lists the artistic movements, artists, and artworks currently present 
 *   **Théodore Géricault** : *The Raft of the Medusa*
 
 ## 29. street art
+*   **Banksy** : *Girl with Balloon*, *Love is in the Air (Flower Thrower)*
+*   **Jean-Michel Basquiat** : *Boy and Dog in a Johnnypump*, *Irony of Negro Policeman*, *Untitled (Skull)*
+*   **JR** : *The Secret of the Great Pyramid*, *Women Are Heroes*
+*   **KAWS** : *Companion*
+*   **Keith Haring** : *Crack is Wack*, *Radiant Baby*, *Tuttomondo*
+*   **Shepard Fairey (Obey)** : *Hope Poster (Barack Obama)*, *Marianne*
 
 ## 30. surrealism
 
@@ -154,3 +162,115 @@ This file lists the artistic movements, artists, and artworks currently present 
 *   **Kitagawa Utamaro** : *Three Beauties of the Present Day*
 *   **Utagawa Hiroshige** : *Sudden Shower over Shin-Ōhashi Bridge and Atake*
 
+
+## Sculpture Moderne
+*   **Auguste Rodin** : *Le Penseur*, *Le Baiser*, *Les Bourgeois de Calais*
+*   **Louise Bourgeois** : *Maman*
+
+## Art Déco
+*   **Tamara de Lempicka** : *Autoportrait dans la Bugatti verte*
+
+## Suprématisme
+*   **Kazimir Malevitch** : *Carré noir sur fond blanc*
+
+## Modernisme Américain
+*   **Georgia O'Keeffe** : *Jimson Weed/White Flower No. 1*
+
+## Pop Art
+*   **Jasper Johns** : *Flag*
+*   **Claes Oldenburg** : *Spoonbridge and Cherry*
+
+## Haute Renaissance
+*   **Michel-Ange** : *Le Jugement dernier*
+
+## (Updates to existing sections)
+### Antiquité & Art classique
+*   **Anonyme (Grèce antique)** : *La Victoire de Samothrace*, *La Vénus de Milo*
+*   **Anonyme (Égypte antique)** : *Le Buste de Néfertiti*
+
+### Baroque
+*   **Caravaggio** : *L'Appel de saint Matthieu*
+*   **Peter Paul Rubens** : *Le Massacre des Innocents*
+*   **Gian Lorenzo Bernini** : *L'Extase de sainte Thérèse*
+
+## Impressionnisme
+*   **Claude Monet** : *Impression, soleil levant*
+
+## Post-Impressionnisme
+*   **Vincent van Gogh** : *Autoportrait à l'oreille bandée*, *Champ de blé aux corbeaux*
+
+## Expressionnisme
+*   **Edvard Munch** : *Le Cri*
+
+## Cubisme
+*   **Marcel Duchamp** : *Nu descendant un escalier (N°2)*
+*   **Pablo Picasso** : *Les Demoiselles d'Avignon*
+
+## Surréalisme
+*   **Salvador Dalí** : *La Persistance de la mémoire*
+*   **René Magritte** : *Le Fils de l'homme*
+
+## (Updates to existing sections)
+### Dutch Golden Age
+*   **Rembrandt** : *La Ronde de nuit*
+
+## Photographie
+*   **Ansel Adams** : *Moonrise, Hernandez, New Mexico*
+*   **Steve McCurry** : *Afghan Girl*
+*   **Sebastião Salgado** : *Serra Pelada Gold Mine*
+
+## (Updates to existing sections)
+### Art Global & Art Contemporain
+*   **Francis Bacon** : *Three Studies for Figures at the Base of a Crucifixion*
+
+## Haute Renaissance
+*   **Titian** : *Venus of Urbino*
+
+## Renaissance
+*   **Albrecht Dürer** : *Autoportrait à la fourrure*
+
+## Néoclassicisme
+*   **Jacques-Louis David** : *L'Intervention des Sabines*
+
+## Romantisme
+*   **Ilya Repin** : *Les Haleurs de la Volga*
+
+## Réalisme
+*   **Gustave Courbet** : *Un enterrement à Ornans*
+
+## (Updates to existing sections)
+### Impressionnisme
+*   **Edgar Degas** : *L'Absinthe*
+
+### Post-Impressionnisme
+*   **Paul Cézanne** : *Les Grandes Baigneuses*
+*   **Paul Gauguin** : *D'où venons-nous ? Que sommes-nous ? Où allons-nous ?*
+
+## Peinture métaphysique
+*   **Giorgio de Chirico** : *Mystère et mélancolie d'une rue*
+
+## Surréalisme
+*   **Max Ernst** : *L'Éléphant Célèbes*
+*   **René Magritte** : *L'Empire des lumières*
+*   **Yves Tanguy** : *Maman, Papa est blessé !*
+
+## Dadaïsme
+*   **Man Ray** : *Le Violon d'Ingres*
+*   **Marcel Duchamp** : *L.H.O.O.Q.*
+
+## Fauvisme
+*   **Henri Matisse** : *Nu bleu II*
+
+## Expressionnisme
+*   **Oskar Kokoschka** : *La Fiancée du vent*
+
+## Pop Art
+*   **Richard Hamilton** : *Qu'est-ce qui rend exactement les maisons d'aujourd'hui si différentes, si séduisantes ?*
+
+*   **Anselm Kiefer** : *Osiris and Isis*
+*   **Francis Bacon** : *Study after Velázquez's Portrait of Pope Innocent X*
+*   **Lucian Freud** : *Benefits Supervisor Sleeping*
+*   **Max Ernst** : *The Elephant Celebes*
+*   **Salvador Dalí** : *Dream Caused by the Flight of a Bee Around a Pomegranate a Second Before Awakening*
+*   **Andreas Gursky** : *99 Cent II Diptychon*
+*   **Andreas Gursky** : *Rhein II*

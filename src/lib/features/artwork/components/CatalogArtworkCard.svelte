@@ -17,6 +17,15 @@
 		loaded = true;
 	}
 
+	function handleClick() {
+		try {
+			if (art) {
+				if (art.id != null) sessionStorage.setItem('catalogue_last_clicked_id', String(art.id));
+				if (art.slug) sessionStorage.setItem('catalogue_last_clicked_slug', String(art.slug));
+			}
+		} catch (e) {}
+	}
+
 	let displaySrc = $derived(
 		(() => {
 			const src = art.image_url_full || art.image_url_thumb;
@@ -34,7 +43,17 @@
 	{/if}
 </svelte:head>
 
-<a href="/catalogue/{art.slug || art.id}" data-sveltekit-prefetch data-sveltekit-preload-data="hover" class="artwork-card-minimal" aria-label="Voir {art.title}">
+<a 
+	id="artwork-{art.id}" 
+	data-slug={art.slug}
+	href="/catalogue/{art.slug || art.id}" 
+	onclick={handleClick} 
+	onpointerdown={handleClick}
+	data-sveltekit-prefetch 
+	data-sveltekit-preload-data="hover" 
+	class="artwork-card-minimal" 
+	aria-label="Voir {art.title}"
+>
 	<div class="thumb-wrapper" class:loading={!loaded}>
 		<img 
 			src={displaySrc} 
@@ -112,7 +131,7 @@
 	.thumb-wrapper img {
 		width: 100%;
 		height: 100%;
-		object-fit: contain;
+		object-fit: cover;
 		transition: transform 0.4s cubic-bezier(0.2, 0, 0, 1), opacity 0.3s ease;
 		opacity: 0;
 	}

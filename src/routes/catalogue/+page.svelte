@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { tick } from 'svelte';
+	import { afterNavigate } from '$app/navigation';
 	let isOnline = $state(true);
 
 	import type { PageData } from './$types';
@@ -8,8 +10,6 @@
 
 	let { data }: { data: PageData } = $props();
 
-
-
 	let searchQuery = $state('');
 	let showFavoritesOnly = $state(false);
 	let selectedMovements = $state<number[]>([]);
@@ -17,6 +17,88 @@
 	let scrollY = $state(0);
 	let lastScrollY = $state(0);
 	let headerVisible = $state(true);
+	let isRestored = $state(false);
+	let isRestoringScroll = $state(true);
+
+	function performScrollTargeting(lastId: string | null, lastSlug: string | null, raw: string | null): boolean {
+		if (lastId) {
+			const el = document.getElementById(`artwork-${lastId}`);
+			if (el) {
+				el.scrollIntoView({ block: 'center', behavior: 'instant' });
+				return true;
+			}
+		}
+		if (lastSlug) {
+			const el = document.querySelector(`[data-slug="${lastSlug}"]`);
+			if (el) {
+				el.scrollIntoView({ block: 'center', behavior: 'instant' });
+				return true;
+			}
+		}
+		if (raw) {
+			try {
+				const saved = JSON.parse(raw);
+				if (typeof saved.scrollY === 'number' && saved.scrollY > 0) {
+					window.scrollTo({ top: saved.scrollY, behavior: 'instant' });
+					return true;
+				}
+			} catch (e) {}
+		}
+		return false;
+	}
+
+	afterNavigate(() => {
+		let raw: string | null = null;
+		let lastId: string | null = null;
+		let lastSlug: string | null = null;
+
+		try {
+			raw = sessionStorage.getItem('catalogue_persisted_state');
+			if (raw) {
+				const saved = JSON.parse(raw);
+				if (typeof saved.searchQuery === 'string') searchQuery = saved.searchQuery;
+				if (typeof saved.showFavoritesOnly === 'boolean') showFavoritesOnly = saved.showFavoritesOnly;
+				if (Array.isArray(saved.selectedMovements)) selectedMovements = saved.selectedMovements;
+			}
+			lastId = sessionStorage.getItem('catalogue_last_clicked_id');
+			lastSlug = sessionStorage.getItem('catalogue_last_clicked_slug');
+		} catch (e) {}
+
+		isRestoringScroll = true;
+		isRestored = true;
+
+		tick().then(() => {
+			setTimeout(() => {
+				performScrollTargeting(lastId, lastSlug, raw);
+
+				setTimeout(() => {
+					performScrollTargeting(lastId, lastSlug, raw);
+				}, 100);
+
+				setTimeout(() => {
+					performScrollTargeting(lastId, lastSlug, raw);
+					try {
+						sessionStorage.removeItem('catalogue_last_clicked_id');
+						sessionStorage.removeItem('catalogue_last_clicked_slug');
+					} catch (e) {}
+					isRestoringScroll = false;
+				}, 250);
+			}, 30);
+		});
+	});
+
+	$effect(() => {
+		if (typeof window === 'undefined' || !isRestored) return;
+		const stateToSave = {
+			searchQuery,
+			showFavoritesOnly,
+			selectedMovements,
+			scrollY
+		};
+		try {
+			sessionStorage.setItem('catalogue_persisted_state', JSON.stringify(stateToSave));
+		} catch (e) {}
+	});
 
 	$effect(() => {
 		if (scrollY < lastScrollY || scrollY < 50) {
@@ -127,6 +209,11 @@
 	let groupedMovements = $derived(computeGroupedMovements(data.movements, data.artworks, progressSet, favoritesSet, selectedMovements, searchQuery, normalizedQuery, showFavoritesOnly));
 	function resetSearch() {
 		searchQuery = '';
+		showFavoritesOnly = false;
+		selectedMovements = [];
+		try {
+			sessionStorage.removeItem('catalogue_persisted_state');
+		} catch (e) {}
 	}
 </script>
 <svelte:window bind:scrollY={scrollY} />
@@ -156,7 +243,7 @@
 				</div>
 
 				{#if group.items.length > 0}
-					<LazySection itemCount={group.items.length} initiallyVisible={gIndex <= 1}>
+					<LazySection itemCount={group.items.length} initiallyVisible={gIndex <= 1 || isRestoringScroll}>
 						{#snippet content()}
 							<div class="grid-catalog-minimal">
 								{#each group.items as art, aIndex (art.id)}

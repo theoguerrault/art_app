@@ -1,4 +1,13 @@
 
+export interface MCQ {
+	question: string;
+	options: string[];
+	correctIndex: number;
+	explanation: string;
+}
+
+export type QCMSynthese = MCQ;
+
 export interface Movement {
 	id: number;
 	slug: string;
@@ -19,6 +28,7 @@ interface Artist {
 	id: number;
 	slug: string;
 	name: string;
+	dates?: string | null;
 	created_at: string;
 }
 
@@ -41,6 +51,8 @@ export interface Artwork {
 	glossary?: {
 		artist_description: string | null;
 		movement_description: string | null;
+		artist_dates?: string | null;
+		movement_century?: string | null;
 	};
 }
 
@@ -50,6 +62,7 @@ export interface RawArtwork extends Artwork {
 	artwork_translations?: { title: string }[];
 	artists?: Artist & {
 		artist_translations?: { name: string }[];
+		dates?: string | null;
 	};
 }
 
@@ -89,6 +102,7 @@ export interface UserProgress {
 
 export interface ActiveLessonView extends Artwork {
 	movement_name: string;
+	movement_century?: string | null;
 	oklch_token: string;
 	main_article: string;
 	introduction?: string | null;
@@ -97,6 +111,8 @@ export interface ActiveLessonView extends Artwork {
 	glossary?: {
 		artist_description: string | null;
 		movement_description: string | null;
+		artist_dates?: string | null;
+		movement_century?: string | null;
 	};
 }
 

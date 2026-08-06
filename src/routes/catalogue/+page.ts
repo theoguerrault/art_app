@@ -20,7 +20,10 @@ export const load: PageLoad = async ({ fetch }) => {
 		const fullArtworks: Artwork[] = sanitizeArtworks((await readFromLocalCache('cached_artworks')) || []);
 		const sortedArtworks = fullArtworks.sort((a, b) => {
 			if (a.movement_id !== b.movement_id) return (a.movement_id || 0) - (b.movement_id || 0);
-			return (a.creation_date || '') > (b.creation_date || '') ? 1 : -1;
+			if ((a.creation_date || '') !== (b.creation_date || '')) {
+				return (a.creation_date || '') > (b.creation_date || '') ? 1 : -1;
+			}
+			return (a.id || 0) - (b.id || 0);
 		});
 		artworks = sortedArtworks.map((a) => ({
 			id: a.id,
@@ -43,7 +46,8 @@ export const load: PageLoad = async ({ fetch }) => {
 				supabase.from('artworks').select('id, slug, movement_id, artist_id, creation_date, image_url_full, image_url_thumb, aspect_ratio, artists(artist_translations(name)), artwork_translations(title)')
 					.eq('is_active', true)
 					.order('movement_id', { ascending: true })
-					.order('creation_date', { ascending: true }),
+					.order('creation_date', { ascending: true })
+					.order('id', { ascending: true }),
 				supabase.from('movements').select('*, movement_translations(name)').order('chronological_order', { ascending: true }),
 				supabase.from('user_artwork_progress').select('artwork_id, box_level, consecutive_correct'),
 				fetch('/api/favorites').then((res) => (res.ok ? res.json() : { favorites: [] }))

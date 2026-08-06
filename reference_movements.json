@@ -1,0 +1,440 @@
+[
+  {
+    "original_name": "dutch-golden-age",
+    "slug": "dutch-golden-age",
+    "fr_name": "Siècle d'or néerlandais",
+    "en_name": "Dutch Golden Age",
+    "fr_description": "Période de prospérité aux Pays-Bas, marquée par un réalisme détaillé, des portraits et des scènes de genre.",
+    "en_description": "Period of prosperity in the Netherlands, marked by detailed realism, portraits, and genre scenes.",
+    "century": "XVIIe siècle"
+  },
+  {
+    "original_name": "antiquite-art-classique",
+    "slug": "antiquite-art-classique",
+    "fr_name": "Antiquité & Art classique",
+    "en_name": "Antiquité & Art classique",
+    "fr_description": "Art de la Grèce et de la Rome antiques, axé sur l'harmonie, la proportion et la beauté idéalisée.",
+    "en_description": "Art of ancient Greece and Rome, focused on harmony, proportion, and idealized beauty.",
+    "century": "Antiquité"
+  },
+  {
+    "original_name": "art-global-art-contemporain",
+    "slug": "art-global-art-contemporain",
+    "fr_name": "Art Global & Art Contemporain",
+    "en_name": "Global & Contemporary Art",
+    "fr_description": "Mouvements récents caractérisés par une diversité mondiale de médiums.",
+    "en_description": "Recent movements characterized by a global diversity of mediums.",
+    "century": "Fin XXe - XXIe siècle"
+  },
+  {
+    "original_name": "baroque",
+    "slug": "baroque",
+    "fr_name": "Baroque",
+    "en_name": "Baroque",
+    "fr_description": "Style grandiose et dramatique utilisant des contrastes forts pour susciter l'émotion.",
+    "en_description": "Grandiose and dramatic style using strong contrasts to evoke emotion.",
+    "century": "XVIIe siècle"
+  },
+  {
+    "original_name": "cubism",
+    "slug": "cubism",
+    "fr_name": "Cubisme",
+    "en_name": "Cubism",
+    "fr_description": "Mouvement déconstruisant les objets pour les représenter sous de multiples angles simultanément.",
+    "en_description": "Movement deconstructing objects to represent them from multiple angles simultaneously.",
+    "century": "1907–1914"
+  },
+  {
+    "original_name": "expressionism",
+    "slug": "expressionism",
+    "fr_name": "Expressionnisme",
+    "en_name": "Expressionism",
+    "fr_description": "Art exprimant des émotions subjectives intenses à travers des couleurs vives et des formes déformées.",
+    "en_description": "Art expressing intense subjective emotions through bold colors and distorted forms.",
+    "century": "Début XXe siècle"
+  },
+  {
+    "original_name": "high-renaissance",
+    "slug": "high-renaissance",
+    "fr_name": "Haute Renaissance",
+    "en_name": "High Renaissance",
+    "fr_description": "Apogée de la Renaissance italienne avec une perfection classique, un équilibre et une maîtrise absolue.",
+    "en_description": "Peak of the Italian Renaissance with classical perfection, balance, and absolute mastery.",
+    "century": "1490–1527"
+  },
+  {
+    "original_name": "impressionism",
+    "slug": "impressionism",
+    "fr_name": "Impressionnisme",
+    "en_name": "Impressionism",
+    "fr_description": "Capture de l'effet éphémère de la lumière et de l'atmosphère par des touches de couleur rapides.",
+    "en_description": "Capturing the fleeting effect of light and atmosphere through quick brushstrokes.",
+    "century": "1874–1886"
+  },
+  {
+    "original_name": "photograph",
+    "slug": "photograph",
+    "fr_name": "Photographie",
+    "en_name": "Photography",
+    "fr_description": "Art de capturer la lumière, évoluant de la simple documentation à un médium artistique majeur.",
+    "en_description": "Art of capturing light, evolving from simple documentation to a major artistic medium.",
+    "century": "XIXe - XXIe siècle"
+  },
+  {
+    "original_name": "post-impressionism",
+    "slug": "post-impressionism",
+    "fr_name": "Post-Impressionnisme",
+    "en_name": "Post-Impressionism",
+    "fr_description": "Prolongement de l'impressionnisme avec un accent accru sur la géométrie ou l'expression personnelle.",
+    "en_description": "Extension of Impressionism with an increased focus on geometry or personal expression.",
+    "century": "1886–1905"
+  },
+  {
+    "original_name": "early-renaissance",
+    "slug": "early-renaissance",
+    "fr_name": "Première Renaissance",
+    "en_name": "Early Renaissance",
+    "fr_description": "Début de la Renaissance italienne, marquant l'invention de la perspective linéaire.",
+    "en_description": "Beginning of the Italian Renaissance, marking the invention of linear perspective.",
+    "century": "XVe siècle"
+  },
+  {
+    "original_name": "realism",
+    "slug": "realism",
+    "fr_name": "Réalisme",
+    "en_name": "Realism",
+    "fr_description": "Rejet de l'idéalisation romantique pour dépeindre la vie quotidienne et les classes sociales avec vérité.",
+    "en_description": "Rejection of romantic idealization to depict everyday life and social classes truthfully.",
+    "century": "Milieu XIXe siècle"
+  },
+  {
+    "original_name": "renaissance-manierisme",
+    "slug": "renaissance-manierisme",
+    "fr_name": "Renaissance & Maniérisme",
+    "en_name": "Renaissance & Mannerism",
+    "fr_description": "Période post-Renaissance caractérisée par une sophistication artificielle et des proportions allongées.",
+    "en_description": "Post-Renaissance period characterized by artificial sophistication and elongated proportions.",
+    "century": "XVIe siècle"
+  },
+  {
+    "original_name": "northern-renaissance",
+    "slug": "northern-renaissance",
+    "fr_name": "Renaissance nordique",
+    "en_name": "Northern Renaissance",
+    "fr_description": "Renaissance en Europe du Nord, célèbre pour son réalisme minutieux et sa peinture à l'huile.",
+    "en_description": "Renaissance in Northern Europe, famous for its meticulous realism and oil painting.",
+    "century": "XVe - XVIe siècle"
+  },
+  {
+    "original_name": "romantisme",
+    "slug": "romantisme",
+    "fr_name": "Romantisme",
+    "en_name": "Romanticism",
+    "fr_description": "Mouvement exaltant l'émotion, l'imagination et la nature sauvage face à la rationalité.",
+    "en_description": "Movement exalting emotion, imagination, and wild nature against rationality.",
+    "century": "Fin XVIIIe - Milieu XIXe siècle"
+  },
+  {
+    "original_name": "street-art",
+    "slug": "street-art",
+    "fr_name": "Street Art",
+    "en_name": "Street Art",
+    "fr_description": "Art urbain contemporain utilisant l'espace public pour des messages visuels, sociaux ou politiques.",
+    "en_description": "Contemporary urban art using public spaces for visual, social, or political messages.",
+    "century": "Fin XXe - XXIe siècle"
+  },
+  {
+    "original_name": "surrealism",
+    "slug": "surrealism",
+    "fr_name": "Surréalisme",
+    "en_name": "Surrealism",
+    "fr_description": "Mouvement cherchant à libérer l'inconscient en créant des images oniriques et surprenantes.",
+    "en_description": "Movement seeking to liberate the unconscious by creating dreamlike and surprising images.",
+    "century": "1924–1966"
+  },
+  {
+    "original_name": "pop-art",
+    "slug": "pop-art",
+    "fr_name": "Pop Art",
+    "en_name": "Pop Art",
+    "fr_description": "Intégration de l'imagerie de la culture de masse, de la publicité et des comics dans l'art.",
+    "en_description": "Integration of mass culture imagery, advertising, and comics into fine art.",
+    "century": "Années 1950 - 1960"
+  },
+  {
+    "original_name": "op-art",
+    "slug": "op-art",
+    "fr_name": "Op Art",
+    "en_name": "Op Art",
+    "fr_description": "Art optique créant des illusions de mouvement par des motifs géométriques et contrastes de couleurs.",
+    "en_description": "Optical art creating illusions of movement through geometric patterns and color contrasts.",
+    "century": "Années 1960"
+  },
+  {
+    "original_name": "art-nouveau",
+    "slug": "art-nouveau",
+    "fr_name": "Art Nouveau",
+    "en_name": "Art Nouveau",
+    "fr_description": "Style ornemental inspiré de la nature et de ses courbes arabesques.",
+    "en_description": "Ornamental style inspired by nature and its arabesque curves.",
+    "century": "Fin XIXe - Début XXe siècle"
+  },
+  {
+    "original_name": "symbolisme",
+    "slug": "symbolisme",
+    "fr_name": "Symbolisme",
+    "en_name": "Symbolism",
+    "fr_description": "Courant onirique axé sur l'expression spirituelle, l'imagination et l'inconscient.",
+    "en_description": "Dreamlike current focused on spiritual expression, imagination, and the unconscious.",
+    "century": "Fin XIXe siècle"
+  },
+  {
+    "original_name": "rococo",
+    "slug": "rococo",
+    "fr_name": "Rococo",
+    "en_name": "Rococo",
+    "fr_description": "Style théâtral, asymétrique et extrêmement ornementé, souvent associé à l'aristocratie.",
+    "en_description": "Theatrical, asymmetrical, and highly ornamented style, often associated with the aristocracy.",
+    "century": "XVIIIe siècle"
+  },
+  {
+    "original_name": "moyen-age",
+    "slug": "moyen-age",
+    "fr_name": "Moyen Âge",
+    "en_name": "Middle Ages",
+    "fr_description": "Art principalement religieux, allant des fresques romanes aux manuscrits enluminés.",
+    "en_description": "Primarily religious art, ranging from Romanesque frescoes to illuminated manuscripts.",
+    "century": "Ve - XVe siècle"
+  },
+  {
+    "original_name": "gothique",
+    "slug": "gothique",
+    "fr_name": "Gothique",
+    "en_name": "Gothic",
+    "fr_description": "Art caractérisé par une élévation lumineuse et un réalisme expressif naissant.",
+    "en_description": "Art characterized by luminous elevation and nascent expressive realism.",
+    "century": "XIIe - XVe siècle"
+  },
+  {
+    "original_name": "pre-renaissance",
+    "slug": "pre-renaissance",
+    "fr_name": "Pré-Renaissance",
+    "en_name": "Pre-Renaissance",
+    "fr_description": "Période de transition en Italie, marquée par le retour à l'espace et l'humanisation des figures.",
+    "en_description": "Transitional period in Italy, marked by a return to space and the humanization of figures.",
+    "century": "XIIIe - XIVe siècle"
+  },
+  {
+    "original_name": "neoclassicisme",
+    "slug": "neoclassicisme",
+    "fr_name": "Néoclassicisme",
+    "en_name": "Neoclassicism",
+    "fr_description": "Retour à la rigueur, aux proportions et aux sujets héroïques de l'Antiquité.",
+    "en_description": "Return to the rigor, proportions, and heroic subjects of Antiquity.",
+    "century": "Fin XVIIIe - Début XIXe siècle"
+  },
+  {
+    "original_name": "realisme-americain",
+    "slug": "realisme-americain",
+    "fr_name": "Réalisme américain",
+    "en_name": "American Realism",
+    "fr_description": "Représentation objective de la vie quotidienne et urbaine aux États-Unis.",
+    "en_description": "Objective representation of daily and urban life in the United States.",
+    "century": "Années 1920 - 1940"
+  },
+  {
+    "original_name": "regionalisme",
+    "slug": "regionalisme",
+    "fr_name": "Régionalisme",
+    "en_name": "Regionalism",
+    "fr_description": "Célébration idéalisée de l'Amérique rurale et des petites villes du Midwest.",
+    "en_description": "Idealized celebration of rural America and small Midwestern towns.",
+    "century": "Années 1930"
+  },
+  {
+    "original_name": "pre-raphaelisme",
+    "slug": "pre-raphaelisme",
+    "fr_name": "Préraphaélites",
+    "en_name": "Pre-Raphaelites",
+    "fr_description": "Retour à l'esthétique médiévale d'avant Raphaël, mêlant romantisme et détail minutieux.",
+    "en_description": "Return to the medieval aesthetics before Raphael, blending romanticism and meticulous detail.",
+    "century": "Milieu XIXe siècle"
+  },
+  {
+    "original_name": "ukiyo-e",
+    "slug": "ukiyo-e",
+    "fr_name": "Ukiyo-e",
+    "en_name": "Ukiyo-e",
+    "fr_description": "Art japonais de l'estampe, immortalisant la nature et les plaisirs éphémères de la vie citadine.",
+    "en_description": "Japanese woodblock print art, immortalizing nature and the fleeting pleasures of city life.",
+    "century": "XVIIe - XIXe siècle"
+  },
+  {
+    "original_name": "futurisme",
+    "slug": "futurisme",
+    "fr_name": "Futurisme",
+    "en_name": "Futurism",
+    "fr_description": "Célébration de la modernité, de la vitesse, de la technologie et de la violence.",
+    "en_description": "Celebration of modernity, speed, technology, and violence.",
+    "century": "Début XXe siècle"
+  },
+  {
+    "original_name": "abstraction",
+    "slug": "abstraction",
+    "fr_name": "Abstraction",
+    "en_name": "Abstraction",
+    "fr_description": "Rejet de la représentation figurative au profit de l'expression pure des formes et couleurs.",
+    "en_description": "Rejection of figurative representation in favor of the pure expression of forms and colors.",
+    "century": "XXe siècle"
+  },
+  {
+    "original_name": "dadaisme",
+    "slug": "dadaisme",
+    "fr_name": "Dadaïsme",
+    "en_name": "Dadaism",
+    "fr_description": "Mouvement anti-art, absurde et provocateur, né en réaction à la Première Guerre mondiale.",
+    "en_description": "Anti-art, absurd, and provocative movement born in reaction to World War I.",
+    "century": "1916–1924"
+  },
+  {
+    "original_name": "peinture-metaphysique",
+    "slug": "peinture-metaphysique",
+    "fr_name": "Peinture métaphysique",
+    "en_name": "Metaphysical Art",
+    "fr_description": "Espaces oniriques et figures immobiles révélant le mystère sous l'apparence des choses.",
+    "en_description": "Dreamlike spaces and motionless figures revealing the mystery beneath the appearance of things.",
+    "century": "1911–1920"
+  },
+  {
+    "original_name": "expressionnisme-abstrait",
+    "slug": "expressionnisme-abstrait",
+    "fr_name": "Expressionnisme abstrait",
+    "en_name": "Abstract Expressionism",
+    "fr_description": "Gestuelle spontanée (Action Painting) et vastes champs de couleurs (Color Field).",
+    "en_description": "Spontaneous gestural brushstrokes (Action Painting) and vast fields of color (Color Field).",
+    "century": "Milieu XXe siècle"
+  },
+  {
+    "original_name": "art-informel",
+    "slug": "art-informel",
+    "fr_name": "Art informel",
+    "en_name": "Art Informel",
+    "fr_description": "Abstraction lyrique et matérielle européenne, privilégiant l'instinct et la texture.",
+    "en_description": "European lyrical and material abstraction, favoring instinct and texture.",
+    "century": "Milieu XXe siècle"
+  },
+  {
+    "original_name": "minimalisme",
+    "slug": "minimalisme",
+    "fr_name": "Minimalisme",
+    "en_name": "Minimalism",
+    "fr_description": "Réduction de l'art à ses structures élémentaires et géométriques, sans subjectivité.",
+    "en_description": "Reduction of art to its elementary and geometric structures, without subjectivity.",
+    "century": "Années 1960"
+  },
+  {
+    "original_name": "fauvisme",
+    "slug": "fauvisme",
+    "fr_name": "Fauvisme",
+    "en_name": "Fauvism",
+    "fr_description": "Exaltation de couleurs pures et violentes appliquées en aplats.",
+    "en_description": "Exaltation of pure, violent colors applied in flat, broad strokes.",
+    "century": "1905–1910"
+  },
+  {
+    "original_name": "art-moderne",
+    "slug": "art-moderne",
+    "fr_name": "Art Moderne",
+    "en_name": "Modern Art",
+    "fr_description": "Rupture avec l'académisme, expérimentations formelles et innovations radicales.",
+    "en_description": "Break with academicism, formal experimentation, and radical innovations.",
+    "century": "Fin XIXe - Milieu XXe siècle"
+  },
+  {
+    "original_name": "sculpture-moderne",
+    "slug": "sculpture-moderne",
+    "fr_name": "Sculpture Moderne",
+    "en_name": "Modern Sculpture"
+  },
+  {
+    "original_name": "art-deco",
+    "slug": "art-deco",
+    "fr_name": "Art Déco",
+    "en_name": "Art Deco"
+  },
+  {
+    "original_name": "suprematisme",
+    "slug": "suprematisme",
+    "fr_name": "Suprématisme",
+    "en_name": "Suprematism"
+  },
+  {
+    "original_name": "modernisme-americain",
+    "slug": "modernisme-americain",
+    "fr_name": "Modernisme Américain",
+    "en_name": "American Modernism"
+  },
+  {
+    "original_name": "haute-renaissance",
+    "slug": "haute-renaissance",
+    "fr_name": "Haute Renaissance",
+    "en_name": "High Renaissance",
+    "century": "16th"
+  },
+  {
+    "original_name": "impressionnisme",
+    "slug": "impressionnisme",
+    "fr_name": "Impressionnisme",
+    "en_name": "Impressionism",
+    "century": "19th"
+  },
+  {
+    "original_name": "post-impressionnisme",
+    "slug": "post-impressionnisme",
+    "fr_name": "Post-Impressionnisme",
+    "en_name": "Post-Impressionism",
+    "century": "19th"
+  },
+  {
+    "original_name": "expressionnisme",
+    "slug": "expressionnisme",
+    "fr_name": "Expressionnisme",
+    "en_name": "Expressionism",
+    "century": "19th-20th"
+  },
+  {
+    "original_name": "cubisme",
+    "slug": "cubisme",
+    "fr_name": "Cubisme",
+    "en_name": "Cubism",
+    "century": "20th"
+  },
+  {
+    "original_name": "surrealisme",
+    "slug": "surrealisme",
+    "fr_name": "Surréalisme",
+    "en_name": "Surrealism",
+    "century": "20th"
+  },
+  {
+    "original_name": "photographie",
+    "slug": "photographie",
+    "fr_name": "Photographie",
+    "en_name": "Photography",
+    "century": "19th-20th"
+  },
+  {
+    "original_name": "renaissance",
+    "slug": "renaissance",
+    "fr_name": "Renaissance",
+    "en_name": "Renaissance",
+    "century": "15th-16th"
+  },
+  {
+    "original_name": "realisme",
+    "slug": "realisme",
+    "fr_name": "Réalisme",
+    "en_name": "Realism",
+    "century": "19th"
+  }
+]

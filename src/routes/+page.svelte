@@ -58,14 +58,18 @@
 
 	function openGlossary(type: 'artist' | 'movement') {
 		if (!lesson) return;
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		const lessonData = lesson as any;
 		if (type === 'artist' && lesson.glossary?.artist_description) {
-			glossaryTitle = lesson.artists?.name || 'Artist';
-			glossarySubtitle = 'Artist';
+			glossaryTitle = lesson.artists?.name || 'Artiste';
+			const dates = lesson.artists?.dates || lessonData.glossary?.artist_dates;
+			glossarySubtitle = dates ? `Artiste • ${dates}` : 'Artiste';
 			glossaryContent = lesson.glossary.artist_description;
 			glossaryOpen = true;
 		} else if (type === 'movement' && lesson.glossary?.movement_description) {
 			glossaryTitle = lesson.movement_name;
-			glossarySubtitle = 'Mouvement Artistique';
+			const century = lessonData.movement_century || lessonData.glossary?.movement_century;
+			glossarySubtitle = century ? `Mouvement Artistique • ${century}` : 'Mouvement Artistique';
 			glossaryContent = lesson.glossary.movement_description;
 			glossaryOpen = true;
 		}

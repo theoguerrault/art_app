@@ -596,6 +596,7 @@ model user_favorites {
 model artists {
   id                  Int                   @id @default(autoincrement())
   slug                String                @unique @db.VarChar(150)
+  dates               String?               @db.VarChar(100)
   created_at          DateTime              @default(now()) @db.Timestamptz(6)
   artworks            artworks[]
   artist_translations artist_translations[]
