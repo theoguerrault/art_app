@@ -61,10 +61,14 @@
 
 	async function toggleReaction(reaction: 'like' | 'dislike') {
 		if (!lesson) return;
+		const prev = currentReaction;
+		currentReaction = currentReaction === reaction ? null : reaction;
 		const res = await apiClient.post('/api/reactions', { artwork_id: lesson.id, reaction });
-		if (res.ok) {
-			const data = await res.json();
-			currentReaction = data.reaction as 'like' | 'dislike' | null;
+		if (!res.ok) {
+			currentReaction = prev;
+		} else {
+			const resData = await res.json();
+			currentReaction = resData.reaction as 'like' | 'dislike' | null;
 		}
 	}
 
