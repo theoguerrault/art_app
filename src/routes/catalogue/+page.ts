@@ -3,6 +3,7 @@ import { supabase } from '$lib/supabase/client';
 import { readFromLocalCache, saveToLocalCache } from '$lib/offline/storage';
 import type { Artwork, Movement, UserProgress } from '$lib/types/database';
 import { sanitizeArtworks } from '$lib/utils/artworks';
+import { getLocalizedText } from '$lib/utils/i18n';
 
 // The catalogue is fully user-specific (progress, favorites). Disabling SSR
 // avoids a Supabase client cold-start that would block TTFB by several seconds.
@@ -46,12 +47,12 @@ export const load: PageLoad = async ({ fetch }) => {
 	} else {
 		try {
 			const [artworksRes, movementsRes, progressRes, favoritesRes, reactionsRes] = await Promise.all([
-				supabase.from('artworks').select('id, slug, movement_id, artist_id, creation_date, image_url_full, image_url_thumb, aspect_ratio, artists(artist_translations(name)), artwork_translations(title)')
+				supabase.from('artworks').select('id, slug, movement_id, artist_id, creation_date, image_url_full, image_url_thumb, aspect_ratio, artists(artist_translations(name, language_code)), artwork_translations(title, language_code)')
 					.eq('is_active', true)
 					.order('movement_id', { ascending: true })
 					.order('creation_date', { ascending: true })
 					.order('id', { ascending: true }),
-				supabase.from('movements').select('*, movement_translations(name)').order('chronological_order', { ascending: true }),
+				supabase.from('movements').select('*, movement_translations(name, language_code)').order('chronological_order', { ascending: true }),
 				supabase.from('user_artwork_progress').select('artwork_id, box_level, consecutive_correct'),
 				fetch('/api/favorites').then((res) => (res.ok ? res.json() : { favorites: [] })),
 				fetch('/api/reactions').then((res) => (res.ok ? res.json() : { likes: [], dislikes: [] }))
@@ -60,7 +61,7 @@ export const load: PageLoad = async ({ fetch }) => {
 
 			if (artworksRes.data && artworksRes.data.length > 0) {
 				// eslint-disable-next-line @typescript-eslint/no-explicit-any
-				artworks = sanitizeArtworks(artworksRes.data.map((a: any) => ({ ...a, title: a.artwork_translations?.[0]?.title || 'Inconnu', artists: { name: a.artists?.artist_translations?.[0]?.name || 'Inconnu' } })) as unknown as Partial<Artwork>[]);
+				artworks = sanitizeArtworks(artworksRes.data.map((a: any) => ({ ...a, title: getLocalizedText(a.artwork_translations, 'title') || 'Inconnu', artists: { name: getLocalizedText(a.artists?.artist_translations, 'name') || 'Inconnu' } })) as unknown as Partial<Artwork>[]);
 			} else {
 				const fullArtworks: Artwork[] = sanitizeArtworks((await readFromLocalCache('cached_artworks')) || []);
 				const sortedArtworks = fullArtworks.sort((a, b) => {
@@ -76,7 +77,7 @@ export const load: PageLoad = async ({ fetch }) => {
 
 			if (movementsRes.data) {
 				// eslint-disable-next-line @typescript-eslint/no-explicit-any
-				movements = movementsRes.data.map((m: any) => ({ ...m, name: m.movement_translations?.[0]?.name || 'Inconnu' }));
+				movements = movementsRes.data.map((m: any) => ({ ...m, name: getLocalizedText(m.movement_translations, 'name') || 'Inconnu' }));
 			}
 
 			if (progressRes.data) {

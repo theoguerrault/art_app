@@ -4,6 +4,7 @@ import { supabase } from '$lib/supabase/client';
 import { readFromLocalCache, saveToLocalCache } from '$lib/offline/storage';
 import type { Artwork, Movement, ContentArtwork, UserProgress, ActiveLessonView, RawArtwork, RawCourant, RawContentArtwork } from '$lib/types/database';
 import { sanitizeArtwork } from '$lib/utils/artworks';
+import { getLocalizedText } from '$lib/utils/i18n';
 
 export interface GlossaryContent {
 	artist_description?: string;
@@ -37,7 +38,7 @@ export const load: PageLoad = async ({ params, fetch }) => {
 		try {
 			// Query by slug or id
 			const isNumeric = /^\d+$/.test(slugOrId);
-			let query = supabase.from('artworks').select('*, artists(dates, artist_translations(name)), artwork_translations(title)').eq('is_active', true);
+			let query = supabase.from('artworks').select('*, artists(dates, artist_translations(name, language_code)), artwork_translations(title, language_code)').eq('is_active', true);
 			if (isNumeric) {
 				query = query.eq('id', parseInt(slugOrId, 10));
 			} else {
@@ -49,11 +50,12 @@ export const load: PageLoad = async ({ params, fetch }) => {
 
 			if (artData) {
 				const typedArtData = artData as RawArtwork;
-				if (typedArtData.artwork_translations?.[0]?.title) {
-					typedArtData.title = typedArtData.artwork_translations[0].title;
+				const title = getLocalizedText(typedArtData.artwork_translations, 'title');
+				if (title) {
+					typedArtData.title = title;
 				}
 				if (typedArtData.artists) {
-					const artisteName = typedArtData.artists.artist_translations?.[0]?.name;
+					const artisteName = getLocalizedText(typedArtData.artists.artist_translations, 'name');
 					if (artisteName) {
 						typedArtData.artists.name = artisteName;
 					}
@@ -65,7 +67,7 @@ export const load: PageLoad = async ({ params, fetch }) => {
 
 			if (artwork) {
 				const [movRes, contRes, progRes, contArtisteRes, contCourantRes, reactionsData] = await Promise.all([
-					supabase.from('movements').select('id, slug, century, oklch_token, movement_translations(name)').eq('id', artwork.movement_id).maybeSingle(),
+					supabase.from('movements').select('id, slug, century, oklch_token, movement_translations(name, language_code)').eq('id', artwork.movement_id).maybeSingle(),
 					supabase.from('artwork_translations').select('artwork_id, introduction, main_article, article_portions, verification_status').eq('artwork_id', artwork.id).eq('language_code', 'fr').maybeSingle(),
 					supabase.from('user_artwork_progress').select('artwork_id, box_level, next_review_at').eq('artwork_id', artwork.id).maybeSingle(),
 					supabase.from('artist_translations').select('artist_id, short_description').eq('artist_id', artwork.artist_id).eq('language_code', 'fr').eq('verification_status', 'VERIFIED').maybeSingle(),
@@ -76,7 +78,7 @@ export const load: PageLoad = async ({ params, fetch }) => {
 
 
 				if (movRes.data) {
-					movement = { ...(movRes.data as RawCourant), name: (movRes.data as RawCourant).movement_translations?.[0]?.name || (movRes.data as RawCourant).slug } as unknown as Movement;
+					movement = { ...(movRes.data as RawCourant), name: getLocalizedText((movRes.data as RawCourant).movement_translations, 'name') || (movRes.data as RawCourant).slug } as unknown as Movement;
 				} else {
 					movement = null;
 				}
