@@ -1,15 +1,17 @@
 <script lang="ts">
-	import { Heart, Check } from 'phosphor-svelte';
+	import { Heart, Check, ThumbsUp, ThumbsDown } from 'phosphor-svelte';
 
 	interface Props {
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		art: any;
 		isFavorite: boolean;
 		isDiscovered: boolean;
+		isLiked?: boolean;
+		isDisliked?: boolean;
 		eager?: boolean;
 	}
 
-	let { art, isFavorite, isDiscovered, eager = false }: Props = $props();
+	let { art, isFavorite, isDiscovered, isLiked = false, isDisliked = false, eager = false }: Props = $props();
 	
 	let loaded = $state(false);
 	
@@ -68,6 +70,16 @@
 			{#if isFavorite}
 				<span class="favorite-indicator" title="Favori">
 					<Heart size={14} weight="fill" />
+				</span>
+			{/if}
+			{#if isLiked}
+				<span class="like-indicator" title="J'aime">
+					<ThumbsUp size={14} weight="fill" />
+				</span>
+			{/if}
+			{#if isDisliked}
+				<span class="dislike-indicator" title="J'aime pas">
+					<ThumbsDown size={14} weight="fill" />
 				</span>
 			{/if}
 			{#if isDiscovered}
@@ -155,7 +167,7 @@
 		gap: 0.4rem;
 	}
 
-	.discovered-indicator, .favorite-indicator {
+	.discovered-indicator, .favorite-indicator, .like-indicator, .dislike-indicator {
 		background: rgba(255, 255, 255, 0.9);
 		color: var(--color-success);
 		backdrop-filter: blur(4px);
@@ -173,8 +185,18 @@
 		color: #ff3b30;
 	}
 
+	.like-indicator {
+		color: #34c759;
+	}
+
+	.dislike-indicator {
+		color: #ff9500;
+	}
+
 	:global([data-theme="dark"]) .discovered-indicator,
-	:global([data-theme="dark"]) .favorite-indicator {
+	:global([data-theme="dark"]) .favorite-indicator,
+	:global([data-theme="dark"]) .like-indicator,
+	:global([data-theme="dark"]) .dislike-indicator {
 		background: rgba(0, 0, 0, 0.6);
 	}
 

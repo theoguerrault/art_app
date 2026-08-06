@@ -10,7 +10,8 @@ The relational schema of **AI Art Coach** is normalized into four primary domain
 1. **Core Entities (`courants`, `oeuvres`, `artistes` tables):** Slugs, chronological sequence, aspect ratios, CDN URLs, and foreign keys.
 2. **Multilingual Translations & Verified Content (`oeuvre_translations`, `courant_translations`, `artiste_translations` tables):** i18n child tables indexed by `[id, language_code]`. `oeuvre_translations` stores localized titles (`titre`), main articles (`article_principal`), intros (`introduction`), article portions (`article_portions`), verification status (`verification_status`), and interactive MCQs (`qcm`).
 3. **User Progress & Leitner SRS (`user_artwork_progress` table):** Tracks daily presentation cooldowns (`last_presented_daily_at`, `times_presented_daily`) and Leitner Box SRS scheduling (`box_level`, `next_review_at`, `last_score`, `consecutive_correct`).
-4. **User Favorites & Response History (`user_favorites`, `historique_reponses` tables):** Bookmarked user items and audit records of user quiz answers.
+4. **User Favorites, Reactions & Response History (`user_favorites`, `user_reactions`, `historique_reponses` tables):** Bookmarked user items, per-artwork like/dislike reactions, and audit records of user quiz answers.
+
 
 ---
 
@@ -110,6 +111,15 @@ CREATE TABLE IF NOT EXISTS public.user_favorites (
     PRIMARY KEY (user_id, id_oeuvre)
 );
 
+CREATE TABLE IF NOT EXISTS public.user_reactions (
+    user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+    artwork_id INT NOT NULL REFERENCES public.artworks(id) ON DELETE CASCADE,
+    reaction VARCHAR(10) NOT NULL CHECK (reaction IN ('like', 'dislike')),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    PRIMARY KEY (user_id, artwork_id)
+);
+
+
 CREATE TABLE IF NOT EXISTS public.user_artwork_progress (
     user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
     id_oeuvre INT NOT NULL REFERENCES public.oeuvres(id) ON DELETE CASCADE,
@@ -152,6 +162,16 @@ CREATE POLICY "User manage favorites" ON public.user_favorites
     FOR ALL TO authenticated
     USING (auth.uid() = user_id)
     WITH CHECK (auth.uid() = user_id);
+
+-- User Reactions Security Policy
+ALTER TABLE public.user_reactions ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "User manage reactions" ON public.user_reactions
+    FOR ALL TO authenticated
+    USING (auth.uid() = user_id)
+    WITH CHECK (auth.uid() = user_id);
+
+CREATE INDEX idx_user_reactions_created ON public.user_reactions (user_id, created_at DESC);
+
 ```
 
 ---

@@ -15,6 +15,9 @@ export const load: PageLoad = async ({ fetch }) => {
 	let movements: Movement[] = [];
 	let progressList: UserProgress[] = [];
 	let favoritesList: number[] = [];
+	let likesList: number[] = [];
+	let dislikesList: number[] = [];
+
 
 	if (!isOnline) {
 		const fullArtworks: Artwork[] = sanitizeArtworks((await readFromLocalCache('cached_artworks')) || []);
@@ -42,7 +45,7 @@ export const load: PageLoad = async ({ fetch }) => {
 		favoritesList = favCache ? favCache.data : [];
 	} else {
 		try {
-			const [artworksRes, movementsRes, progressRes, favoritesRes] = await Promise.all([
+			const [artworksRes, movementsRes, progressRes, favoritesRes, reactionsRes] = await Promise.all([
 				supabase.from('artworks').select('id, slug, movement_id, artist_id, creation_date, image_url_full, image_url_thumb, aspect_ratio, artists(artist_translations(name)), artwork_translations(title)')
 					.eq('is_active', true)
 					.order('movement_id', { ascending: true })
@@ -50,8 +53,10 @@ export const load: PageLoad = async ({ fetch }) => {
 					.order('id', { ascending: true }),
 				supabase.from('movements').select('*, movement_translations(name)').order('chronological_order', { ascending: true }),
 				supabase.from('user_artwork_progress').select('artwork_id, box_level, consecutive_correct'),
-				fetch('/api/favorites').then((res) => (res.ok ? res.json() : { favorites: [] }))
+				fetch('/api/favorites').then((res) => (res.ok ? res.json() : { favorites: [] })),
+				fetch('/api/reactions').then((res) => (res.ok ? res.json() : { likes: [], dislikes: [] }))
 			]);
+
 
 			if (artworksRes.data && artworksRes.data.length > 0) {
 				// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -88,6 +93,12 @@ export const load: PageLoad = async ({ fetch }) => {
 				const favCache = await readFromLocalCache('user_favorites_cache', 'favorites');
 				favoritesList = favCache ? favCache.data : [];
 			}
+
+			if (reactionsRes && reactionsRes.likes) {
+				likesList = reactionsRes.likes;
+				dislikesList = reactionsRes.dislikes || [];
+			}
+
 		} catch (err) {
 			const fullArtworks: Artwork[] = sanitizeArtworks((await readFromLocalCache('cached_artworks')) || []);
 			const sortedArtworks = fullArtworks.sort((a, b) => {
@@ -111,6 +122,9 @@ export const load: PageLoad = async ({ fetch }) => {
 		artworks,
 		movements,
 		progressList,
-		favoritesList
+		favoritesList,
+		likesList,
+		dislikesList
 	};
+
 };

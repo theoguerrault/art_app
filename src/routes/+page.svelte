@@ -18,10 +18,17 @@
 	);
 
 	let isFavorite = $state(data.isFavorite ?? false);
+	let currentReaction = $state<'like' | 'dislike' | null>(data.currentReaction ?? null);
+
 	$effect(() => {
 		const fav = data.isFavorite ?? false;
 		if (isFavorite !== fav) isFavorite = fav;
 	});
+	$effect(() => {
+		const react = data.currentReaction ?? null;
+		if (currentReaction !== react) currentReaction = react;
+	});
+
 
 	// Sync from local cache when offline (no server fetch in component)
 	$effect(() => {
@@ -51,6 +58,16 @@
 			await saveToLocalCache(cacheKey, { id: 'favorites', data: cached });
 		}
 	}
+
+	async function toggleReaction(reaction: 'like' | 'dislike') {
+		if (!lesson) return;
+		const res = await apiClient.post('/api/reactions', { artwork_id: lesson.id, reaction });
+		if (res.ok) {
+			const data = await res.json();
+			currentReaction = data.reaction as 'like' | 'dislike' | null;
+		}
+	}
+
 	let glossaryOpen = $state(false);
 	let glossaryTitle = $state('');
 	let glossarySubtitle = $state('');
@@ -117,10 +134,13 @@
 			<ArtworkDetailHeader
 				artwork={lesson}
 				{isFavorite}
+				{currentReaction}
 				onToggleFavorite={toggleFavorite}
+				onToggleReaction={toggleReaction}
 				onOpenCourant={handleOpenCourant}
 				onOpenArtiste={handleOpenArtiste}
 			/>
+
 			<ArtworkCard
 				artwork={lesson}
 				movementName={lesson.movement_name}

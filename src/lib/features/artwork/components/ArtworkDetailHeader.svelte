@@ -1,16 +1,18 @@
 <script lang="ts">
-	import { Heart, SealCheck } from 'phosphor-svelte';
+	import { Heart, SealCheck, ThumbsUp, ThumbsDown } from 'phosphor-svelte';
 	import type { ActiveLessonView } from '$lib/types/database';
 
 	interface Props {
 		artwork: ActiveLessonView;
 		isFavorite: boolean;
+		currentReaction?: 'like' | 'dislike' | null;
 		onToggleFavorite: () => void;
+		onToggleReaction?: (reaction: 'like' | 'dislike') => void;
 		onOpenCourant?: () => void;
 		onOpenArtiste?: () => void;
 	}
 
-	let { artwork, isFavorite, onToggleFavorite, onOpenCourant, onOpenArtiste }: Props = $props();
+	let { artwork, isFavorite, currentReaction = null, onToggleFavorite, onToggleReaction, onOpenCourant, onOpenArtiste }: Props = $props();
 </script>
 
 <div class="detail-header">
@@ -38,6 +40,28 @@
 		<button class="favorite-btn" onclick={onToggleFavorite} aria-label="Toggle Favorite">
 			<Heart size={24} weight={isFavorite ? 'fill' : 'bold'} color={isFavorite ? '#ff3b30' : 'currentColor'} />
 		</button>
+		{#if onToggleReaction}
+			<div class="reaction-group">
+				<button
+					class="reaction-btn like-btn"
+					class:active={currentReaction === 'like'}
+					onclick={() => onToggleReaction!('like')}
+					aria-label="J'aime"
+					title="J'aime"
+				>
+					<ThumbsUp size={22} weight={currentReaction === 'like' ? 'fill' : 'bold'} />
+				</button>
+				<button
+					class="reaction-btn dislike-btn"
+					class:active={currentReaction === 'dislike'}
+					onclick={() => onToggleReaction!('dislike')}
+					aria-label="Je n'aime pas"
+					title="Je n'aime pas"
+				>
+					<ThumbsDown size={22} weight={currentReaction === 'dislike' ? 'fill' : 'bold'} />
+				</button>
+			</div>
+		{/if}
 	</div>
 	
 	<h1 class="artwork-title">{artwork.title}</h1>
@@ -127,6 +151,47 @@
 
 	.favorite-btn:active {
 		transform: scale(0.95);
+	}
+
+	/* Reaction group */
+	.reaction-group {
+		display: flex;
+		align-items: center;
+		gap: 0.25rem;
+		background: var(--color-surface);
+		border-radius: 999px;
+		padding: 0.2rem 0.35rem;
+		box-shadow: inset 0 0 0 1px var(--color-border);
+	}
+
+	.reaction-btn {
+		background: none;
+		border: none;
+		padding: 0.3rem 0.45rem;
+		border-radius: 999px;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		color: var(--color-text-muted);
+		transition: transform 0.2s ease, background 0.15s ease, color 0.15s ease;
+	}
+
+	.reaction-btn:hover {
+		transform: scale(1.1);
+	}
+
+	.reaction-btn:active {
+		transform: scale(0.9);
+	}
+
+	.like-btn.active {
+		color: #34c759;
+		background: color-mix(in oklch, #34c759 15%, transparent);
+	}
+
+	.dislike-btn.active {
+		color: #ff9500;
+		background: color-mix(in oklch, #ff9500 15%, transparent);
 	}
 
 	.artwork-meta {

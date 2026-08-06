@@ -12,7 +12,10 @@
 
 	let searchQuery = $state('');
 	let showFavoritesOnly = $state(false);
+	let showLikesOnly = $state(false);
+	let showDislikesOnly = $state(false);
 	let selectedMovements = $state<number[]>([]);
+
 
 	let scrollY = $state(0);
 	let lastScrollY = $state(0);
@@ -58,7 +61,10 @@
 				const saved = JSON.parse(raw);
 				if (typeof saved.searchQuery === 'string') searchQuery = saved.searchQuery;
 				if (typeof saved.showFavoritesOnly === 'boolean') showFavoritesOnly = saved.showFavoritesOnly;
+				if (typeof saved.showLikesOnly === 'boolean') showLikesOnly = saved.showLikesOnly;
+				if (typeof saved.showDislikesOnly === 'boolean') showDislikesOnly = saved.showDislikesOnly;
 				if (Array.isArray(saved.selectedMovements)) selectedMovements = saved.selectedMovements;
+
 			}
 			lastId = sessionStorage.getItem('catalogue_last_clicked_id');
 			lastSlug = sessionStorage.getItem('catalogue_last_clicked_slug');
@@ -92,9 +98,12 @@
 		const stateToSave = {
 			searchQuery,
 			showFavoritesOnly,
+			showLikesOnly,
+			showDislikesOnly,
 			selectedMovements,
 			scrollY
 		};
+
 		try {
 			sessionStorage.setItem('catalogue_persisted_state', JSON.stringify(stateToSave));
 		} catch (e) {}
@@ -119,7 +128,19 @@
 
 	function toggleFavoritesFilter() {
 		showFavoritesOnly = !showFavoritesOnly;
+		if (showFavoritesOnly) { showLikesOnly = false; showDislikesOnly = false; }
 	}
+
+	function toggleLikesFilter() {
+		showLikesOnly = !showLikesOnly;
+		if (showLikesOnly) { showFavoritesOnly = false; showDislikesOnly = false; }
+	}
+
+	function toggleDislikesFilter() {
+		showDislikesOnly = !showDislikesOnly;
+		if (showDislikesOnly) { showFavoritesOnly = false; showLikesOnly = false; }
+	}
+
 
 	function computeProgressSet(progressList: { artwork_id?: number; box_level?: number; consecutive_correct?: number }[]) {
 		const set = new Set<number>();
@@ -136,6 +157,12 @@
 		return new Set<number>(favoritesList || []);
 	}
 	let favoritesSet = $derived(computeFavoritesSet(data.favoritesList));
+
+	function computeLikesSet(list: number[]) { return new Set<number>(list || []); }
+	function computeDislikesSet(list: number[]) { return new Set<number>(list || []); }
+	let likesSet = $derived(computeLikesSet(data.likesList));
+	let dislikesSet = $derived(computeDislikesSet(data.dislikesList));
+
 
 	function computeNormalizedQuery(query: string) {
 		return query.trim().toLowerCase();
@@ -162,10 +189,14 @@
 		artworks: ArtworkType[],
 		pSet: Set<number>,
 		favSet: Set<number>,
+		likSet: Set<number>,
+		disSet: Set<number>,
 		activeMovements: number[],
 		query: string,
 		qLower: string,
-		showFavs: boolean
+		showFavs: boolean,
+		showLikes: boolean,
+		showDislikes: boolean
 	) {
 		const groups = new Map<number, { movement: MovementType; items: ArtworkType[]; discoveredCount: number; totalCount: number }>();
 
@@ -177,7 +208,12 @@
 
 		if (showFavs) {
 			filtered = filtered.filter(a => a.id && favSet.has(a.id));
+		} else if (showLikes) {
+			filtered = filtered.filter(a => a.id && likSet.has(a.id));
+		} else if (showDislikes) {
+			filtered = filtered.filter(a => a.id && disSet.has(a.id));
 		}
+
 		if (activeMovements.length > 0) {
 			filtered = filtered.filter(a => a.movement_id && activeMovements.includes(a.movement_id));
 		}
@@ -206,15 +242,19 @@
 			return g.items.length > 0;
 		});
 	}
-	let groupedMovements = $derived(computeGroupedMovements(data.movements, data.artworks, progressSet, favoritesSet, selectedMovements, searchQuery, normalizedQuery, showFavoritesOnly));
+	let groupedMovements = $derived(computeGroupedMovements(data.movements, data.artworks, progressSet, favoritesSet, likesSet, dislikesSet, selectedMovements, searchQuery, normalizedQuery, showFavoritesOnly, showLikesOnly, showDislikesOnly));
+
 	function resetSearch() {
 		searchQuery = '';
 		showFavoritesOnly = false;
+		showLikesOnly = false;
+		showDislikesOnly = false;
 		selectedMovements = [];
 		try {
 			sessionStorage.removeItem('catalogue_persisted_state');
 		} catch (e) {}
 	}
+
 </script>
 <svelte:window bind:scrollY={scrollY} />
 
@@ -222,12 +262,17 @@
 	<CatalogHeader 
 		bind:searchQuery 
 		{showFavoritesOnly}
+		{showLikesOnly}
+		{showDislikesOnly}
 		onToggleFavorites={toggleFavoritesFilter}
+		onToggleLikes={toggleLikesFilter}
+		onToggleDislikes={toggleDislikesFilter}
 		bind:selectedMovements 
 		{headerVisible} 
 		movements={data.movements || []} 
 		{toggleMovement} 
 	/>
+
 
 	<div class="movements-list" class:header-hidden={!headerVisible}>
 		{#each groupedMovements as group, gIndex (group.movement.id)}
@@ -250,9 +295,12 @@
 									<CatalogArtworkCard 
 										{art} 
 										isFavorite={favoritesSet.has(art.id as number)} 
-										isDiscovered={progressSet.has(art.id as number)} 
+										isDiscovered={progressSet.has(art.id as number)}
+										isLiked={likesSet.has(art.id as number)}
+										isDisliked={dislikesSet.has(art.id as number)}
 										eager={gIndex === 0 && aIndex < 6}
 									/>
+
 								{/each}
 							</div>
 						{/snippet}

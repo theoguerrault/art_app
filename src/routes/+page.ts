@@ -45,8 +45,24 @@ export const load: PageLoad = async ({ fetch }) => {
 			const res = await fetch('/api/daily-artwork');
 			if (res.ok) {
 				const { lesson } = await res.json();
-				return { lesson, isOffline: false };
+				// Fetch favorites & reactions in parallel
+				const [favRes, reactRes] = await Promise.all([
+					fetch('/api/favorites'),
+					fetch('/api/reactions')
+				]);
+				const favData = favRes.ok ? await favRes.json() : { favorites: [] };
+				const reactData = reactRes.ok ? await reactRes.json() : { likes: [], dislikes: [] };
+				const artworkId = lesson?.id;
+				const isFavorite = artworkId != null && (favData.favorites || []).includes(artworkId);
+				const currentReaction: 'like' | 'dislike' | null =
+					artworkId != null && (reactData.likes || []).includes(artworkId)
+						? 'like'
+						: artworkId != null && (reactData.dislikes || []).includes(artworkId)
+							? 'dislike'
+							: null;
+				return { lesson, isFavorite, currentReaction, isOffline: false };
 			}
+
 		} catch (err) {
 		}
 	}
@@ -132,6 +148,8 @@ export const load: PageLoad = async ({ fetch }) => {
 	return {
 		lesson,
 		isFavorite: false,
+		currentReaction: null as 'like' | 'dislike' | null,
 		isOffline: !isOnline
 	};
 };
+

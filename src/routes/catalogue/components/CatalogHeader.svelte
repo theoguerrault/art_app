@@ -1,32 +1,36 @@
 <script lang="ts">
-	import { MagnifyingGlass, X, Heart } from 'phosphor-svelte';
+	import { MagnifyingGlass, X, Heart, ThumbsUp, ThumbsDown } from 'phosphor-svelte';
 
 
 	let {
 		searchQuery = $bindable(''),
 		showFavoritesOnly,
+		showLikesOnly,
+		showDislikesOnly,
 		selectedMovements = $bindable(),
 		headerVisible,
 		movements = [],
 		toggleMovement,
-		onToggleFavorites
+		onToggleFavorites,
+		onToggleLikes,
+		onToggleDislikes
 	}: {
 		searchQuery: string;
 		showFavoritesOnly: boolean;
+		showLikesOnly: boolean;
+		showDislikesOnly: boolean;
 		selectedMovements: number[];
 		headerVisible: boolean;
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		movements: any[];
 		toggleMovement: (id: number) => void;
 		onToggleFavorites: () => void;
+		onToggleLikes: () => void;
+		onToggleDislikes: () => void;
 	} = $props();
 
 	function handleClearSearch() {
 		searchQuery = '';
-	}
-
-	function handleToggleFavorites() {
-		onToggleFavorites();
 	}
 
 	function handleToggleMovement(e: MouseEvent) {
@@ -54,12 +58,35 @@
 		{/if}
 	</div>
 	<div class="filters-bar">
+		<!-- Favoris -->
 		<button 
 			class="filter-pill favorite-pill {showFavoritesOnly ? 'active' : ''}" 
-			onclick={handleToggleFavorites}
+			onclick={onToggleFavorites}
+			aria-pressed={showFavoritesOnly}
+			id="filter-favorites"
 		>
 			<Heart size={16} weight={showFavoritesOnly ? 'fill' : 'regular'} />
 			Favoris
+		</button>
+		<!-- Likes -->
+		<button 
+			class="filter-pill like-pill {showLikesOnly ? 'active' : ''}" 
+			onclick={onToggleLikes}
+			aria-pressed={showLikesOnly}
+			id="filter-likes"
+		>
+			<ThumbsUp size={16} weight={showLikesOnly ? 'fill' : 'regular'} />
+			J'aime
+		</button>
+		<!-- Dislikes -->
+		<button 
+			class="filter-pill dislike-pill {showDislikesOnly ? 'active' : ''}" 
+			onclick={onToggleDislikes}
+			aria-pressed={showDislikesOnly}
+			id="filter-dislikes"
+		>
+			<ThumbsDown size={16} weight={showDislikesOnly ? 'fill' : 'regular'} />
+			J'aime pas
 		</button>
 		<div class="divider"></div>
 		{#each movements as movement (movement.id || movement)}
@@ -176,22 +203,37 @@
 		justify-content: center;
 		gap: 0.4rem;
 		padding: 0 1rem;
-		min-height: 40px; /* Better touch target */
+		min-height: 40px;
 		border-radius: 20px;
 		background-color: var(--color-surface);
 		color: var(--color-text-secondary);
 		font-size: 0.85rem;
 		font-weight: 600;
 		box-shadow: inset 0 0 0 1px var(--color-border);
-		transition: opacity 0.2s ease, transform 0.2s ease;
+		transition: opacity 0.2s ease, transform 0.2s ease, background-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
 		white-space: nowrap;
 		flex-shrink: 0;
 	}
 
+	/* Favoris — red */
 	.filter-pill.favorite-pill.active {
 		background-color: color-mix(in oklch, #ff3b30 15%, transparent);
 		color: #ff3b30;
 		box-shadow: inset 0 0 0 1px #ff3b30;
+	}
+
+	/* Likes — green */
+	.filter-pill.like-pill.active {
+		background-color: color-mix(in oklch, #34c759 15%, transparent);
+		color: #34c759;
+		box-shadow: inset 0 0 0 1px #34c759;
+	}
+
+	/* Dislikes — orange */
+	.filter-pill.dislike-pill.active {
+		background-color: color-mix(in oklch, #ff9500 15%, transparent);
+		color: #ff9500;
+		box-shadow: inset 0 0 0 1px #ff9500;
 	}
 
 	.filter-pill.movement-pill.active {
