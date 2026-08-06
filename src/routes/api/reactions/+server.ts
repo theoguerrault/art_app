@@ -43,6 +43,7 @@ export async function POST(event: RequestEvent) {
       return json({ status: 'added', reaction });
     }
   } catch (err) {
+    console.error('Error in POST /api/reactions:', err);
     return json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
@@ -61,6 +62,7 @@ export async function GET(_event: RequestEvent) {
 
     return json({ likes, dislikes });
   } catch (err) {
+    console.error('Error in GET /api/reactions:', err);
     return json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
