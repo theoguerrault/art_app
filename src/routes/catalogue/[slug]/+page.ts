@@ -18,6 +18,8 @@ export const load: PageLoad = async ({ params }) => {
 	let movement: Movement | null = null;
 	let content: ContentArtwork | null = null;
 	let progress: UserProgress | null = null;
+	let currentReaction: 'like' | 'dislike' | null = null;
+
 
 	if (!isOnline) {
 		const cachedArtworks: Artwork[] = (await readFromLocalCache('cached_artworks')) || [];
@@ -83,8 +85,8 @@ export const load: PageLoad = async ({ params }) => {
 				const artworkId = artwork.id;
 				const likes: number[] = (reactionsData as { likes?: number[]; dislikes?: number[] })?.likes || [];
 				const dislikes: number[] = (reactionsData as { likes?: number[]; dislikes?: number[] })?.dislikes || [];
-				const currentReaction: 'like' | 'dislike' | null =
-					likes.includes(artworkId) ? 'like' : dislikes.includes(artworkId) ? 'dislike' : null;
+				currentReaction = likes.includes(artworkId) ? 'like' : dislikes.includes(artworkId) ? 'dislike' : null;
+
 
 
 				
@@ -156,7 +158,8 @@ export const load: PageLoad = async ({ params }) => {
 	return {
 		lesson,
 		progress,
-		currentReaction: (typeof currentReaction !== 'undefined' ? currentReaction : null) as 'like' | 'dislike' | null
+		currentReaction
 	};
+
 
 };

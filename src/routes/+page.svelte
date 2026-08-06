@@ -20,14 +20,6 @@
 	let isFavorite = $state(data.isFavorite ?? false);
 	let currentReaction = $state<'like' | 'dislike' | null>(data.currentReaction ?? null);
 
-	$effect(() => {
-		const fav = data.isFavorite ?? false;
-		if (isFavorite !== fav) isFavorite = fav;
-	});
-	$effect(() => {
-		const react = data.currentReaction ?? null;
-		if (currentReaction !== react) currentReaction = react;
-	});
 
 
 	// Sync from local cache when offline (no server fetch in component)

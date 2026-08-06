@@ -13,6 +13,15 @@
 	}
 
 	let { artwork, isFavorite, currentReaction = null, onToggleFavorite, onToggleReaction, onOpenCourant, onOpenArtiste }: Props = $props();
+
+	function handleToggleLike() {
+		if (onToggleReaction) onToggleReaction('like');
+	}
+
+	function handleToggleDislike() {
+		if (onToggleReaction) onToggleReaction('dislike');
+	}
+
 </script>
 
 <div class="detail-header">
@@ -37,21 +46,23 @@
 				<SealCheck size={22} weight="fill" />
 			</span>
 		{/if}
-		<button class="action-btn favorite-btn" onclick={onToggleFavorite} aria-label="Toggle Favorite">
+		<button type="button" class="action-btn favorite-btn" onclick={onToggleFavorite} aria-label="Toggle Favorite">
 			<Heart size={24} weight={isFavorite ? 'fill' : 'bold'} color={isFavorite ? '#ff3b30' : 'currentColor'} />
 		</button>
 		{#if onToggleReaction}
 			<button
+				type="button"
 				class="action-btn like-btn"
-				onclick={() => onToggleReaction!('like')}
+				onclick={handleToggleLike}
 				aria-label="J'aime"
 				title="J'aime"
 			>
 				<ThumbsUp size={24} weight={currentReaction === 'like' ? 'fill' : 'bold'} color={currentReaction === 'like' ? '#34c759' : 'currentColor'} />
 			</button>
 			<button
+				type="button"
 				class="action-btn dislike-btn"
-				onclick={() => onToggleReaction!('dislike')}
+				onclick={handleToggleDislike}
 				aria-label="Je n'aime pas"
 				title="Je n'aime pas"
 			>

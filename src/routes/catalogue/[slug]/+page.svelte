@@ -27,10 +27,6 @@
 	let isFavorite = $state(false);
 	let currentReaction = $state<'like' | 'dislike' | null>(data.currentReaction ?? null);
 
-	$effect(() => {
-		const react = data.currentReaction ?? null;
-		if (currentReaction !== react) currentReaction = react;
-	});
 
 
 	// Check local cache only — no component-level GET fetch
