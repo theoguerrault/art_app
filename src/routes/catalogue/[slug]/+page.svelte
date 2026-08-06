@@ -25,6 +25,13 @@
 	let glossaryContent = $state('');
 
 	let isFavorite = $state(false);
+	let currentReaction = $state<'like' | 'dislike' | null>(data.currentReaction ?? null);
+
+	$effect(() => {
+		const react = data.currentReaction ?? null;
+		if (currentReaction !== react) currentReaction = react;
+	});
+
 
 	// Check local cache only — no component-level GET fetch
 	$effect(() => {
@@ -53,6 +60,15 @@
 			await saveToLocalCache(cacheKey, { id: 'favorites', data: cached });
 		}
 	}
+
+	async function toggleReaction(reaction: 'like' | 'dislike') {
+		const res = await apiClient.post('/api/reactions', { artwork_id: lesson.id, reaction });
+		if (res.ok) {
+			const json = await res.json();
+			currentReaction = json.reaction as 'like' | 'dislike' | null;
+		}
+	}
+
 
 	function openGlossary(type: 'artist' | 'movement') {
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -159,10 +175,13 @@
 	<ArtworkDetailHeader
 		artwork={lesson}
 		{isFavorite}
+		{currentReaction}
 		onToggleFavorite={toggleFavorite}
+		onToggleReaction={toggleReaction}
 		onOpenCourant={handleOpenCourant}
 		onOpenArtiste={handleOpenArtiste}
 	/>
+
 
 	<section class="card-display">
 		<ArtworkCard

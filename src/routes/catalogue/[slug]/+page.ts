@@ -62,13 +62,16 @@ export const load: PageLoad = async ({ params }) => {
 			}
 
 			if (artwork) {
-				const [movRes, contRes, progRes, contArtisteRes, contCourantRes] = await Promise.all([
+				const [movRes, contRes, progRes, contArtisteRes, contCourantRes, reactionsData] = await Promise.all([
 					supabase.from('movements').select('id, slug, century, oklch_token, movement_translations(name)').eq('id', artwork.movement_id).maybeSingle(),
 					supabase.from('artwork_translations').select('artwork_id, introduction, main_article, article_portions, verification_status').eq('artwork_id', artwork.id).eq('language_code', 'fr').maybeSingle(),
 					supabase.from('user_artwork_progress').select('artwork_id, box_level, next_review_at').eq('artwork_id', artwork.id).maybeSingle(),
 					supabase.from('artist_translations').select('artist_id, short_description').eq('artist_id', artwork.artist_id).eq('language_code', 'fr').eq('verification_status', 'VERIFIED').maybeSingle(),
-					supabase.from('movement_translations').select('movement_id, short_description').eq('movement_id', artwork.movement_id).eq('language_code', 'fr').eq('verification_status', 'VERIFIED').maybeSingle()
+					supabase.from('movement_translations').select('movement_id, short_description').eq('movement_id', artwork.movement_id).eq('language_code', 'fr').eq('verification_status', 'VERIFIED').maybeSingle(),
+					fetch('/api/reactions').then((r) => r.ok ? r.json() : { likes: [], dislikes: [] })
 				]);
+
+
 
 				if (movRes.data) {
 					movement = { ...(movRes.data as RawCourant), name: (movRes.data as RawCourant).movement_translations?.[0]?.name || (movRes.data as RawCourant).slug } as unknown as Movement;
@@ -77,6 +80,13 @@ export const load: PageLoad = async ({ params }) => {
 				}
 				content = (contRes.data as unknown as ContentArtwork) || null;
 				progress = (progRes.data as unknown as UserProgress) || null;
+				const artworkId = artwork.id;
+				const likes: number[] = (reactionsData as { likes?: number[]; dislikes?: number[] })?.likes || [];
+				const dislikes: number[] = (reactionsData as { likes?: number[]; dislikes?: number[] })?.dislikes || [];
+				const currentReaction: 'like' | 'dislike' | null =
+					likes.includes(artworkId) ? 'like' : dislikes.includes(artworkId) ? 'dislike' : null;
+
+
 				
 				// Attached Glossary Content
 				artwork.glossary = {
@@ -145,6 +155,8 @@ export const load: PageLoad = async ({ params }) => {
 
 	return {
 		lesson,
-		progress
+		progress,
+		currentReaction: (typeof currentReaction !== 'undefined' ? currentReaction : null) as 'like' | 'dislike' | null
 	};
+
 };
