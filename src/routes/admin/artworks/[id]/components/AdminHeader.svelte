@@ -1,18 +1,22 @@
 <script lang="ts">
-	import { ArrowLeft } from 'phosphor-svelte';
+	import { ArrowLeft, Trash, Sparkle } from 'phosphor-svelte';
 	import Button from '$lib/components/ui/Button.svelte';
 
 	let {
 		artwork,
 		generating,
 		checking,
-		generateContent
+		deleting = false,
+		generateContent,
+		deleteArtwork
 	}: {
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		artwork: any;
 		generating: boolean;
 		checking: boolean;
+		deleting?: boolean;
 		generateContent: () => void;
+		deleteArtwork?: () => void;
 	} = $props();
 </script>
 
@@ -29,12 +33,26 @@
 		</div>
 		
 		<div class="action-buttons">
+			{#if deleteArtwork}
+				<Button 
+					variant="danger" 
+					onclick={deleteArtwork} 
+					loading={deleting}
+					disabled={generating || checking}
+					title="Supprimer définitivement cette œuvre"
+				>
+					<Trash size={16} weight="bold" />
+					<span>{deleting ? 'Suppression...' : 'Supprimer'}</span>
+				</Button>
+			{/if}
 			<Button 
 				variant="primary" 
 				onclick={generateContent} 
 				loading={generating || checking}
+				disabled={deleting}
 			>
-				{generating ? 'Génération...' : checking ? 'Vérification...' : 'Générer'}
+				<Sparkle size={16} weight="fill" />
+				<span>{generating ? 'Génération...' : checking ? 'Vérification...' : 'Générer'}</span>
 			</Button>
 		</div>
 	</div>
@@ -90,7 +108,7 @@
 
 	.page-title {
 		font-family: var(--font-body);
-		font-size: 1.6rem;
+		font-size: 1.5rem;
 		font-weight: 800;
 		text-transform: uppercase;
 		letter-spacing: 0.05em;

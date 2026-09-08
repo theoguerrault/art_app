@@ -2,44 +2,57 @@
   import { invalidateAll } from '$app/navigation';
   import { parseMarkdown } from '$lib/utils/markdown';
   import { html } from '$lib/actions/html';
+  import { autosize } from '$lib/actions/autosize';
   import { Sparkle, ArrowLeft, Warning, PencilSimple, Check, X } from 'phosphor-svelte';
   import Button from '$lib/components/ui/Button.svelte';
   import { apiClient } from '$lib/utils/api';
+  import { toast } from '$lib/utils/toast.svelte';
 
   let { data } = $props();
   let movement = $derived(data.movement);
   let content = $derived(data.movement.movement_translations[0]);
+  let isVerified = $derived(content?.verification_status?.toUpperCase() === 'VERIFIED');
   
   let generating = $state(false);
   let validating = $state(false);
+  let unvalidating = $state(false);
   let editing = $state(false);
   let editContent = $state('');
+  let isSaving = $state(false);
 
   async function saveEdit() {
+    if (!editContent.trim()) return;
+    isSaving = true;
     try {
       const res = await apiClient.post(`/api/admin/movements/${movement.id}/edit-description`, { content: editContent });
       if (res.ok) {
-        const json = await res.json();
         await invalidateAll();
         editing = false;
+        toast.success("Description enregistrée");
       } else {
-        alert('Erreur lors de la sauvegarde');
+        toast.error('Erreur lors de la sauvegarde');
       }
-    } catch (e) {
+    } catch {
+      toast.error('Erreur réseau lors de la sauvegarde');
+    } finally {
+      isSaving = false;
     }
   }
 
   async function generateContent() {
-    if (content?.short_description && !confirm('Du contenu existe déjà. Voulez-vous vraiment le regénérer ?')) return;
+    if (content?.short_description && !confirm('Du contenu existe déjà. Voulez-vous vraiment le regénérer par IA ?')) return;
     generating = true;
+    toast.info("Génération du glossaire par IA...");
     try {
       const res = await apiClient.post(`/api/admin/movements/${movement.id}/generate`);
       if (res.ok) {
-        const json = await res.json();
         await invalidateAll();
+        toast.success("Description générée par IA");
       } else {
-        alert('Erreur lors de la génération');
+        toast.error('Erreur lors de la génération');
       }
+    } catch {
+      toast.error('Erreur réseau lors de la génération');
     } finally {
       generating = false;
     }
@@ -50,13 +63,32 @@
     try {
       const res = await apiClient.post(`/api/admin/movements/${movement.id}/validate`);
       if (res.ok) {
-        const json = await res.json();
         await invalidateAll();
+        toast.success("Description validée");
       } else {
-        alert('Erreur lors de la validation');
+        toast.error('Erreur lors de la validation');
       }
+    } catch {
+      toast.error('Erreur réseau');
     } finally {
       validating = false;
+    }
+  }
+
+  async function unvalidateManual() {
+    unvalidating = true;
+    try {
+      const res = await apiClient.post(`/api/admin/movements/${movement.id}/unvalidate`);
+      if (res.ok) {
+        await invalidateAll();
+        toast.info("Statut invalidé");
+      } else {
+        toast.error("Erreur lors de l'invalidation");
+      }
+    } catch {
+      toast.error('Erreur réseau');
+    } finally {
+      unvalidating = false;
     }
   }
 
@@ -68,77 +100,129 @@
     editContent = content?.short_description || '';
     editing = true;
   }
+
+  function handleKeydown(e: KeyboardEvent) {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+      e.preventDefault();
+      saveEdit();
+    } else if (e.key === 'Escape') {
+      e.preventDefault();
+      handleCancelEdit();
+    }
+  }
 </script>
 
 <div class="admin-detail-view">
-  <div class="top-nav">
+  <!-- Sticky Header -->
+  <header class="header-section sticky-header">
     <a data-sveltekit-preload-data="hover" href="/admin/movements" data-sveltekit-prefetch class="back-link">
-      <ArrowLeft size={20} />
-      <span>Retour à la liste</span>
+      <ArrowLeft size={18} weight="bold" />
+      Retour
     </a>
-  </div>
-
-  <div class="detail-header">
-    <div class="header-info">
-      <h1 class="page-title">{(movement.movement_translations?.[0]?.name || '')}</h1>
-      <p class="subtitle">Mouvement Artistique</p>
+    
+    <div class="title-row">
+      <div class="title-info">
+        <h1 class="page-title">{movement.movement_translations?.[0]?.name || ''}</h1>
+        <p class="page-subtitle">Mouvement Artistique</p>
+      </div>
+      
+      <div class="action-buttons">
+        <Button 
+          variant="primary" 
+          onclick={generateContent} 
+          loading={generating} 
+          disabled={generating}
+        >
+          <Sparkle size={16} weight="fill" />
+          <span>{generating ? 'Génération...' : content?.short_description ? 'Régénérer' : 'Générer'}</span>
+        </Button>
+      </div>
     </div>
-    <div class="header-actions">
-      <Button variant="primary" onclick={generateContent} loading={generating} disabled={generating}>
-        <Sparkle size={20} weight="fill" />
-        {content?.short_description ? 'Regénérer le contenu' : 'Générer le contenu'}
-      </Button>
-    </div>
-  </div>
+  </header>
 
-  <div class="content-container">
-    <section class="panel">
-      <div class="panel-header">
-        <h2 class="panel-title mb-0">Contenu (Glossaire)</h2>
+  <div class="mobile-flow">
+    <!-- Status Summary Card -->
+    <div class="summary-card">
+      <div class="summary-header">
+        <span class="summary-label">Statut de vérification</span>
         {#if content?.verification_status}
-          <div class="status-badge {content.verification_status.toLowerCase()}">
+          <div class="status-pill {content.verification_status.toLowerCase()}">
             {content.verification_status}
           </div>
         {:else}
-          <div class="status-badge unknown">VIDE</div>
+          <div class="status-pill empty">VIDE</div>
         {/if}
       </div>
 
-      {#if content?.short_description}
-        <div class="description-section">
-          <div class="section-header">
-            <h3 class="section-subtitle mb-0">Description courte (Affichée à l'utilisateur)</h3>
-            <div class="action-buttons">
-              {#if editing}
-                <Button variant="primary" size="sm" onclick={saveEdit} title="Sauvegarder"><Check size={18} /></Button>
-                <Button variant="outline" size="sm" onclick={handleCancelEdit} title="Annuler"><X size={18} /></Button>
-              {:else}
-                <Button variant="outline" size="sm" onclick={handleStartEdit} title="Éditer"><PencilSimple size={18} /></Button>
-              {/if}
-            </div>
-          </div>
+      {#if isVerified}
+        <Button variant="ghost" size="sm" onclick={unvalidateManual} loading={unvalidating} class="unvalidate-btn">
+          Invalider le contenu
+        </Button>
+      {/if}
+    </div>
 
-          {#if editing}
-            <textarea class="edit-textarea" bind:value={editContent} rows="6"></textarea>
-          {:else}
-            <div class="rich-text statement-text" use:html={parseMarkdown(content.short_description)}></div>
-          {/if}
-          
-          {#if content.verification_status !== 'VERIFIED'}
-            <div class="statement-actions mt-1">
+    <!-- Editorial Description Section -->
+    <section class="editorial-section">
+      <div class="panel-header">
+        <h2 class="panel-title">DESCRIPTION GLOSSAIRE</h2>
+        {#if !editing && content?.short_description}
+          <div class="header-actions">
+            {#if isVerified}
+              <Button variant="outline" size="sm" onclick={handleStartEdit}>
+                <PencilSimple size={14} weight="bold" />
+                Modifier
+              </Button>
+              <Button variant="ghost" size="sm" onclick={unvalidateManual} loading={unvalidating}>
+                <X size={14} weight="bold" />
+                Invalider
+              </Button>
+            {:else}
               <Button variant="primary" size="sm" onclick={validateManual} loading={validating}>
-                Valider ce texte
+                <Check size={14} weight="bold" />
+                Valider
+              </Button>
+              <Button variant="outline" size="sm" onclick={handleStartEdit}>
+                <PencilSimple size={14} weight="bold" />
+                Modifier
+              </Button>
+            {/if}
+          </div>
+        {/if}
+      </div>
+
+      {#if editing}
+        <div class="edit-box">
+          <textarea 
+            class="edit-textarea" 
+            bind:value={editContent} 
+            use:autosize
+            onkeydown={handleKeydown}
+            rows="5"
+            placeholder="Description du mouvement pour le glossaire..."
+          ></textarea>
+
+          <div class="edit-footer">
+            <span class="shortcut-hint">
+              <kbd>⌘</kbd>+<kbd>Entrée</kbd> pour sauvegarder • <kbd>Échap</kbd> pour annuler
+            </span>
+            <div class="edit-actions">
+              <Button variant="ghost" size="sm" onclick={handleCancelEdit}>Annuler</Button>
+              <Button variant="primary" size="sm" onclick={saveEdit} loading={isSaving}>
+                <Check size={14} weight="bold" />
+                Enregistrer
               </Button>
             </div>
-          {/if}
+          </div>
+        </div>
+      {:else if content?.short_description}
+        <div class="statement-card {isVerified ? 'verified' : 'pending'}">
+          <div class="rich-text" use:html={parseMarkdown(content.short_description)}></div>
         </div>
       {:else}
         <div class="empty-state">
-          <div class="empty-icon">
-            <Warning size={32} weight="duotone" />
-          </div>
-          <h3>Aucun contenu</h3>
-          <p>Cliquez sur "Générer le contenu" pour demander à l'IA de rédiger une courte description pour le glossaire.</p>
+          <Warning size={36} weight="duotone" class="empty-icon" />
+          <p class="empty-title">Aucune description disponible</p>
+          <p class="empty-desc">Cliquez sur le bouton "Générer" ci-dessus pour rédiger une notice glossaire via l'IA.</p>
         </div>
       {/if}
     </section>
@@ -146,192 +230,42 @@
 </div>
 
 <style>
-  .admin-detail-view {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-    padding-bottom: 4rem;
-  }
-
-  .top-nav {
-    margin-bottom: -1rem;
-  }
-
-  .back-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: var(--color-text-muted);
-    text-decoration: none;
-    font-weight: 500;
-    transition: color 0.2s ease;
-  }
-
-  .back-link:hover {
-    color: var(--color-primary);
-  }
-
-  .detail-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    flex-wrap: wrap;
-    gap: 1.5rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid var(--color-border-subtle);
-  }
-
-  .page-title {
-    font-family: 'Instrument Serif', serif;
-    font-size: 3rem;
-    font-weight: 400;
-    margin: 0 0 0.5rem 0;
-    color: var(--color-text-primary);
-    line-height: 1.1;
-  }
-
-  .subtitle {
-    font-size: 1.1rem;
-    color: var(--color-text-muted);
-    margin: 0;
-  }
-
-  .header-actions {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-  }
-
-  .content-container {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 2rem;
-  }
-
-  .panel {
-    background-color: transparent;
-    border-radius: 0;
-    padding: 0;
-    box-shadow: none;
-    border: none;
-  }
-
-  .panel-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
-  }
-
-  .panel-title {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--color-text-primary);
-    margin: 0;
-  }
-
-  .status-badge {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.25rem 0.75rem;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-
-  .status-badge.verified {
-    background-color: color-mix(in oklch, var(--color-success) 15%, transparent);
-    color: var(--color-success);
-  }
-
-  .status-badge.pending {
-    background-color: color-mix(in oklch, var(--color-warning) 15%, transparent);
-    color: var(--color-warning);
-  }
-
-  .status-badge.unknown {
-    background-color: color-mix(in oklch, var(--color-text-muted) 15%, transparent);
-    color: var(--color-text-muted);
-  }
-
-  .section-subtitle {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: var(--color-text-secondary);
-    margin: 0 0 1rem 0;
-  }
-
-  .statement-text {
-    background-color: var(--color-bg);
-    border: 1px solid var(--color-border);
-    padding: 1rem;
-    border-radius: 12px;
-  }
-
-  .empty-state {
-    text-align: center;
-    padding: 3rem 1rem;
-    background-color: color-mix(in oklch, var(--color-bg) 50%, transparent);
-    border-radius: 12px;
-    border: 1px dashed var(--color-border);
-  }
-
-  .empty-icon {
-    color: var(--color-text-muted);
-    margin-bottom: 1rem;
-    opacity: 0.5;
-  }
-
-  .empty-state h3 {
-    margin: 0 0 0.5rem 0;
-    color: var(--color-text-primary);
-  }
-
-  .empty-state p {
-    margin: 0;
-    color: var(--color-text-muted);
-    max-width: 400px;
-    margin: 0 auto;
-  }
-
-  .edit-textarea {
-    width: 100%;
-    background: color-mix(in oklch, var(--color-surface) 50%, transparent);
-    border: 1px solid var(--color-border);
-    border-radius: 8px;
-    padding: 0.75rem;
-    color: var(--color-text-primary);
-    font-family: inherit;
-    font-size: 0.95rem;
-    line-height: 1.6;
-    resize: vertical;
-    margin-top: 0.5rem;
-  }
-  
-  .edit-textarea:focus {
-    outline: 2px solid var(--color-primary);
-    border-color: transparent;
-  }
-
-  .mb-0 {
-    margin-bottom: 0 ;
-  }
-
-  .section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-  }
-
-  .action-buttons {
-    display: flex;
-    gap: 0.5rem;
-  }
-
-  .mt-1 {
-    margin-top: 1rem;
-  }
+  .admin-detail-view { display: flex; flex-direction: column; gap: 1.25rem; padding-bottom: 5rem; width: 100%; }
+  .sticky-header { position: sticky; top: 0; z-index: 20; background: color-mix(in oklch, var(--color-bg) 85%, transparent); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); padding: 1rem 1.25rem 1.25rem; margin: -1rem -1.25rem 0; border-bottom: 1px solid var(--color-border-subtle); }
+  .back-link { display: inline-flex; align-items: center; gap: 0.35rem; color: var(--color-text-secondary); font-size: 0.88rem; font-weight: 600; text-decoration: none; margin-bottom: 0.75rem; transition: color 0.2s ease; }
+  .back-link:hover { color: var(--color-primary); }
+  .title-row { display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem; }
+  .title-info { flex: 1 1 200px; }
+  .page-title { font-family: var(--font-body); font-size: 1.5rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-text-primary); margin: 0 0 0.2rem 0; line-height: 1.2; }
+  .page-subtitle { font-size: 0.9rem; color: var(--color-text-secondary); margin: 0; }
+  .action-buttons { display: flex; gap: 0.5rem; }
+  .mobile-flow { display: flex; flex-direction: column; gap: 1.5rem; width: 100%; }
+  .summary-card { padding: 1rem 1.25rem; background: var(--color-surface); border: 1px solid var(--color-border-subtle); border-radius: var(--radius-lg); display: flex; flex-direction: column; gap: 0.75rem; }
+  .summary-header { display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; }
+  .summary-label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-text-muted); }
+  :global(.unvalidate-btn) { width: 100%; margin-top: 0.25rem; }
+  .status-pill { display: inline-flex; align-items: center; padding: 0.25rem 0.65rem; border-radius: var(--radius-pill); font-size: 0.7rem; font-weight: 700; font-family: var(--font-body); text-transform: uppercase; letter-spacing: 0.04em; border: 1px solid transparent; }
+  .status-pill.verified { background: color-mix(in oklch, var(--color-success) 15%, transparent); color: var(--color-success); border-color: color-mix(in oklch, var(--color-success) 30%, transparent); }
+  .status-pill.pending, .status-pill.pending_validation { background: color-mix(in oklch, var(--color-warning) 15%, transparent); color: var(--color-warning); border-color: color-mix(in oklch, var(--color-warning) 30%, transparent); }
+  .status-pill.empty { background: color-mix(in oklch, var(--color-error) 15%, transparent); color: var(--color-error); border-color: color-mix(in oklch, var(--color-error) 30%, transparent); }
+  .editorial-section { display: flex; flex-direction: column; gap: 1rem; }
+  .panel-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--color-border-subtle); padding-bottom: 0.5rem; gap: 0.5rem; flex-wrap: wrap; }
+  .panel-title { font-family: var(--font-body); font-size: 1.05rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-text-primary); margin: 0; }
+  .header-actions { display: flex; gap: 0.5rem; align-items: center; }
+  .statement-card { padding: 1.25rem 1.5rem; border-radius: var(--radius-lg); background: var(--color-surface); border: 1px solid var(--color-border-subtle); line-height: 1.65; }
+  .statement-card.verified { border-color: color-mix(in oklch, var(--color-success) 35%, transparent); background: color-mix(in oklch, var(--color-success) 3%, var(--color-surface)); }
+  .statement-card.pending { border-color: color-mix(in oklch, var(--color-warning) 35%, transparent); background: color-mix(in oklch, var(--color-warning) 3%, var(--color-surface)); }
+  .rich-text { line-height: 1.65; color: var(--color-text-primary); font-size: 0.95rem; }
+  .edit-box { display: flex; flex-direction: column; gap: 0.5rem; }
+  .edit-textarea { width: 100%; background-color: var(--color-surface); color: var(--color-text-primary); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 0.85rem 1rem; font-family: var(--font-body); font-size: 0.95rem; line-height: 1.6; }
+  .edit-textarea:focus { outline: none; border-color: var(--color-primary); }
+  .edit-footer { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.25rem; }
+  .shortcut-hint { font-size: 0.75rem; color: var(--color-text-muted); }
+  .shortcut-hint kbd { background: var(--color-surface-hover); padding: 0.15rem 0.4rem; border-radius: 4px; border: 1px solid var(--color-border-subtle); font-size: 0.7rem; }
+  .edit-actions { display: flex; gap: 0.5rem; margin-left: auto; }
+  .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 3rem 1.5rem; background: var(--color-surface); border-radius: var(--radius-lg); border: 1px dashed var(--color-border); text-align: center; color: var(--color-text-secondary); gap: 0.5rem; }
+  .empty-title { font-weight: 700; font-size: 1rem; color: var(--color-text-primary); margin: 0.5rem 0 0 0; }
+  .empty-desc { font-size: 0.88rem; color: var(--color-text-muted); max-width: 450px; line-height: 1.5; margin: 0; }
+  :global(.empty-icon) { color: var(--color-text-muted); }
 </style>
+

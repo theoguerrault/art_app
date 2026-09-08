@@ -1,4 +1,4 @@
-import type { MCQ, QCMSynthese } from '$lib/types/database';
+import type { MCQ, QCMSynthese } from '../types';
 
 export function createQuizSession(initialQcm: QCMSynthese | MCQ | null, onAnswerCallback?: (result: { score: number; isCorrect: boolean; selectedIndex: number }) => void) {
 	let qcm = $state(initialQcm);

@@ -40,7 +40,8 @@ Execute a temporary Node/Prisma script to insert the required records:
    - Insert into `artists` (slug derived from international name).
    - Insert into `artist_translations` for `fr` (French) and `en` (English).
 3. **Artwork**:
-   - Insert into `artworks` (slug derived from international name, verified image URLs, relations to movement and artist).
+   - Query Wikidata (P195/P276) or Wikipedia for current museum/exhibition location and city (e.g. *"Musée du Louvre, Paris"*).
+   - Insert into `artworks` (slug derived from international name, verified image URLs, relations to movement and artist, and `musee` field).
    - **Crucial**: Set `image_verified: true` in the DB insertion, as you have visually verified the image yourself in Step 2.
    - Insert into `artwork_translations` for `fr` (French title) and `en` (English title).
    - **Constraint**: Leave editorial fields (`introduction`, `main_article`, `short_description`) empty, as AI editorial generation populates article contents separately.
@@ -49,5 +50,6 @@ Execute a temporary Node/Prisma script to insert the required records:
 - Append the new artwork to `/doc/01_product/existing_catalogue.md` under its movement.
 - Remove the artwork from `/doc/01_product/proposed_catalogue.md` if it was listed there.
 - **IMPORTANT**: Always append the new entity records to their respective JSON reference files (`reference_movements.json`, `reference_artists.json`, `reference_artworks.json`) to keep them in sync as the source of truth for database seeding.
-- **Image Validation**: When appending the new artwork to `reference_artworks.json`, explicitly add the field `"image_verified": true` to indicate that you have visually verified the image.
+- **Museum & Image Validation**: When appending the new artwork to `reference_artworks.json`, explicitly add `"musee": "Nom du musée, Ville"` and `"image_verified": true`.
+
 

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="dark">
 	<head>
 		<meta charset="utf-8" />
 		<meta name="description" content="Découvrez une nouvelle œuvre d'art chaque jour. Explorez l'histoire de l'art avec Artichaut." />
@@ -20,7 +20,7 @@
 					if (navLang && /^[a-z]{2}$/.test(navLang)) {
 						document.documentElement.setAttribute('lang', navLang);
 					}
-					var theme = localStorage.getItem('theme') || 'light';
+					var theme = localStorage.getItem('theme') || 'dark';
 					document.documentElement.setAttribute('data-theme', theme);
 				} catch (e) {}
 			})();
@@ -47,9 +47,9 @@
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link rel="preconnect" href="https://upload.wikimedia.org" crossorigin />
-		<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Instrument+Serif:ital,wght@0,400;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+		<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
 		<noscript>
-			<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Instrument+Serif:ital,wght@0,400;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+			<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 		</noscript>
 		%sveltekit.head%
 	</head>
@@ -57,3 +57,4 @@
 		<div class="sveltekit-body-wrapper">%sveltekit.body%</div>
 	</body>
 </html>
+

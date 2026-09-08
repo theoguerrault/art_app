@@ -117,12 +117,13 @@
 	}
 
 	.artwork-title {
-		font-family: 'Instrument Serif', serif;
-		font-size: 2.5rem;
-		font-weight: 400;
+		font-family: var(--font-body);
+		font-size: 2rem;
+		font-weight: 800;
 		margin: 0 0 0.5rem 0;
 		color: var(--color-text-primary);
-		line-height: 1.1;
+		line-height: 1.2;
+		letter-spacing: -0.02em;
 	}
 
 	.actions-row {

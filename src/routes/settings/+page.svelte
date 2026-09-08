@@ -1,8 +1,9 @@
 <script lang="ts">
-	import { Sparkle, User } from 'phosphor-svelte';
-	import { authStore } from '$lib/core/auth.svelte';
+	import { Sparkle } from 'phosphor-svelte';
+	import AccountSection from './components/AccountSection.svelte';
 	import ThemeSelector from './components/ThemeSelector.svelte';
 	import StorageManager from './components/StorageManager.svelte';
+	import AdminSection from './components/AdminSection.svelte';
 
 	let isOnline = $state<boolean>(typeof window !== 'undefined' ? navigator.onLine : true);
 
@@ -19,8 +20,6 @@
 			};
 		}
 	});
-
-
 </script>
 
 <svelte:head>
@@ -39,60 +38,13 @@
 		</p>
 	</header>
 
-	<section class="settings-section" aria-labelledby="account-title">
-		<div class="section-header">
-			<h2 id="account-title" class="section-title">Mon Compte</h2>
-			<p class="section-desc">
-				Gérez votre connexion et la sauvegarde de vos données sur le cloud.
-			</p>
-		</div>
-
-		<div class="storage-card">
-			<div class="status-row">
-				<div class="status-indicator">
-					<div class="theme-icon light-icon user-icon">
-						<User size={22} weight="fill" />
-					</div>
-					<div>
-						<span class="status-title">
-							{#if authStore.user}
-								Connecté en tant que {authStore.user.email}
-							{:else}
-								Mode Anonyme
-							{/if}
-						</span>
-						<span class="status-val">
-							{#if authStore.user}
-								Vos données sont synchronisées avec le cloud.
-							{:else}
-								Vos progrès sont sauvegardés uniquement sur cet appareil.
-							{/if}
-						</span>
-					</div>
-				</div>
-			</div>
-
-			<div class="action-row">
-				<div class="action-info">
-					<strong>Authentification</strong>
-					<span>Rejoignez-nous pour ne jamais perdre votre progression.</span>
-				</div>
-				{#if authStore.user}
-					<button type="button" class="btn-clear" onclick={async () => await authStore.signOut()}>
-						<span>Se déconnecter</span>
-					</button>
-				{:else}
-					<a data-sveltekit-preload-data="hover" href="/auth" data-sveltekit-prefetch class="cta-btn primary cta-auth-btn">
-						Créer un compte
-					</a>
-				{/if}
-			</div>
-		</div>
-	</section>
+	<AccountSection />
 
 	<ThemeSelector />
 
 	<StorageManager {isOnline} />
+
+	<AdminSection />
 
 	<footer class="settings-footer">
 		<p>Coach Art IA • Version 1.0.0 (Client PWA)</p>
@@ -160,31 +112,6 @@
 		line-height: 1.5;
 	}
 
-	.settings-section {
-		display: flex;
-		flex-direction: column;
-		gap: 1.25rem;
-	}
-
-	.section-header {
-		display: flex;
-		flex-direction: column;
-		gap: 0.25rem;
-	}
-
-	.section-title {
-		font-size: 1.5rem;
-		font-weight: 500;
-		color: var(--color-text-primary);
-	}
-
-	.section-desc {
-		font-size: 0.875rem;
-		color: var(--color-text-secondary);
-	}
-
-
-
 	/* Footer */
 	.settings-footer {
 		margin-top: 1rem;
@@ -200,21 +127,5 @@
 
 	.footer-sub {
 		font-size: 0.75rem;
-	}
-
-	.user-icon {
-		border-radius: 50%;
-		width: 2.5rem;
-		height: 2.5rem;
-	}
-
-	.cta-auth-btn {
-		text-decoration: none;
-		padding: 0.5rem 1rem;
-		border-radius: var(--radius-md);
-		font-weight: 600;
-		background: var(--color-primary);
-		color: white;
-		display: inline-block;
 	}
 </style>

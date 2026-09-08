@@ -1,0 +1,29 @@
+[
+  {
+    "original_name": "alphonse-mucha",
+    "slug": "alphonse-mucha",
+    "fr_name": "Alphonse Mucha",
+    "en_name": "Alphonse Mucha",
+    "fr_description": "",
+    "en_description": "",
+    "dates": "1860-1939"
+  },
+  {
+    "original_name": "j-c-leyendecker",
+    "slug": "j-c-leyendecker",
+    "fr_name": "J. C. Leyendecker",
+    "en_name": "J. C. Leyendecker",
+    "fr_description": "",
+    "en_description": "",
+    "dates": "1874-1951"
+  },
+  {
+    "original_name": "gian-lorenzo-bernini",
+    "slug": "gian-lorenzo-bernini",
+    "fr_name": "Gian Lorenzo Bernini",
+    "en_name": "Gian Lorenzo Bernini",
+    "fr_description": "",
+    "en_description": "",
+    "dates": "1598-1680"
+  }
+]

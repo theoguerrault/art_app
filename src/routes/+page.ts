@@ -5,7 +5,7 @@ import type { Artwork, UserProgress, ContentArtwork, ActiveLessonView } from '$l
 import { sanitizeArtwork } from '$lib/utils/artworks';
 
 
-// export const ssr = false; // Client-side rendering enabled for daily storage state logic
+export const ssr = false; // Client-side rendering enabled for instant TTFB & offline daily storage logic
 
 /**
  * Calculates the next review date based on Leitner Box Level rules:

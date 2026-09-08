@@ -1,0 +1,83 @@
+[
+  {
+    "original_name": "zodiac",
+    "slug": "zodiac",
+    "fr_title": "Zodiaque",
+    "en_title": "Zodiac",
+    "image_verified": true,
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/9/90/Alphonse_Mucha_-_Zodiac%2C_1869.jpg",
+    "musee": "Mucha Museum, Prague"
+  },
+  {
+    "original_name": "gismonda",
+    "slug": "gismonda",
+    "fr_title": "Gismonda",
+    "en_title": "Gismonda",
+    "image_verified": true,
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/2/2f/Alfons_Mucha_-_1894_-_Gismonda.jpg",
+    "musee": "Musée d'Orsay, Paris"
+  },
+  {
+    "original_name": "job",
+    "slug": "job",
+    "fr_title": "Job",
+    "en_title": "Job",
+    "image_verified": true,
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/d/df/Mucha-job.jpg",
+    "musee": "Musée des Arts Décoratifs, Paris"
+  },
+  {
+    "original_name": "arrow-collar-man",
+    "slug": "arrow-collar-man",
+    "fr_title": "L'Homme Arrow Collar",
+    "en_title": "The Arrow Collar Man",
+    "image_verified": true,
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/7/7b/Arrow_Collars_and_Shirts_-1927A.jpg",
+    "musee": "National Museum of American Illustration, Newport"
+  },
+  {
+    "original_name": "baby-new-year-1930",
+    "slug": "baby-new-year-1930",
+    "fr_title": "Bébé du Nouvel An 1930 (Saturday Evening Post)",
+    "en_title": "Baby New Year 1930 (Saturday Evening Post)",
+    "image_verified": true,
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/c/c6/Saturday_Evening_Post_Baby_New_Year_1930.jpg",
+    "musee": "National Museum of American Illustration, Newport"
+  },
+  {
+    "original_name": "football-players",
+    "slug": "football-players",
+    "fr_title": "Joueurs de football américain",
+    "en_title": "Football Players",
+    "image_verified": true,
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/5/5c/Leyendecker_Football.jpg",
+    "musee": "National Museum of American Illustration, Newport"
+  },
+  {
+    "original_name": "the-rape-of-proserpina",
+    "slug": "the-rape-of-proserpina",
+    "fr_title": "Le Rapt de Proserpine",
+    "en_title": "The Rape of Proserpina",
+    "image_verified": true,
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/3/36/Rape_of_Prosepina_September_2015-3a.jpg",
+    "musee": "Galerie Borghèse, Rome"
+  },
+  {
+    "original_name": "david-bernini",
+    "slug": "david-bernini",
+    "fr_title": "David",
+    "en_title": "David",
+    "image_verified": true,
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/b/b3/David_by_Bernini%2C_1623-1624%2C_Villa_Borghese%2C_Rome.jpg",
+    "musee": "Galerie Borghèse, Rome"
+  },
+  {
+    "original_name": "medusa-bernini",
+    "slug": "medusa-bernini",
+    "fr_title": "Méduse",
+    "en_title": "Medusa",
+    "image_verified": true,
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/9/95/Medusa_by_Bernini.jpg",
+    "musee": "Musées du Capitole, Rome"
+  }
+]

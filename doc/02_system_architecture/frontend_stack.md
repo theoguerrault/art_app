@@ -43,7 +43,10 @@ The frontend codebase follows a Domain-Driven / Feature-Sliced structure:
 
 ### 2.3 SvelteKit & Service Worker (`@vite-pwa/sveltekit`)
 - **Hybrid Rendering:** Pre-renders static UI shells at build time. Dynamic routes configure client rendering where needed.
-- **Workbox Integration:** Precaches static assets (JS, CSS, fonts) and applies runtime caching (`Stale-While-Revalidate`) for imagery and API payloads.
+### 2.4 Data Layer & SWR In-Memory Caching (`catalogCache.svelte.ts`)
+- **Stale-While-Revalidate (SWR):** Catalogue and artwork data resolve immediately (0ms) from in-memory / IndexedDB cache on client navigation, avoiding network waterfalls inside SvelteKit `load()` functions.
+- **Background Revalidation:** If online, fresh dataset queries execute asynchronously in the background without blocking the UI thread or route transitions.
+- **Prefetching:** Bottom navigation links and artwork cards use `data-sveltekit-preload-data="hover"` and `data-sveltekit-preload-code="eager"` to warm chunks and data before touch release.
 
 ---
 
@@ -54,12 +57,12 @@ The frontend codebase follows a Domain-Driven / Feature-Sliced structure:
 - Primary background is fixed to `#121212` with primary accent `#FA47FF` for active states and action controls.
 - Theme preferences persist in `localStorage` and update `--artwork-hue` dynamically based on the current artwork's movement color token.
 
-### 3.2 Editorial Typography
-- **Headings & Titles:** Utilizes `Instrument Serif` for an editorial artwork presentation.
-- **Interface & Body:** Utilizes clean geometric sans-serif typefaces (`Inter`, `Outfit`, `Geist`) for UI controls and long-form descriptions.
+### 3.2 Typography
+- **Universal Sans-Serif Stack:** Utilizes `Geist` / `Inter` exclusively across all headings, titles, UI controls, metadata, and long-form descriptions for cohesive, sharp visual clarity.
 
 ### 3.3 Layout & View Transitions
-- **View Transitions API:** Executes `document.startViewTransition()` to morph view transitions smoothly during page navigation.
+- **View Transitions API:** Executes `document.startViewTransition()` to morph view transitions smoothly during page navigation with snappier 180ms ease-out curves.
+- **Isolated Shell Elements:** Fixed elements (e.g. `.bottom-nav`) declare `view-transition-name: bottom-nav;` and `contain: layout style;` with `animation: none;` on pseudo-elements, preventing flicker and ensuring native-app fluidity.
 - **Aspect Ratio Pre-allocation:** Explicit `aspect-ratio` CSS declarations on artwork card containers prevent Cumulative Layout Shift (**CLS = 0.00**).
 
 ---

@@ -1,0 +1,23 @@
+[
+  {
+    "original_name": "art-nouveau",
+    "slug": "art-nouveau",
+    "fr_name": "Art Nouveau",
+    "en_name": "Art Nouveau",
+    "century": "Fin XIXe - Début XXe siècle"
+  },
+  {
+    "original_name": "art-deco",
+    "slug": "art-deco",
+    "fr_name": "Art Déco",
+    "en_name": "Art Deco",
+    "century": "1920–1939"
+  },
+  {
+    "original_name": "baroque",
+    "slug": "baroque",
+    "fr_name": "Baroque",
+    "en_name": "Baroque",
+    "century": "XVIIe siècle"
+  }
+]

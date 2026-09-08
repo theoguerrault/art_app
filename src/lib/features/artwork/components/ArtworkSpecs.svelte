@@ -38,20 +38,30 @@
 		flex-wrap: wrap;
 		justify-content: center;
 		align-items: center;
-		gap: 1rem 1.5rem;
+		gap: 0.75rem 1.25rem;
 		padding: 0.65rem 1.35rem;
 		background-color: var(--color-surface);
 		border: 1px solid var(--color-border-subtle);
-		border-radius: 9999px;
+		border-radius: var(--radius-pill);
 		font-size: 0.85rem;
 		color: var(--color-text-secondary);
 		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+		max-width: 100%;
+	}
+
+	@media (max-width: 480px) {
+		.specs-bar {
+			border-radius: var(--radius-lg);
+			padding: 0.75rem 1rem;
+			gap: 0.5rem 0.85rem;
+			font-size: 0.8rem;
+		}
 	}
 
 	.spec-item {
 		display: inline-flex;
 		align-items: center;
-		gap: 0.4rem;
+		gap: 0.45rem;
 		font-weight: 500;
 	}
 

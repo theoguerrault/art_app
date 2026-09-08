@@ -2,10 +2,13 @@
 	import '../app.css';
 	import BottomNav from '$lib/components/BottomNav.svelte';
 	import OfflineBanner from '$lib/components/OfflineBanner.svelte';
+	import SplashScreen from '$lib/components/SplashScreen.svelte';
+	import ToastContainer from '$lib/components/ui/ToastContainer.svelte';
 	import { onNavigate } from '$app/navigation';
 
+	import type { Snippet } from 'svelte';
 	import { page } from '$app/state';
-	let { children } = $props();
+	let { children }: { children: Snippet } = $props();
 
 	onNavigate((navigation) => {
 		if (!document.startViewTransition || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -29,7 +32,10 @@
 </main>
 
 <OfflineBanner />
+<ToastContainer />
 
 {#if page.url.pathname !== '/auth'}
 	<BottomNav />
 {/if}
+
+<SplashScreen />

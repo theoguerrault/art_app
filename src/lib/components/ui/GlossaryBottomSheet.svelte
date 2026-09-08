@@ -29,20 +29,22 @@
   function onPointerMove(e: PointerEvent) {
     if (!isDragging) return;
     const deltaY = e.clientY - startY;
-    if (deltaY > 0) {
-      currentY = deltaY;
-      if (sheetRef) sheetRef.style.transform = `translateY(${currentY}px)`;
-    }
+    currentY = deltaY;
+    if (sheetRef) sheetRef.style.transform = `translateY(${currentY}px)`;
   }
 
   function onPointerUp(e: PointerEvent) {
     if (!isDragging) return;
     isDragging = false;
-    (e.currentTarget as HTMLElement).releasePointerCapture(e.pointerId);
+    try {
+      (e.currentTarget as HTMLElement).releasePointerCapture(e.pointerId);
+    } catch {
+      // ignore in case pointer wasn't captured
+    }
     
     if (sheetRef) {
       sheetRef.style.transition = 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1)';
-      if (currentY > 100) {
+      if (Math.abs(currentY) > 100) {
         close();
         setTimeout(() => {
           if (sheetRef) sheetRef.style.transform = '';
@@ -159,12 +161,12 @@
   }
 
   .sheet-header h2 {
-    font-family: 'Instrument Serif', serif;
-    font-size: 2rem;
-    font-weight: 400;
+    font-family: var(--font-body);
+    font-size: 1.5rem;
+    font-weight: 800;
     margin: 0;
     color: var(--color-text-primary);
-    line-height: 1.1;
+    line-height: 1.2;
   }
 
   .subtitle {

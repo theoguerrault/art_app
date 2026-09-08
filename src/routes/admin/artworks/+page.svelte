@@ -102,11 +102,14 @@
   }
 
   .page-title {
-    font-size: 2rem;
+    font-family: var(--font-body);
+    font-size: 1.5rem;
     font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
     color: var(--color-text-primary);
-    margin-bottom: 1rem;
-    padding: 0;
+    margin: 0 0 1rem 0;
+    line-height: 1.2;
   }
 
   .search-bar {
@@ -251,6 +254,7 @@
   }
 
   .art-title {
+    font-family: var(--font-body);
     font-size: 0.9rem;
     font-weight: 600;
     line-height: 1.25;

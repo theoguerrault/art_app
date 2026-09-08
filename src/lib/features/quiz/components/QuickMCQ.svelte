@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { MCQ, QCMSynthese } from '$lib/types/database';
+	import type { MCQ, QCMSynthese } from '../types';
 	import { createQuizSession } from '../logic/useQuizSession.svelte';
 	import MCQOption from './MCQOption.svelte';
 	import MCQExplanation from './MCQExplanation.svelte';

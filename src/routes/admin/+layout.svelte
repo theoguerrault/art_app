@@ -10,7 +10,7 @@
         <span>Œuvres</span>
       </a>
       <a data-sveltekit-preload-data="hover" href="/admin/artists" data-sveltekit-prefetch class="nav-item" class:active={$page.url.pathname.startsWith('/admin/artists')}>
-        <span>Artists</span>
+        <span>Artistes</span>
       </a>
       <a data-sveltekit-preload-data="hover" href="/admin/movements" data-sveltekit-prefetch class="nav-item" class:active={$page.url.pathname.startsWith('/admin/movements')}>
         <span>Mouvements</span>
@@ -28,6 +28,16 @@
     display: flex;
     min-height: 100vh;
     background-color: var(--color-bg);
+    font-family: var(--font-body);
+  }
+
+  .admin-layout :global(h1),
+  .admin-layout :global(h2),
+  .admin-layout :global(h3),
+  .admin-layout :global(h4),
+  .admin-layout :global(h5),
+  .admin-layout :global(h6) {
+    font-family: var(--font-body);
   }
 
   .admin-sidebar {
@@ -73,8 +83,8 @@
   .admin-content {
     flex: 1;
     overflow-y: auto;
-    padding: 1rem 1.25rem;
-    max-width: 1000px;
+    padding: 1rem 1rem 3rem 1rem;
+    max-width: 600px;
     margin: 0 auto;
     width: 100%;
   }

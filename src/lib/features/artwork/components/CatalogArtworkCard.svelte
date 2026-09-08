@@ -39,19 +39,12 @@
 	);
 </script>
 
-<svelte:head>
-	{#if eager && displaySrc}
-		<link rel="preload" as="image" href={displaySrc} fetchpriority="high" />
-	{/if}
-</svelte:head>
-
 <a 
 	id="artwork-{art.id}" 
 	data-slug={art.slug}
 	href="/catalogue/{art.slug || art.id}" 
 	onclick={handleClick} 
 	onpointerdown={handleClick}
-	data-sveltekit-prefetch 
 	data-sveltekit-preload-data="hover" 
 	class="artwork-card-minimal" 
 	aria-label="Voir {art.title}"

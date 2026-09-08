@@ -6,13 +6,14 @@
  * Detects the user's browser language (e.g., 'fr', 'en', 'es'), returning lowercased 2-letter ISO code.
  * Defaults to 'fr' if non-browser context or unresolvable.
  */
-export function getBrowserLanguage(): string {
+function getBrowserLanguage(): string {
 	if (typeof window !== 'undefined' && window.navigator && window.navigator.language) {
 		const code = window.navigator.language.split('-')[0].toLowerCase();
 		if (code) return code;
 	}
 	return 'fr';
 }
+
 
 /**
  * Returns localized property text from a translations array based on target language or browser locale.

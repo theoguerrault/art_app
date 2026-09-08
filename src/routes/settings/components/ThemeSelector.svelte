@@ -19,7 +19,7 @@
 	<div class="section-header">
 		<h2 id="appearance-title" class="section-title">Apparence</h2>
 		<p class="section-desc">
-			Sélectionnez votre thème d'interface préféré. Par défaut, l'application s'affiche en mode clair.
+			Sélectionnez votre thème d'interface préféré. Par défaut, l'application s'affiche en mode sombre.
 		</p>
 	</div>
 

@@ -25,7 +25,7 @@ For users studying beyond the daily recommendation:
 - **Design System Reference:** Refer to [`ui_design_system.md`](file:///Users/theoguerrault/Documents/Projets/art_app/doc/01_product/ui_design_system.md) for complete visual specs.
 
 ### 2.2 Animated Transitions & Layout Stability
-- **View Transitions:** Navigation across views (`/`, `/catalogue`, `/admin/oeuvres`, `/settings`) applies smooth view transitions.
+- **View Transitions:** Navigation across views (`/`, `/catalogue`, `/settings`) applies smooth view transitions.
 - **Zero Layout Shift:** Image containers pre-allocate exact aspect ratios prior to image loading, preventing Cumulative Layout Shift (CLS = 0.00).
 
 ### 2.3 One-Handed Mobile Ergonomics

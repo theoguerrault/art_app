@@ -80,6 +80,7 @@ CREATE TABLE IF NOT EXISTS public.oeuvres (
     aspect_ratio FLOAT NOT NULL DEFAULT 1.33,
     ordre_dans_courant INT NOT NULL,
     is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    musee VARCHAR(250) NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     UNIQUE (id_courant, ordre_dans_courant)
 );

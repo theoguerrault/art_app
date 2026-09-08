@@ -5,6 +5,7 @@ import { readFromLocalCache, saveToLocalCache } from '$lib/offline/storage';
 import type { Artwork, Movement, ContentArtwork, UserProgress, ActiveLessonView, RawArtwork, RawCourant, RawContentArtwork } from '$lib/types/database';
 import { sanitizeArtwork } from '$lib/utils/artworks';
 import { getLocalizedText } from '$lib/utils/i18n';
+import { getCachedArtworkByIdOrSlug } from '$lib/features/artwork/logic/catalogCache.svelte';
 
 export interface GlossaryContent {
 	artist_description?: string;
@@ -21,11 +22,15 @@ export const load: PageLoad = async ({ params, fetch }) => {
 	let progress: UserProgress | null = null;
 	let currentReaction: 'like' | 'dislike' | null = null;
 
-
 	if (!isOnline) {
-		const cachedArtworks: Artwork[] = (await readFromLocalCache('cached_artworks')) || [];
-		const found = cachedArtworks.find((a) => a.slug === slugOrId || a.id.toString() === slugOrId) || null;
-		artwork = found ? sanitizeArtwork(found) : null;
+		const memArtwork = getCachedArtworkByIdOrSlug(slugOrId);
+		if (memArtwork) {
+			artwork = sanitizeArtwork(memArtwork as Artwork);
+		} else {
+			const cachedArtworks: Artwork[] = (await readFromLocalCache('cached_artworks')) || [];
+			const found = cachedArtworks.find((a) => a.slug === slugOrId || a.id.toString() === slugOrId) || null;
+			artwork = found ? sanitizeArtwork(found) : null;
+		}
 
 		if (artwork) {
 			const cachedMcqs: ContentArtwork[] = (await readFromLocalCache('cached_mcqs')) || [];
@@ -45,8 +50,7 @@ export const load: PageLoad = async ({ params, fetch }) => {
 				query = query.eq('slug', slugOrId);
 			}
 
-			const { data: artData, error: dbErr } = await query.maybeSingle();
-			if (dbErr) console.error("Database error fetching artwork:", dbErr);
+			const { data: artData } = await query.maybeSingle();
 
 			if (artData) {
 				const typedArtData = artData as RawArtwork;

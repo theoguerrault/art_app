@@ -12,6 +12,7 @@ This file lists the artistic movements, artists, and artworks currently present 
 ## 3. Art Global & Art Contemporain
 
 ## 4. Art Nouveau / Symbolisme
+*   **Alphonse Mucha** : *Zodiac*, *Gismonda*, *Job*
 *   **Arnold Böcklin** : *Isle of the Dead*
 *   **Gustav Klimt** : *The Tree of Life*, *The Kiss*, *Portrait of Adele Bloch-Bauer I*
 *   **Gustave Moreau** : *The Apparition*
@@ -20,7 +21,7 @@ This file lists the artistic movements, artists, and artworks currently present 
 *   **Artemisia Gentileschi** : *Judith Slaying Holofernes*
 *   **Caravaggio** : *Bacchus*, *David with the Head of Goliath*, *The Calling of Saint Matthew*
 *   **Diego Velázquez** : *Las Meninas*
-*   **Gian Lorenzo Bernini** : *Apollo and Daphne*
+*   **Gian Lorenzo Bernini** : *Apollo and Daphne*, *The Rape of Proserpina*, *David*, *Medusa*
 *   **Peter Paul Rubens** : *The Descent from the Cross*, *The Rape of the Daughters of Leucippus*, *The Three Graces*
 
 ## 6. Baroque & Rococo
@@ -168,6 +169,7 @@ This file lists the artistic movements, artists, and artworks currently present 
 *   **Louise Bourgeois** : *Maman*
 
 ## Art Déco
+*   **J. C. Leyendecker** : *The Arrow Collar Man*, *Baby New Year 1930 (Saturday Evening Post)*, *Football Players*
 *   **Tamara de Lempicka** : *Autoportrait dans la Bugatti verte*
 
 ## Suprématisme
@@ -214,31 +216,21 @@ This file lists the artistic movements, artists, and artworks currently present 
 ### Dutch Golden Age
 *   **Rembrandt** : *La Ronde de nuit*
 
-## Photographie
-*   **Ansel Adams** : *Moonrise, Hernandez, New Mexico*
-*   **Steve McCurry** : *Afghan Girl*
-*   **Sebastião Salgado** : *Serra Pelada Gold Mine*
-
-## (Updates to existing sections)
-### Art Global & Art Contemporain
-*   **Francis Bacon** : *Three Studies for Figures at the Base of a Crucifixion*
-
-## Haute Renaissance
+### Haute Renaissance
 *   **Titian** : *Venus of Urbino*
 
-## Renaissance
+### Renaissance
 *   **Albrecht Dürer** : *Autoportrait à la fourrure*
 
-## Néoclassicisme
+### Néoclassicisme
 *   **Jacques-Louis David** : *L'Intervention des Sabines*
 
-## Romantisme
+### Romantisme
 *   **Ilya Repin** : *Les Haleurs de la Volga*
 
-## Réalisme
+### Réalisme
 *   **Gustave Courbet** : *Un enterrement à Ornans*
 
-## (Updates to existing sections)
 ### Impressionnisme
 *   **Edgar Degas** : *L'Absinthe*
 
@@ -253,6 +245,7 @@ This file lists the artistic movements, artists, and artworks currently present 
 *   **Max Ernst** : *L'Éléphant Célèbes*
 *   **René Magritte** : *L'Empire des lumières*
 *   **Yves Tanguy** : *Maman, Papa est blessé !*
+*   **Salvador Dalí** : *Dream Caused by the Flight of a Bee Around a Pomegranate a Second Before Awakening*
 
 ## Dadaïsme
 *   **Man Ray** : *Le Violon d'Ingres*
@@ -266,11 +259,3 @@ This file lists the artistic movements, artists, and artworks currently present 
 
 ## Pop Art
 *   **Richard Hamilton** : *Qu'est-ce qui rend exactement les maisons d'aujourd'hui si différentes, si séduisantes ?*
-
-*   **Anselm Kiefer** : *Osiris and Isis*
-*   **Francis Bacon** : *Study after Velázquez's Portrait of Pope Innocent X*
-*   **Lucian Freud** : *Benefits Supervisor Sleeping*
-*   **Max Ernst** : *The Elephant Celebes*
-*   **Salvador Dalí** : *Dream Caused by the Flight of a Bee Around a Pomegranate a Second Before Awakening*
-*   **Andreas Gursky** : *99 Cent II Diptychon*
-*   **Andreas Gursky** : *Rhein II*

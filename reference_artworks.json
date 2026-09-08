@@ -5,7 +5,8 @@
     "fr_title": "Drowning Girl",
     "en_title": "Drowning Girl",
     "image_verified": true,
-    "image_url": "https://en.wikipedia.org/wiki/Special:FilePath/Roy_Lichtenstein_Drowning_Girl.jpg"
+    "image_url": "https://en.wikipedia.org/wiki/Special:FilePath/Roy_Lichtenstein_Drowning_Girl.jpg",
+    "musee": "Museum of Modern Art (MoMA), New York"
   },
   {
     "original_name": "the-art-of-painting",
@@ -13,7 +14,8 @@
     "fr_title": "L'Art de la peinture",
     "en_title": "The Art of Painting",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Jan%20Vermeer%20-%20The%20Art%20of%20Painting%20-%20Google%20Art%20Project.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Jan%20Vermeer%20-%20The%20Art%20of%20Painting%20-%20Google%20Art%20Project.jpg",
+    "musee": "Kunsthistorisches Museum, Vienne"
   },
   {
     "original_name": "the-lacemaker",
@@ -21,7 +23,8 @@
     "fr_title": "La Dentellière",
     "en_title": "The Lacemaker",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/La%20Dentelli%C3%A8re.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/La%20Dentelli%C3%A8re.jpg",
+    "musee": "Musée du Louvre, Paris"
   },
   {
     "original_name": "the-three-graces",
@@ -29,7 +32,8 @@
     "fr_title": "Les trois Grâces",
     "en_title": "The Three Graces",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Rubens%2C%20Peter%20Paul%20(workshop)%20-%20Die%20drei%20Grazien%20-%201620-24.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Rubens%2C%20Peter%20Paul%20(workshop)%20-%20Die%20drei%20Grazien%20-%201620-24.jpg",
+    "musee": "Musée du Prado, Madrid"
   },
   {
     "original_name": "the-young-beggar",
@@ -37,7 +41,8 @@
     "fr_title": "Le Jeune Mendiant",
     "en_title": "The Young Beggar",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Bartolom%C3%A9%20Esteban%20Murillo%20-%20Joven%20mendigo%20(1645-50).jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Bartolom%C3%A9%20Esteban%20Murillo%20-%20Joven%20mendigo%20(1645-50).jpg",
+    "musee": "Musée du Louvre, Paris"
   },
   {
     "original_name": "vitruvian-man",
@@ -45,7 +50,8 @@
     "fr_title": "Homme de Vitruve",
     "en_title": "Vitruvian Man",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Da%20Vinci%20Vitruve%20Luc%20Viatour.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Da%20Vinci%20Vitruve%20Luc%20Viatour.jpg",
+    "musee": "Gallerie dell'Accademia, Venise"
   },
   {
     "original_name": "the-last-supper",
@@ -53,7 +59,8 @@
     "fr_title": "La Cène",
     "en_title": "The Last Supper",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Leonardo%20da%20Vinci%20(1452-1519)%20-%20The%20Last%20Supper%20(1495-1498).jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Leonardo%20da%20Vinci%20(1452-1519)%20-%20The%20Last%20Supper%20(1495-1498).jpg",
+    "musee": "Église Sainte-Marie-des-Grâces, Milan"
   },
   {
     "original_name": "mona-lisa",
@@ -61,7 +68,8 @@
     "fr_title": "La Joconde",
     "en_title": "Mona Lisa",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Mona%20Lisa%2C%20by%20Leonardo%20da%20Vinci%2C%20from%20C2RMF%20natural%20color.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Mona%20Lisa%2C%20by%20Leonardo%20da%20Vinci%2C%20from%20C2RMF%20natural%20color.jpg",
+    "musee": "Musée du Louvre, Paris"
   },
   {
     "original_name": "the-creation-of-adam",
@@ -69,7 +77,8 @@
     "fr_title": "La Création d'Adam",
     "en_title": "The Creation of Adam",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/The%20Creation%20of%20Adam%20perspective%20fix.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/The%20Creation%20of%20Adam%20perspective%20fix.jpg",
+    "musee": "Chapelle Sixtine, Vatican"
   },
   {
     "original_name": "the-school-of-athens",
@@ -77,7 +86,8 @@
     "fr_title": "L'École d'Athènes",
     "en_title": "The School of Athens",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/%22The%20School%20of%20Athens%22%20by%20Raffaello%20Sanzio%20da%20Urbino.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/%22The%20School%20of%20Athens%22%20by%20Raffaello%20Sanzio%20da%20Urbino.jpg",
+    "musee": "Musées du Vatican, Vatican"
   },
   {
     "original_name": "sistine-madonna",
@@ -85,7 +95,8 @@
     "fr_title": "La Madone Sixtine",
     "en_title": "Sistine Madonna",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Raphael%20-%20The%20Sistine%20Madonna%20-%20Google%20Arts%20%26%20Culture.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Raphael%20-%20The%20Sistine%20Madonna%20-%20Google%20Arts%20%26%20Culture.jpg",
+    "musee": "Gemäldegalerie Alte Meister, Dresde"
   },
   {
     "original_name": "the-ballet-class",
@@ -93,7 +104,8 @@
     "fr_title": "La Classe de danse",
     "en_title": "The Ballet Class",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Edgar%20Degas%20-%20The%20Ballet%20Class%20-%20Google%20Art%20Project.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Edgar%20Degas%20-%20The%20Ballet%20Class%20-%20Google%20Art%20Project.jpg",
+    "musee": "Musée d'Orsay, Paris"
   },
   {
     "original_name": "l-absinthe",
@@ -101,7 +113,8 @@
     "fr_title": "L'Absinthe",
     "en_title": "L'Absinthe",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Edgar%20Degas%20-%20In%20a%20Caf%C3%A9%20-%20Google%20Art%20Project%202.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Edgar%20Degas%20-%20In%20a%20Caf%C3%A9%20-%20Google%20Art%20Project%202.jpg",
+    "musee": "Musée d'Orsay, Paris"
   },
   {
     "original_name": "the-potato-eaters",
@@ -109,7 +122,8 @@
     "fr_title": "Les Mangeurs de pommes de terre",
     "en_title": "The Potato Eaters",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Van-willem-vincent-gogh-die-kartoffelesser-03850.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Van-willem-vincent-gogh-die-kartoffelesser-03850.jpg",
+    "musee": "Musée Van Gogh, Amsterdam"
   },
   {
     "original_name": "kiss-of-judas",
@@ -117,7 +131,8 @@
     "fr_title": "Le Baiser de Judas",
     "en_title": "Kiss of Judas",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Giotto%20di%20Bondone%20-%20No.%2031%20Scenes%20from%20the%20Life%20of%20Christ%20-%2015.%20The%20Arrest%20of%20Christ%20(Kiss%20of%20Judas)%20-%20WGA09216.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Giotto%20di%20Bondone%20-%20No.%2031%20Scenes%20from%20the%20Life%20of%20Christ%20-%2015.%20The%20Arrest%20of%20Christ%20(Kiss%20of%20Judas)%20-%20WGA09216.jpg",
+    "musee": "Chapelle des Scrovegni, Padoue"
   },
   {
     "original_name": "the-clothed-maja",
@@ -125,7 +140,8 @@
     "fr_title": "La Maja vêtue",
     "en_title": "The Clothed Maja",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Goya%20Maja%20ubrana2.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Goya%20Maja%20ubrana2.jpg",
+    "musee": "Musée du Prado, Madrid"
   },
   {
     "original_name": "the-card-players",
@@ -133,7 +149,8 @@
     "fr_title": "Les Joueurs de cartes",
     "en_title": "The Card Players",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Paul%20C%C3%A9zanne%2C%20Les%20joueurs%20de%20carte%20(1892-95).jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Paul%20C%C3%A9zanne%2C%20Les%20joueurs%20de%20carte%20(1892-95).jpg",
+    "musee": "Musée d'Orsay, Paris"
   },
   {
     "original_name": "arearea",
@@ -141,7 +158,8 @@
     "fr_title": "Arearea",
     "en_title": "Arearea",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Paul%20Gauguin%20-%20Arearea%20-%20Google%20Art%20Project.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Paul%20Gauguin%20-%20Arearea%20-%20Google%20Art%20Project.jpg",
+    "musee": "Musée d'Orsay, Paris"
   },
   {
     "original_name": "the-yellow-christ",
@@ -149,7 +167,8 @@
     "fr_title": "Le Christ jaune",
     "en_title": "The Yellow Christ",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Paul%20Gauguin%20-%20The%20Yellow%20Christ%20(Le%20Christ%20jaune)%201889.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Paul%20Gauguin%20-%20The%20Yellow%20Christ%20(Le%20Christ%20jaune)%201889.jpg",
+    "musee": "Albright-Knox Art Gallery, Buffalo"
   },
   {
     "original_name": "the-angelus",
@@ -157,7 +176,8 @@
     "fr_title": "L'Angélus",
     "en_title": "The Angelus",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/JEAN-FRAN%C3%87OIS%20MILLET%20-%20El%20%C3%81ngelus%20(Museo%20de%20Orsay%2C%201857-1859.%20%C3%93leo%20sobre%20lienzo%2C%2055.5%20x%2066%20cm).jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/JEAN-FRAN%C3%87OIS%20MILLET%20-%20El%20%C3%81ngelus%20(Museo%20de%20Orsay%2C%201857-1859.%20%C3%93leo%20sobre%20lienzo%2C%2055.5%20x%2066%20cm).jpg",
+    "musee": "Musée d'Orsay, Paris"
   },
   {
     "original_name": "a-burial-at-ornans",
@@ -173,7 +193,8 @@
     "fr_title": "Melencolia",
     "en_title": "Melencolia I",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Albrecht%20D%C3%BCrer%20-%20Melencolia%20I%20-%20Google%20Art%20Project%20(427760).jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Albrecht%20D%C3%BCrer%20-%20Melencolia%20I%20-%20Google%20Art%20Project%20(427760).jpg",
+    "musee": "British Museum, Londres"
   },
   {
     "original_name": "the-burial-of-the-count-of-orgaz",
@@ -181,7 +202,8 @@
     "fr_title": "L'Enterrement du comte d'Orgaz",
     "en_title": "The Burial of the Count of Orgaz",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/El%20Greco%20-%20The%20Burial%20of%20the%20Count%20of%20Orgaz.JPG"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/El%20Greco%20-%20The%20Burial%20of%20the%20Count%20of%20Orgaz.JPG",
+    "musee": "Église Santo Tomé, Tolède"
   },
   {
     "original_name": "the-slave-ship",
@@ -189,7 +211,8 @@
     "fr_title": "Le Négrier",
     "en_title": "The Slave Ship",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Slave-ship.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Slave-ship.jpg",
+    "musee": "Museum of Fine Arts, Boston"
   },
   {
     "original_name": "the-oath-of-the-horatii",
@@ -197,7 +220,8 @@
     "fr_title": "Le Serment des Horaces",
     "en_title": "The Oath of the Horatii",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Le%20Serment%20des%20Horaces%20-%20Jacques-Louis%20David%20-%20Mus%C3%A9e%20du%20Louvre%20Peintures%20INV%203692%20%3B%20MR%201432.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Le%20Serment%20des%20Horaces%20-%20Jacques-Louis%20David%20-%20Mus%C3%A9e%20du%20Louvre%20Peintures%20INV%203692%20%3B%20MR%201432.jpg",
+    "musee": "Musée du Louvre, Paris"
   },
   {
     "original_name": "grande-odalisque",
@@ -205,7 +229,8 @@
     "fr_title": "La Grande Odalisque",
     "en_title": "Grande Odalisque",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/La%20grande%20odalisque%20-%20Jean-Auguste%20Dominique%20Ingres%20-%20Mus%C3%A9e%20du%20Louvre%20Peintures%20RF%201158.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/La%20grande%20odalisque%20-%20Jean-Auguste%20Dominique%20Ingres%20-%20Mus%C3%A9e%20du%20Louvre%20Peintures%20RF%201158.jpg",
+    "musee": "Musée du Louvre, Paris"
   },
   {
     "original_name": "the-fighting-temeraire",
@@ -213,7 +238,8 @@
     "fr_title": "Le Dernier Voyage du Téméraire",
     "en_title": "The Fighting Temeraire",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Turner%2C%20J.%20M.%20W.%20-%20The%20Fighting%20T%C3%A9m%C3%A9raire%20tugged%20to%20her%20last%20Berth%20to%20be%20broken.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Turner%2C%20J.%20M.%20W.%20-%20The%20Fighting%20T%C3%A9m%C3%A9raire%20tugged%20to%20her%20last%20Berth%20to%20be%20broken.jpg",
+    "musee": "National Gallery, Londres"
   },
   {
     "original_name": "rain-steam-and-speed-the-great-western-railway",
@@ -221,7 +247,8 @@
     "fr_title": "Pluie, Vapeur et Vitesse",
     "en_title": "Rain, Steam and Speed – The Great Western Railway",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Turner%20-%20Rain%2C%20Steam%20and%20Speed%20-%20National%20Gallery%20file.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Turner%20-%20Rain%2C%20Steam%20and%20Speed%20-%20National%20Gallery%20file.jpg",
+    "musee": "National Gallery, Londres"
   },
   {
     "original_name": "girl-with-a-pearl-earring",
@@ -229,7 +256,8 @@
     "fr_title": "La Jeune Fille à la perle",
     "en_title": "Girl with a Pearl Earring",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/1665%20Girl%20with%20a%20Pearl%20Earring.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/1665%20Girl%20with%20a%20Pearl%20Earring.jpg",
+    "musee": "Mauritshuis, La Haye"
   },
   {
     "original_name": "the-milkmaid",
@@ -237,7 +265,8 @@
     "fr_title": "La Laitière",
     "en_title": "The Milkmaid",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Johannes%20Vermeer%20-%20Het%20melkmeisje%20-%20Google%20Art%20Project.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Johannes%20Vermeer%20-%20Het%20melkmeisje%20-%20Google%20Art%20Project.jpg",
+    "musee": "Rijksmuseum, Amsterdam"
   },
   {
     "original_name": "the-goldfinch",
@@ -245,7 +274,8 @@
     "fr_title": "Le Chardonneret",
     "en_title": "The Goldfinch",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Carel%20Fabritius%20-%20The%20Goldfinch%20-%20605%20-%20Mauritshuis.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Carel%20Fabritius%20-%20The%20Goldfinch%20-%20605%20-%20Mauritshuis.jpg",
+    "musee": "Mauritshuis, La Haye"
   },
   {
     "original_name": "the-tree-of-life",
@@ -253,7 +283,8 @@
     "fr_title": "L'Arbre de Vie, Frise Stoclet",
     "en_title": "The Tree of Life",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Klimt%20-%20Nine%20Cartoons%20for%20the%20Stoclet%20Frieze-%20Part%204%2C%20Part%20of%20the%20tree%20of%20life%20(1910-11).jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Klimt%20-%20Nine%20Cartoons%20for%20the%20Stoclet%20Frieze-%20Part%204%2C%20Part%20of%20the%20tree%20of%20life%20(1910-11).jpg",
+    "musee": "Musée des arts appliqués (MAK), Vienne"
   },
   {
     "original_name": "the-descent-from-the-cross",
@@ -261,7 +292,8 @@
     "fr_title": "Descente de croix",
     "en_title": "The Descent from the Cross",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Peter%20Paul%20Rubens%20-%20Descent%20from%20the%20cross%20(1617).jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Peter%20Paul%20Rubens%20-%20Descent%20from%20the%20cross%20(1617).jpg",
+    "musee": "Cathédrale Notre-Dame, Anvers"
   },
   {
     "original_name": "madonna-with-the-long-neck",
@@ -269,7 +301,8 @@
     "fr_title": "La Vierge au long cou",
     "en_title": "Madonna with the Long Neck",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Parmigianino%20-%20Madonna%20and%20Child%20with%20Angels%2C%20known%20as%20the%20Madonna%20with%20the%20Long%20Neck.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Parmigianino%20-%20Madonna%20and%20Child%20with%20Angels%2C%20known%20as%20the%20Madonna%20with%20the%20Long%20Neck.jpg",
+    "musee": "Galleria degli Uffizi, Florence"
   },
   {
     "original_name": "the-anatomy-lesson-of-dr-nicolaes-tulp",
@@ -277,7 +310,8 @@
     "fr_title": "La Leçon d'anatomie du docteur Tulp",
     "en_title": "The Anatomy Lesson of Dr. Nicolaes Tulp",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Rembrandt%20-%20The%20Anatomy%20Lesson%20of%20Dr%20Nicolaes%20Tulp.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Rembrandt%20-%20The%20Anatomy%20Lesson%20of%20Dr%20Nicolaes%20Tulp.jpg",
+    "musee": "Mauritshuis, La Haye"
   },
   {
     "original_name": "isle-of-the-dead",
@@ -285,7 +319,8 @@
     "fr_title": "L'Île des morts",
     "en_title": "Isle of the Dead",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Arnold%20B%C3%B6cklin%20-%20Die%20Toteninsel%20III%20(Alte%20Nationalgalerie%2C%20Berlin).jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Arnold%20B%C3%B6cklin%20-%20Die%20Toteninsel%20III%20(Alte%20Nationalgalerie%2C%20Berlin).jpg",
+    "musee": "Kunstmuseum, Bâle"
   },
   {
     "original_name": "the-kiss",
@@ -301,7 +336,8 @@
     "fr_title": "Portrait d'Adele Bloch-Bauer I",
     "en_title": "Portrait of Adele Bloch-Bauer I",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustav%20Klimt%2C%201907%2C%20Adele%20Bloch-Bauer%20I%2C%20Neue%20Galerie%20New%20York.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustav%20Klimt%2C%201907%2C%20Adele%20Bloch-Bauer%20I%2C%20Neue%20Galerie%20New%20York.jpg",
+    "musee": "Neue Galerie, New York"
   },
   {
     "original_name": "the-apparition",
@@ -309,7 +345,8 @@
     "fr_title": "L'Apparition",
     "en_title": "The Apparition",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustave%20Moreau%20A%20apari%C3%A7%C3%A3o.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustave%20Moreau%20A%20apari%C3%A7%C3%A3o.jpg",
+    "musee": "Musée d'Orsay, Paris"
   },
   {
     "original_name": "judith-slaying-holofernes",
@@ -317,7 +354,8 @@
     "fr_title": "Judith décapitant Holopherne",
     "en_title": "Judith Slaying Holofernes",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Artemisia%20Gentileschi%20-%20Judith%20Beheading%20Holofernes%20-%20WGA8563.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Artemisia%20Gentileschi%20-%20Judith%20Beheading%20Holofernes%20-%20WGA8563.jpg",
+    "musee": "Galleria degli Uffizi, Florence"
   },
   {
     "original_name": "las-meninas",
@@ -325,7 +363,8 @@
     "fr_title": "Les Ménines",
     "en_title": "Las Meninas",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Las%20Meninas%2C%20by%20Diego%20Vel%C3%A1zquez%2C%20from%20Prado%20in%20Google%20Earth.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Las%20Meninas%2C%20by%20Diego%20Vel%C3%A1zquez%2C%20from%20Prado%20in%20Google%20Earth.jpg",
+    "musee": "Musée du Prado, Madrid"
   },
   {
     "original_name": "apollo-and-daphne",
@@ -333,7 +372,8 @@
     "fr_title": "Apollon et Daphné",
     "en_title": "Apollo and Daphne",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Apollo%20and%20Daphne%20(Bernini)%20(cropped).jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Apollo%20and%20Daphne%20(Bernini)%20(cropped).jpg",
+    "musee": "Galerie Borghèse, Rome"
   },
   {
     "original_name": "bacchus",
@@ -341,7 +381,8 @@
     "fr_title": "Bacchus",
     "en_title": "Bacchus",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Baco%2C%20por%20Caravaggio.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Baco%2C%20por%20Caravaggio.jpg",
+    "musee": "Galleria degli Uffizi, Florence"
   },
   {
     "original_name": "david-with-the-head-of-goliath",
@@ -349,7 +390,8 @@
     "fr_title": "David avec la tête de Goliath",
     "en_title": "David with the Head of Goliath",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/David%20with%20the%20Head%20of%20Goliath-Caravaggio%20(c.1606-7).jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/David%20with%20the%20Head%20of%20Goliath-Caravaggio%20(c.1606-7).jpg",
+    "musee": "Galerie Borghèse, Rome"
   },
   {
     "original_name": "the-calling-of-saint-matthew",
@@ -357,7 +399,8 @@
     "fr_title": "La Vocation de saint Matthieu",
     "en_title": "The Calling of Saint Matthew",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Caravaggio%20%E2%80%94%20The%20Calling%20of%20Saint%20Matthew.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Caravaggio%20%E2%80%94%20The%20Calling%20of%20Saint%20Matthew.jpg",
+    "musee": "Église Saint-Louis-des-Français, Rome"
   },
   {
     "original_name": "the-rape-of-the-daughters-of-leucippus",
@@ -365,7 +408,8 @@
     "fr_title": "L'Enlèvement des filles de Leucippe",
     "en_title": "The Rape of the Daughters of Leucippus",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Peter%20Paul%20Rubens%20-%20The%20Rape%20of%20the%20Daughters%20of%20Leucippus.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Peter%20Paul%20Rubens%20-%20The%20Rape%20of%20the%20Daughters%20of%20Leucippus.jpg",
+    "musee": "Alte Pinakothek, Munich"
   },
   {
     "original_name": "pierrot",
@@ -373,7 +417,8 @@
     "fr_title": "Pierrot",
     "en_title": "Pierrot",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Pierrot%20-%20Antoine%20Watteau%20-%20Mus%C3%A9e%20du%20Louvre%20Peintures%20MI%201121%20-%20apr%C3%A8s%20restauration%202024.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Pierrot%20-%20Antoine%20Watteau%20-%20Mus%C3%A9e%20du%20Louvre%20Peintures%20MI%201121%20-%20apr%C3%A8s%20restauration%202024.jpg",
+    "musee": "Musée du Louvre, Paris"
   },
   {
     "original_name": "apollo-in-the-forge-of-vulcan",
@@ -381,7 +426,8 @@
     "fr_title": "La Forge de Vulcain",
     "en_title": "Apollo in the Forge of Vulcan",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Vel%C3%A1zquez%20-%20La%20Fragua%20de%20Vulcano%20(Museo%20del%20Prado%2C%201630).jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Vel%C3%A1zquez%20-%20La%20Fragua%20de%20Vulcano%20(Museo%20del%20Prado%2C%201630).jpg",
+    "musee": "Musée du Prado, Madrid"
   },
   {
     "original_name": "the-triumph-of-bacchus",
@@ -389,7 +435,8 @@
     "fr_title": "Le Triomphe de Bacchus",
     "en_title": "The Triumph of Bacchus",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Vel%C3%A1zquez%20-%20El%20Triunfo%20de%20Baco%20o%20Los%20Borrachos%20(Museo%20del%20Prado%2C%201628-29).jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Vel%C3%A1zquez%20-%20El%20Triunfo%20de%20Baco%20o%20Los%20Borrachos%20(Museo%20del%20Prado%2C%201628-29).jpg",
+    "musee": "Musée du Prado, Madrid"
   },
   {
     "original_name": "agnus-dei",
@@ -397,7 +444,8 @@
     "fr_title": "Agnus Dei",
     "en_title": "Agnus Dei",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Francisco%20de%20Zurbar%C3%A1n%20006.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Francisco%20de%20Zurbar%C3%A1n%20006.jpg",
+    "musee": "Musée du Prado, Madrid"
   },
   {
     "original_name": "saint-serapion",
@@ -405,7 +453,8 @@
     "fr_title": "Saint Sérapion",
     "en_title": "Saint Serapion",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/San%20Serapio%2C%20por%20Francisco%20de%20Zurbar%C3%A1n.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/San%20Serapio%2C%20por%20Francisco%20de%20Zurbar%C3%A1n.jpg",
+    "musee": "Wadsworth Atheneum, Hartford"
   },
   {
     "original_name": "the-triumph-of-venus",
@@ -413,7 +462,8 @@
     "fr_title": "Le Triomphe de Vénus",
     "en_title": "The Triumph of Venus",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Fran%C3%A7ois%20Boucher%20-%20The%20Triumph%20of%20Venus%20-%20Google%20Art%20Project.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Fran%C3%A7ois%20Boucher%20-%20The%20Triumph%20of%20Venus%20-%20Google%20Art%20Project.jpg",
+    "musee": "Nationalmuseum, Stockholm"
   },
   {
     "original_name": "blond-odalisque",
@@ -421,7 +471,8 @@
     "fr_title": "Jeune fille allongée",
     "en_title": "Blond Odalisque",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Resting%20Girl%20by%20Fran%C3%A7ois%20Boucher%20(1753)%20-%20Alte%20Pinakothek%20-%20Munich%20-%20Germany%202017%20(crop).jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Resting%20Girl%20by%20Fran%C3%A7ois%20Boucher%20(1753)%20-%20Alte%20Pinakothek%20-%20Munich%20-%20Germany%202017%20(crop).jpg",
+    "musee": "Alte Pinakothek, Munich"
   },
   {
     "original_name": "magdalene-with-the-smoking-flame",
@@ -429,7 +480,8 @@
     "fr_title": "La Madeleine à la veilleuse",
     "en_title": "Magdalene with the Smoking Flame",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/La%20Tour%20-%20La%20Madeleine%20%C3%A0%20la%20veilleuse%20dite%20La%20Madeleine%20Terff%2C%20vers%201642%20-%201644%2C%20RF%201949%2011.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/La%20Tour%20-%20La%20Madeleine%20%C3%A0%20la%20veilleuse%20dite%20La%20Madeleine%20Terff%2C%20vers%201642%20-%201644%2C%20RF%201949%2011.jpg",
+    "musee": "Musée du Louvre, Paris"
   },
   {
     "original_name": "the-cheat-with-the-ace-of-diamonds",
@@ -437,7 +489,8 @@
     "fr_title": "Le Tricheur à l'as de carreau",
     "en_title": "The Cheat with the Ace of Diamonds",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Le%20Tricheur%20%C3%A0%20l'as%20de%20carreau%20-%20Georges%20de%20La%20Tour%20-%20Mus%C3%A9e%20du%20Louvre%20Peintures%20RF%201972%208.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Le%20Tricheur%20%C3%A0%20l'as%20de%20carreau%20-%20Georges%20de%20La%20Tour%20-%20Mus%C3%A9e%20du%20Louvre%20Peintures%20RF%201972%208.jpg",
+    "musee": "Musée du Louvre, Paris"
   },
   {
     "original_name": "portrait-of-louis-xiv",
@@ -445,7 +498,8 @@
     "fr_title": "Louis XIV, roi de France",
     "en_title": "Portrait of Louis XIV",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Portrait%20of%20Louis%20XIV%20of%20France%20in%20Coronation%20Robes%20(by%20Hyacinthe%20Rigaud)%20-%20Louvre%20Museum.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Portrait%20of%20Louis%20XIV%20of%20France%20in%20Coronation%20Robes%20(by%20Hyacinthe%20Rigaud)%20-%20Louvre%20Museum.jpg",
+    "musee": "Musée du Louvre, Paris"
   },
   {
     "original_name": "the-lock",
@@ -453,7 +507,8 @@
     "fr_title": "Le Verrou",
     "en_title": "The Lock",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Le%20Verrou%20-%20Jean-Honor%C3%A9%20Fragonard%20-%20Mus%C3%A9e%20du%20Louvre%20Peintures%20RF%201974%202.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Le%20Verrou%20-%20Jean-Honor%C3%A9%20Fragonard%20-%20Mus%C3%A9e%20du%20Louvre%20Peintures%20RF%201974%202.jpg",
+    "musee": "Musée du Louvre, Paris"
   },
   {
     "original_name": "the-swing",
@@ -461,7 +516,8 @@
     "fr_title": "Les Hasards Heureux de l'Escarpolette",
     "en_title": "The Swing",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Fragonard%2C%20The%20Swing.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Fragonard%2C%20The%20Swing.jpg",
+    "musee": "Wallace Collection, Londres"
   },
   {
     "original_name": "self-portrait-in-a-straw-hat",
@@ -469,7 +525,8 @@
     "fr_title": "Autoportrait au chapeau de paille",
     "en_title": "Self Portrait in a Straw Hat",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Self-portrait%20in%20a%20Straw%20Hat%20by%20Elisabeth-Louise%20Vig%C3%A9e-Lebrun.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Self-portrait%20in%20a%20Straw%20Hat%20by%20Elisabeth-Louise%20Vig%C3%A9e-Lebrun.jpg",
+    "musee": "National Gallery, Londres"
   },
   {
     "original_name": "marie-antoinette-with-a-rose",
@@ -477,7 +534,8 @@
     "fr_title": "Marie-Antoinette dit « à la Rose »",
     "en_title": "Marie Antoinette with a Rose",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Louise%20Elisabeth%20Vig%C3%A9e-Lebrun%20-%20Marie-Antoinette%20dit%20%C2%AB%20%C3%A0%20la%20Rose%20%C2%BB%20-%20Google%20Art%20Project.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Louise%20Elisabeth%20Vig%C3%A9e-Lebrun%20-%20Marie-Antoinette%20dit%20%C2%AB%20%C3%A0%20la%20Rose%20%C2%BB%20-%20Google%20Art%20Project.jpg",
+    "musee": "Château de Versailles, Versailles"
   },
   {
     "original_name": "transfiguration",
@@ -485,7 +543,8 @@
     "fr_title": "La Transfiguration",
     "en_title": "Transfiguration",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Transfigurazione%20(Raffaello)%20September%202015-1a.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Transfigurazione%20(Raffaello)%20September%202015-1a.jpg",
+    "musee": "Pinacothèque vaticane, Vatican"
   },
   {
     "original_name": "bacchus-and-ariadne",
@@ -493,7 +552,8 @@
     "fr_title": "Bacchus et Ariane",
     "en_title": "Bacchus and Ariadne",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Titian%20Bacchus%20and%20Ariadne.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Titian%20Bacchus%20and%20Ariadne.jpg",
+    "musee": "National Gallery, Londres"
   },
   {
     "original_name": "assumption-of-the-virgin",
@@ -501,7 +561,8 @@
     "fr_title": "L'Assomption de la Vierge",
     "en_title": "Assumption of the Virgin",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Tizian%20041.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Tizian%20041.jpg",
+    "musee": "Basilique Santa Maria Gloriosa dei Frari, Venise"
   },
   {
     "original_name": "girls-at-the-piano",
@@ -509,7 +570,8 @@
     "fr_title": "Jeunes Filles au piano",
     "en_title": "Girls at the Piano",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Auguste%20Renoir%20-%20Young%20Girls%20at%20the%20Piano%20-%20Google%20Art%20Project.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Auguste%20Renoir%20-%20Young%20Girls%20at%20the%20Piano%20-%20Google%20Art%20Project.jpg",
+    "musee": "Musée d'Orsay, Paris"
   },
   {
     "original_name": "venus-of-urbino",
@@ -517,7 +579,8 @@
     "fr_title": "Vénus d'Urbin",
     "en_title": "Venus of Urbino",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Tiziano's%20Venere%20di%20Urbino%20(from%20The%20History%20BLog).jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Tiziano's%20Venere%20di%20Urbino%20(from%20The%20History%20BLog).jpg",
+    "musee": "Galleria degli Uffizi, Florence"
   },
   {
     "original_name": "bal-du-moulin-de-la-galette",
@@ -525,7 +588,8 @@
     "fr_title": "Bal du moulin de la Galette",
     "en_title": "Bal du moulin de la Galette",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Renoir%2C%20Pierre-Auguste%20-%20Dance%20at%20Le%20Moulin%20de%20la%20Galette%2C%201876.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Renoir%2C%20Pierre-Auguste%20-%20Dance%20at%20Le%20Moulin%20de%20la%20Galette%2C%201876.jpg",
+    "musee": "Musée d'Orsay, Paris"
   },
   {
     "original_name": "luncheon-of-the-boating-party",
@@ -533,7 +597,8 @@
     "fr_title": "Le Déjeuner des canotiers",
     "en_title": "Luncheon of the Boating Party",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Pierre-Auguste%20Renoir%20-%20Luncheon%20of%20the%20Boating%20Party%20-%20Google%20Art%20Project.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Pierre-Auguste%20Renoir%20-%20Luncheon%20of%20the%20Boating%20Party%20-%20Google%20Art%20Project.jpg",
+    "musee": "The Phillips Collection, Washington"
   },
   {
     "original_name": "the-umbrellas",
@@ -541,7 +606,8 @@
     "fr_title": "Les Parapluies",
     "en_title": "The Umbrellas",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Pierre-Auguste%20Renoir%2C%20The%20Umbrellas%2C%20ca.%201881-86.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Pierre-Auguste%20Renoir%2C%20The%20Umbrellas%2C%20ca.%201881-86.jpg",
+    "musee": "National Gallery, Londres"
   },
   {
     "original_name": "the-cradle",
@@ -549,7 +615,8 @@
     "fr_title": "Le Berceau",
     "en_title": "The Cradle",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Berthe%20Morisot%20-%20The%20Cradle%20-%20Google%20Art%20Project.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Berthe%20Morisot%20-%20The%20Cradle%20-%20Google%20Art%20Project.jpg",
+    "musee": "Musée d'Orsay, Paris"
   },
   {
     "original_name": "la-gare-saint-lazare",
@@ -557,7 +624,8 @@
     "fr_title": "La Gare Saint-Lazare",
     "en_title": "La Gare Saint-Lazare",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/La%20Gare%20Saint-Lazare%20-%20Claude%20Monet.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/La%20Gare%20Saint-Lazare%20-%20Claude%20Monet.jpg",
+    "musee": "Musée d'Orsay, Paris"
   },
   {
     "original_name": "the-boulevard-montmartre-at-night",
@@ -565,7 +633,8 @@
     "fr_title": "Boulevard Montmartre de nuit",
     "en_title": "The Boulevard Montmartre at Night",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Pissarro%20-%20The%20Boulevard%20Montmartre%20at%20Night%20(1897).jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Pissarro%20-%20The%20Boulevard%20Montmartre%20at%20Night%20(1897).jpg",
+    "musee": "National Gallery, Londres"
   },
   {
     "original_name": "woman-with-a-parasol-madame-monet-and-her-son",
@@ -573,7 +642,8 @@
     "fr_title": "La Femme à l'ombrelle — Madame Monet et son fils",
     "en_title": "Woman with a Parasol – Madame Monet and Her Son",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Claude%20Monet%20-%20Woman%20with%20a%20Parasol%20-%20Madame%20Monet%20and%20Her%20Son%20-%20Google%20Art%20Project.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Claude%20Monet%20-%20Woman%20with%20a%20Parasol%20-%20Madame%20Monet%20and%20Her%20Son%20-%20Google%20Art%20Project.jpg",
+    "musee": "National Gallery of Art, Washington"
   },
   {
     "original_name": "impression-sunrise",
@@ -589,7 +659,8 @@
     "fr_title": "Femme à l'ombrelle tournée vers la droite",
     "en_title": "Femme à l'ombrelle tournée vers la droite",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Femme%20%C3%A0%20l'ombrelle%20tourn%C3%A9e%20vers%20la%20droite%20-%20Claude%20Monnet%20-%20Mus%C3%A9e%20d'Orsay%20RF%202620.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Femme%20%C3%A0%20l'ombrelle%20tourn%C3%A9e%20vers%20la%20droite%20-%20Claude%20Monnet%20-%20Mus%C3%A9e%20d'Orsay%20RF%202620.jpg",
+    "musee": "Musée d'Orsay, Paris"
   },
   {
     "original_name": "les-raboteurs-de-parquet",
@@ -597,7 +668,8 @@
     "fr_title": "Les Raboteurs de parquet",
     "en_title": "Les raboteurs de parquet",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustave%20Caillebotte%20-%20The%20Floor%20Planers%20-%20Google%20Art%20Project.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustave%20Caillebotte%20-%20The%20Floor%20Planers%20-%20Google%20Art%20Project.jpg",
+    "musee": "Musée d'Orsay, Paris"
   },
   {
     "original_name": "paris-street-rainy-day",
@@ -605,7 +677,8 @@
     "fr_title": "Rue de Paris, temps de pluie",
     "en_title": "Paris Street; Rainy Day",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustave%20Caillebotte%20-%20Paris%20Street%2C%20Rainy%20Day%20-%201964.336%20-%20Art%20Institute%20of%20Chicago.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustave%20Caillebotte%20-%20Paris%20Street%2C%20Rainy%20Day%20-%201964.336%20-%20Art%20Institute%20of%20Chicago.jpg",
+    "musee": "Art Institute of Chicago, Chicago"
   },
   {
     "original_name": "a-bar-at-the-folies-bergere",
@@ -613,7 +686,8 @@
     "fr_title": "Un bar aux Folies Bergère",
     "en_title": "A Bar at the Folies-Bergère",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Un%20bar%20aux%20Folies-Berg%C3%A8re%20d'E.%20Manet%20(Fondation%20Vuitton%2C%20Paris)%20(33539037428).jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Un%20bar%20aux%20Folies-Berg%C3%A8re%20d'E.%20Manet%20(Fondation%20Vuitton%2C%20Paris)%20(33539037428).jpg",
+    "musee": "Courtauld Gallery, Londres"
   },
   {
     "original_name": "flood-at-port-marly",
@@ -621,7 +695,8 @@
     "fr_title": "Inondation à Port-Marly",
     "en_title": "Flood at Port-Marly",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Sisley%20-%20The-Flood-At-Port-Marly.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Sisley%20-%20The-Flood-At-Port-Marly.jpg",
+    "musee": "Musée d'Orsay, Paris"
   },
   {
     "original_name": "la-neige-a-louveciennes",
@@ -629,7 +704,8 @@
     "fr_title": "La Neige à Louveciennes",
     "en_title": "La neige à Louveciennes",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Alfred%20Sisley%2C%20La%20Neige%20%C3%A0%20Louveciennes%20(cropped).jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Alfred%20Sisley%2C%20La%20Neige%20%C3%A0%20Louveciennes%20(cropped).jpg",
+    "musee": "Musée d'Orsay, Paris"
   },
   {
     "original_name": "la-loge",
@@ -637,7 +713,8 @@
     "fr_title": "La Loge",
     "en_title": "La loge",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/La%20Loge%20de%20P.-A.%20Renoir%20(Fondation%20Vuitton%2C%20Paris)%20(46499625955).jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/La%20Loge%20de%20P.-A.%20Renoir%20(Fondation%20Vuitton%2C%20Paris)%20(46499625955).jpg",
+    "musee": "Courtauld Gallery, Londres"
   },
   {
     "original_name": "harvestring-potatoes-pontoise",
@@ -645,7 +722,8 @@
     "fr_title": "La Récolte des pommes de terre",
     "en_title": "Harvestring Potatoes, Pontoise",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Camille%20Pissarro%20-%20La%20R%C3%A9colte%20des%20pommes%20de%20terre%20-%201874.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Camille%20Pissarro%20-%20La%20R%C3%A9colte%20des%20pommes%20de%20terre%20-%201874.jpg",
+    "musee": "Musée d'Orsay, Paris"
   },
   {
     "original_name": "the-magpie",
@@ -653,7 +731,8 @@
     "fr_title": "La Pie",
     "en_title": "The Magpie",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Claude%20Monet%20-%20The%20Magpie%20-%20Google%20Art%20Project.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Claude%20Monet%20-%20The%20Magpie%20-%20Google%20Art%20Project.jpg",
+    "musee": "Musée d'Orsay, Paris"
   },
   {
     "original_name": "little-girl-in-a-blue-armchair",
@@ -661,7 +740,8 @@
     "fr_title": "Petite Fille dans un fauteuil bleu",
     "en_title": "Little Girl in a Blue Armchair",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Cassat%20-%20Blue%20Armchair%20NGA.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Cassat%20-%20Blue%20Armchair%20NGA.jpg",
+    "musee": "National Gallery of Art, Washington"
   },
   {
     "original_name": "la-goulue-at-the-moulin-rouge",
@@ -669,7 +749,8 @@
     "fr_title": "La Goulue entrant au Moulin-Rouge",
     "en_title": "La Goulue at the Moulin Rouge",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Toulouse-Lautrec%20-%20La%20Goulue%20at%20the%20Moulin%20Rouge%2C%201891-92.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Toulouse-Lautrec%20-%20La%20Goulue%20at%20the%20Moulin%20Rouge%2C%201891-92.jpg",
+    "musee": "Musée d'Orsay, Paris"
   },
   {
     "original_name": "the-toilette",
@@ -677,7 +758,8 @@
     "fr_title": "La Toilette",
     "en_title": "The Toilette",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Brooklyn%20Museum%20-%20La%20Toilette%20-%20Mary%20Cassatt.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Brooklyn%20Museum%20-%20La%20Toilette%20-%20Mary%20Cassatt.jpg",
+    "musee": "Art Institute of Chicago, Chicago"
   },
   {
     "original_name": "apples-and-oranges",
@@ -685,7 +767,8 @@
     "fr_title": "Pommes et Oranges",
     "en_title": "Apples and Oranges",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Nature%20morte%20aux%20pommes%20et%20aux%20oranges%2C%20par%20Paul%20C%C3%A9zanne.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Nature%20morte%20aux%20pommes%20et%20aux%20oranges%2C%20par%20Paul%20C%C3%A9zanne.jpg",
+    "musee": "Musée d'Orsay, Paris"
   },
   {
     "original_name": "entrance-to-the-port-of-marseille",
@@ -693,7 +776,8 @@
     "fr_title": "Entrée du port de Marseille",
     "en_title": "Entrance to the port of Marseille",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Signac%20-%20Entr%C3%A9e%20du%20port%20de%20Marseille%2C%201898%2C%20KM%20103.185.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Signac%20-%20Entr%C3%A9e%20du%20port%20de%20Marseille%2C%201898%2C%20KM%20103.185.jpg",
+    "musee": "Musée d'Orsay, Paris"
   },
   {
     "original_name": "joachim-among-the-shepherds",
@@ -701,7 +785,8 @@
     "fr_title": "Joachim chez les bergers",
     "en_title": "Joachim among the Shepherds",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Giotto%2002.%20Joachim%20among%20the%20Shepherds%20Capella%20degli%20Scrovegni%20(Padova)%20jm56710%20(1).jpeg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Giotto%2002.%20Joachim%20among%20the%20Shepherds%20Capella%20degli%20Scrovegni%20(Padova)%20jm56710%20(1).jpeg",
+    "musee": "Chapelle des Scrovegni, Padoue"
   },
   {
     "original_name": "virgin-and-child-surrounded-by-angels",
@@ -709,7 +794,8 @@
     "fr_title": "La Vierge et l'Enfant entourés d'anges",
     "en_title": "Virgin and Child Surrounded by Angels",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Madonna%20omringd%20door%20serafijnen%20en%20cherubijnen%2C%20Jean%20Fouquet%2C%20(1454-1456)%2C%20Koninklijk%20Museum%20voor%20Schone%20Kunsten%20Antwerpen%2C%20132.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Madonna%20omringd%20door%20serafijnen%20en%20cherubijnen%2C%20Jean%20Fouquet%2C%20(1454-1456)%2C%20Koninklijk%20Museum%20voor%20Schone%20Kunsten%20Antwerpen%2C%20132.jpg",
+    "musee": "Koninklijk Museum voor Schone Kunsten, Anvers"
   },
   {
     "original_name": "ivan-the-terrible-and-his-son-ivan-on-november-16-1581",
@@ -717,7 +803,8 @@
     "fr_title": "Ivan le Terrible tue son fils",
     "en_title": "Ivan the Terrible and his son Ivan on November 16, 1581",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Iv%C3%A1n%20el%20Terrible%20y%20su%20hijo%2C%20por%20Ili%C3%A1%20Repin.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Iv%C3%A1n%20el%20Terrible%20y%20su%20hijo%2C%20por%20Ili%C3%A1%20Repin.jpg",
+    "musee": "Galerie Tretiakov, Moscou"
   },
   {
     "original_name": "the-ninth-wave",
@@ -725,7 +812,8 @@
     "fr_title": "La Neuvième Vague",
     "en_title": "The Ninth Wave",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Hovhannes%20Aivazovsky%20-%20The%20Ninth%20Wave%20-%20Google%20Art%20Project.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Hovhannes%20Aivazovsky%20-%20The%20Ninth%20Wave%20-%20Google%20Art%20Project.jpg",
+    "musee": "Musée Russe, Saint-Pétersbourg"
   },
   {
     "original_name": "the-two-sisters",
@@ -733,7 +821,8 @@
     "fr_title": "Adèle et Aline Chassériau",
     "en_title": "The Two Sisters",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Th%C3%A9odore%20Chass%C3%A9riau%20-%20Mesdemoiselles%20Chass%C3%A9riau%20(Louvre%20RF%202214)%200000787160%20OG.JPG"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Th%C3%A9odore%20Chass%C3%A9riau%20-%20Mesdemoiselles%20Chass%C3%A9riau%20(Louvre%20RF%202214)%200000787160%20OG.JPG",
+    "musee": "Musée du Louvre, Paris"
   },
   {
     "original_name": "the-intervention-of-the-sabine-women",
@@ -749,7 +838,8 @@
     "fr_title": "Le Grand Architecte",
     "en_title": "The Ancient of Days",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Europe%20a%20Prophecy%20copy%20K%20plate%2001.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Europe%20a%20Prophecy%20copy%20K%20plate%2001.jpg",
+    "musee": "British Museum, Londres"
   },
   {
     "original_name": "the-circus",
@@ -757,7 +847,8 @@
     "fr_title": "Le Cirque",
     "en_title": "The Circus",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Georges%20Seurat%20-%20The%20Circus%20-%20Google%20Art%20Project.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Georges%20Seurat%20-%20The%20Circus%20-%20Google%20Art%20Project.jpg",
+    "musee": "Musée d'Orsay, Paris"
   },
   {
     "original_name": "a-sunday-afternoon-on-the-island-of-la-grande-jatte",
@@ -765,7 +856,8 @@
     "fr_title": "Un dimanche après-midi à l'Île de la Grande Jatte",
     "en_title": "A Sunday Afternoon on the Island of La Grande Jatte",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/A%20Sunday%20on%20La%20Grande%20Jatte%2C%20Georges%20Seurat%2C%201884.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/A%20Sunday%20on%20La%20Grande%20Jatte%2C%20Georges%20Seurat%2C%201884.jpg",
+    "musee": "Art Institute of Chicago, Chicago"
   },
   {
     "original_name": "la-montagne-sainte-victoire",
@@ -773,7 +865,8 @@
     "fr_title": "La Montagne Sainte-Victoire vue des Lauves",
     "en_title": "La montagne Sainte-Victoire",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Montagne%20Sainte-Victoire%2C%20par%20Paul%20C%C3%A9zanne%20110.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Montagne%20Sainte-Victoire%2C%20par%20Paul%20C%C3%A9zanne%20110.jpg",
+    "musee": "Kunsthaus, Zurich"
   },
   {
     "original_name": "where-do-we-come-from-what-are-we-where-are-we-going",
@@ -789,7 +882,8 @@
     "fr_title": "Femmes de Tahiti",
     "en_title": "Tahitian Women on the Beach",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Paul%20Gauguin%20056.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Paul%20Gauguin%20056.jpg",
+    "musee": "Musée d'Orsay, Paris"
   },
   {
     "original_name": "vision-after-the-sermon",
@@ -797,7 +891,8 @@
     "fr_title": "Vision après le sermon",
     "en_title": "Vision After the Sermon",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/La%20vision%20apr%C3%A8s%20le%20sermon%20(Paul%20Gauguin).jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/La%20vision%20apr%C3%A8s%20le%20sermon%20(Paul%20Gauguin).jpg",
+    "musee": "National Gallery of Scotland, Édimbourg"
   },
   {
     "original_name": "bedroom-in-arles",
@@ -805,7 +900,8 @@
     "fr_title": "La Chambre à Coucher",
     "en_title": "Bedroom in Arles",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Vincent%20van%20Gogh%20-%20De%20slaapkamer%20-%20Google%20Art%20Project.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Vincent%20van%20Gogh%20-%20De%20slaapkamer%20-%20Google%20Art%20Project.jpg",
+    "musee": "Musée Van Gogh, Amsterdam"
   },
   {
     "original_name": "the-starry-night",
@@ -813,7 +909,8 @@
     "fr_title": "La Nuit étoilée",
     "en_title": "The Starry Night",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Van%20Gogh%20-%20Starry%20Night%20-%20Google%20Art%20Project.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Van%20Gogh%20-%20Starry%20Night%20-%20Google%20Art%20Project.jpg",
+    "musee": "Museum of Modern Art (MoMA), New York"
   },
   {
     "original_name": "sunflowers",
@@ -821,7 +918,8 @@
     "fr_title": "Les Tournesols",
     "en_title": "Sunflowers",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Vincent%20Willem%20van%20Gogh%20128.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Vincent%20Willem%20van%20Gogh%20128.jpg",
+    "musee": "National Gallery, Londres"
   },
   {
     "original_name": "starry-night-over-the-rhone",
@@ -829,7 +927,8 @@
     "fr_title": "La Nuit étoilée",
     "en_title": "Starry Night Over the Rhone",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Vincent%20van%20Gogh%20-%20Starry%20Night%20-%20Google%20Art%20Project.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Vincent%20van%20Gogh%20-%20Starry%20Night%20-%20Google%20Art%20Project.jpg",
+    "musee": "Musée d'Orsay, Paris"
   },
   {
     "original_name": "cafe-terrace-at-night",
@@ -837,7 +936,8 @@
     "fr_title": "Terrasse du café le soir",
     "en_title": "Café Terrace at Night",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Van%20Gogh%20-%20Terrace%20of%20a%20Caf%C3%A9%20at%20Night%20(Place%20du%20Forum)%201888.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Van%20Gogh%20-%20Terrace%20of%20a%20Caf%C3%A9%20at%20Night%20(Place%20du%20Forum)%201888.jpg",
+    "musee": "Musée Kröller-Müller, Otterlo"
   },
   {
     "original_name": "annunciation",
@@ -845,7 +945,8 @@
     "fr_title": "L'Annonciation",
     "en_title": "Annunciation",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Fra%20Angelico%20-%20The%20Annunciation%20-%20WGA0454.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Fra%20Angelico%20-%20The%20Annunciation%20-%20WGA0454.jpg",
+    "musee": "Couvent San Marco, Florence"
   },
   {
     "original_name": "the-birth-of-venus",
@@ -853,7 +954,8 @@
     "fr_title": "La Naissance de Vénus",
     "en_title": "The Birth of Venus",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Sandro%20Botticelli%20-%20La%20nascita%20di%20Venere%20-%20Google%20Art%20Project%20-%20edited.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Sandro%20Botticelli%20-%20La%20nascita%20di%20Venere%20-%20Google%20Art%20Project%20-%20edited.jpg",
+    "musee": "Galleria degli Uffizi, Florence"
   },
   {
     "original_name": "primavera",
@@ -861,7 +963,8 @@
     "fr_title": "Le Printemps",
     "en_title": "Primavera",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Sandro%20Botticelli%20-%20La%20Primavera%20-%20Google%20Art%20Project.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Sandro%20Botticelli%20-%20La%20Primavera%20-%20Google%20Art%20Project.jpg",
+    "musee": "Galleria degli Uffizi, Florence"
   },
   {
     "original_name": "the-meeting-or-bonjour-monsieur-courbet",
@@ -869,7 +972,8 @@
     "fr_title": "La Rencontre, ou Bonjour Monsieur Courbet",
     "en_title": "The Meeting, or Bonjour, Monsieur Courbet!",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustave%20Courbet%20-%20Bonjour%20Monsieur%20Courbet%20-%20Mus%C3%A9e%20Fabre.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustave%20Courbet%20-%20Bonjour%20Monsieur%20Courbet%20-%20Mus%C3%A9e%20Fabre.jpg",
+    "musee": "Musée Fabre, Montpellier"
   },
   {
     "original_name": "the-painter-s-studio",
@@ -877,7 +981,8 @@
     "fr_title": "L'Atelier du peintre",
     "en_title": "The Painter's Studio",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Courbet%20LAtelier%20du%20peintre.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Courbet%20LAtelier%20du%20peintre.jpg",
+    "musee": "Musée d'Orsay, Paris"
   },
   {
     "original_name": "l-origine-du-monde",
@@ -885,7 +990,8 @@
     "fr_title": "L'Origine du monde",
     "en_title": "L'Origine du monde",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Origin-of-the-World.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Origin-of-the-World.jpg",
+    "musee": "Musée d'Orsay, Paris"
   },
   {
     "original_name": "le-desespere",
@@ -893,7 +999,8 @@
     "fr_title": "Le Désespéré",
     "en_title": "Le Désespéré",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustave%20Courbet%20-%20Le%20D%C3%A9sesp%C3%A9r%C3%A9%20(1843).jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustave%20Courbet%20-%20Le%20D%C3%A9sesp%C3%A9r%C3%A9%20(1843).jpg",
+    "musee": "Collection privée"
   },
   {
     "original_name": "the-sower",
@@ -901,7 +1008,8 @@
     "fr_title": "le Semeur",
     "en_title": "The Sower",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Jean-Fran%C3%A7ois%20Millet%20-%20The%20Sower%20-%20Google%20Art%20Project.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Jean-Fran%C3%A7ois%20Millet%20-%20The%20Sower%20-%20Google%20Art%20Project.jpg",
+    "musee": "Musée des Beaux-Arts, Boston"
   },
   {
     "original_name": "the-gleaners",
@@ -909,7 +1017,8 @@
     "fr_title": "Des glaneuses",
     "en_title": "The Gleaners",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Jean-Fran%C3%A7ois%20Millet%20-%20Gleaners%20-%20Google%20Art%20Project.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Jean-Fran%C3%A7ois%20Millet%20-%20Gleaners%20-%20Google%20Art%20Project.jpg",
+    "musee": "Musée d'Orsay, Paris"
   },
   {
     "original_name": "luncheon-on-the-grass",
@@ -917,7 +1026,8 @@
     "fr_title": "Le Déjeuner sur l'herbe",
     "en_title": "Luncheon on the Grass",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Edouard%20Manet%20-%20Luncheon%20on%20the%20Grass%20-%20Google%20Art%20Project.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Edouard%20Manet%20-%20Luncheon%20on%20the%20Grass%20-%20Google%20Art%20Project.jpg",
+    "musee": "Musée d'Orsay, Paris"
   },
   {
     "original_name": "olympia",
@@ -925,7 +1035,8 @@
     "fr_title": "Olympia",
     "en_title": "Olympia",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Edouard%20Manet%20-%20Olympia%20-%20Google%20Art%20Project%203.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Edouard%20Manet%20-%20Olympia%20-%20Google%20Art%20Project%203.jpg",
+    "musee": "Musée d'Orsay, Paris"
   },
   {
     "original_name": "automat",
@@ -933,7 +1044,8 @@
     "fr_title": "Automat",
     "en_title": "Automat",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Automat-edward-hopper-1927.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Automat-edward-hopper-1927.jpg",
+    "musee": "Des Moines Art Center, Des Moines"
   },
   {
     "original_name": "chop-suey",
@@ -941,7 +1053,8 @@
     "fr_title": "Chop Suey",
     "en_title": "Chop Suey",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Edward%20hopper%20chop%20suey.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Edward%20hopper%20chop%20suey.jpg",
+    "musee": "Collection privée"
   },
   {
     "original_name": "nighthawks",
@@ -949,7 +1062,8 @@
     "fr_title": "Nighthawks",
     "en_title": "Nighthawks",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Nighthawks%20by%20Edward%20Hopper%201942.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Nighthawks%20by%20Edward%20Hopper%201942.jpg",
+    "musee": "Art Institute of Chicago, Chicago"
   },
   {
     "original_name": "american-gothic",
@@ -957,7 +1071,8 @@
     "fr_title": "American Gothic",
     "en_title": "American Gothic",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Grant%20Wood%20-%20American%20Gothic%20(1930).jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Grant%20Wood%20-%20American%20Gothic%20(1930).jpg",
+    "musee": "Art Institute of Chicago, Chicago"
   },
   {
     "original_name": "beata-beatrix",
@@ -965,7 +1080,8 @@
     "fr_title": "Beata Beatrix",
     "en_title": "Beata Beatrix",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Dante%20Gabriel%20Rossetti%20-%20Beata%20Beatrix%20-%20Google%20Art%20Project.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Dante%20Gabriel%20Rossetti%20-%20Beata%20Beatrix%20-%20Google%20Art%20Project.jpg",
+    "musee": "Tate Britain, Londres"
   },
   {
     "original_name": "the-sphinx-or-the-caresses",
@@ -973,7 +1089,8 @@
     "fr_title": "Des caresses",
     "en_title": "The Sphinx, or, The Caresses",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Fernand%20Khnopff%20-%20Caresses%20-%20Google%20Art%20Project.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Fernand%20Khnopff%20-%20Caresses%20-%20Google%20Art%20Project.jpg",
+    "musee": "Musées royaux des Beaux-Arts de Belgique, Bruxelles"
   },
   {
     "original_name": "ophelia",
@@ -981,7 +1098,8 @@
     "fr_title": "Ophélie",
     "en_title": "Ophelia",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/John%20Everett%20Millais%20-%20Ophelia%20-%20Google%20Art%20Project.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/John%20Everett%20Millais%20-%20Ophelia%20-%20Google%20Art%20Project.jpg",
+    "musee": "Tate Britain, Londres"
   },
   {
     "original_name": "hylas-and-the-nymphs",
@@ -989,7 +1107,8 @@
     "fr_title": "Hylas et les nymphes",
     "en_title": "Hylas and the Nymphs",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Waterhouse%20Hylas%20and%20the%20Nymphs%20Manchester%20Art%20Gallery%201896.15.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Waterhouse%20Hylas%20and%20the%20Nymphs%20Manchester%20Art%20Gallery%201896.15.jpg",
+    "musee": "Manchester Art Gallery, Manchester"
   },
   {
     "original_name": "the-lady-of-shalott",
@@ -997,7 +1116,8 @@
     "fr_title": "The Lady of Shalott",
     "en_title": "The Lady of Shalott",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/John%20William%20Waterhouse%20-%20The%20Lady%20of%20Shalott%20-%20Google%20Art%20Project%20(derivative%20work%20-%20AutoContrast%20edit%20in%20LCH%20space).jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/John%20William%20Waterhouse%20-%20The%20Lady%20of%20Shalott%20-%20Google%20Art%20Project%20(derivative%20work%20-%20AutoContrast%20edit%20in%20LCH%20space).jpg",
+    "musee": "Tate Britain, Londres"
   },
   {
     "original_name": "the-cyclops",
@@ -1005,7 +1125,8 @@
     "fr_title": "Le Cyclope",
     "en_title": "The Cyclops",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Odilon%20Redon%20-%20The%20Cyclops%2C%20c.%201914.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Odilon%20Redon%20-%20The%20Cyclops%2C%20c.%201914.jpg",
+    "musee": "Musée Kröller-Müller, Otterlo"
   },
   {
     "original_name": "the-poor-fisherman",
@@ -1013,7 +1134,8 @@
     "fr_title": "Le Pauvre Pêcheur",
     "en_title": "The Poor Fisherman",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Pierre%20Puvis%20de%20Chavannes%20-%20The%20Poor%20Fisherman%20-%20Google%20Art%20Project.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Pierre%20Puvis%20de%20Chavannes%20-%20The%20Poor%20Fisherman%20-%20Google%20Art%20Project.jpg",
+    "musee": "Musée d'Orsay, Paris"
   },
   {
     "original_name": "the-light-of-the-world",
@@ -1021,7 +1143,8 @@
     "fr_title": "La Lumière du monde",
     "en_title": "The Light of the World",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Hunt%2C%20William%20Homan%20-%20The%20Light%20of%20the%20World%20-%201853-54.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Hunt%2C%20William%20Homan%20-%20The%20Light%20of%20the%20World%20-%201853-54.jpg",
+    "musee": "Cathédrale Saint-Paul, Londres"
   },
   {
     "original_name": "the-coronation-of-the-virgin",
@@ -1029,7 +1152,8 @@
     "fr_title": "Le Couronnement de la Vierge",
     "en_title": "The Coronation of the Virgin",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Jacopo%20Tintoretto%20026.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Jacopo%20Tintoretto%20026.jpg",
+    "musee": "Palais des Doges, Venise"
   },
   {
     "original_name": "adam-and-eve",
@@ -1037,7 +1161,8 @@
     "fr_title": "Adam et Ève",
     "en_title": "Adam and Eve",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Lucas%20Cranach%20(I)%20-%20Adam%20und%20Eva%20(Museo%20Soumaya).jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Lucas%20Cranach%20(I)%20-%20Adam%20und%20Eva%20(Museo%20Soumaya).jpg",
+    "musee": "Musée d'Histoire de l'art, Vienne"
   },
   {
     "original_name": "the-fountain-of-youth",
@@ -1045,7 +1170,8 @@
     "fr_title": "Fontaine de jouvence",
     "en_title": "The fountain of youth",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Lucas%20Cranach%20-%20Der%20Jungbrunnen%20(Gem%C3%A4ldegalerie%20Berlin).jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Lucas%20Cranach%20-%20Der%20Jungbrunnen%20(Gem%C3%A4ldegalerie%20Berlin).jpg",
+    "musee": "Gemäldegalerie, Berlin"
   },
   {
     "original_name": "lady-with-an-ermine",
@@ -1053,7 +1179,8 @@
     "fr_title": "La Dame à l'hermine",
     "en_title": "Lady with an Ermine",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Lady%20with%20an%20Ermine%20-%20Leonardo%20da%20Vinci%20-%20Google%20Art%20Project.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Lady%20with%20an%20Ermine%20-%20Leonardo%20da%20Vinci%20-%20Google%20Art%20Project.jpg",
+    "musee": "Musée Czartoryski, Cracovie"
   },
   {
     "original_name": "saint-john-the-baptist",
@@ -1061,7 +1188,8 @@
     "fr_title": "Saint Jean-Baptiste",
     "en_title": "Saint John the Baptist",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Leonardo%20da%20Vinci%20-%20Saint%20John%20the%20Baptist%20C2RMF%20retouched.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Leonardo%20da%20Vinci%20-%20Saint%20John%20the%20Baptist%20C2RMF%20retouched.jpg",
+    "musee": "Musée du Louvre, Paris"
   },
   {
     "original_name": "isenheim-altarpiece",
@@ -1069,7 +1197,8 @@
     "fr_title": "Retable d'Issenheim",
     "en_title": "Isenheim Altarpiece",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Isenheim%20Altarpiece%20-%20In%20situ%20(cropped).jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Isenheim%20Altarpiece%20-%20In%20situ%20(cropped).jpg",
+    "musee": "Musée Unterlinden, Colmar"
   },
   {
     "original_name": "the-marriage-of-the-virgin",
@@ -1077,7 +1206,8 @@
     "fr_title": "Le Mariage de la Vierge",
     "en_title": "The Marriage of the Virgin",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Raffaello%20-%20Spozalizio%20-%20Web%20Gallery%20of%20Art.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Raffaello%20-%20Spozalizio%20-%20Web%20Gallery%20of%20Art.jpg",
+    "musee": "Pinacothèque de Brera, Milan"
   },
   {
     "original_name": "portrait-of-baldassare-castiglione",
@@ -1085,7 +1215,8 @@
     "fr_title": "Portrait de Baldassare Castiglione",
     "en_title": "Portrait of Baldassare Castiglione",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Baldassare%20Castiglione%2C%20by%20Raffaello%20Sanzio%2C%20from%20C2RMF%20retouched.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Baldassare%20Castiglione%2C%20by%20Raffaello%20Sanzio%2C%20from%20C2RMF%20retouched.jpg",
+    "musee": "Musée du Louvre, Paris"
   },
   {
     "original_name": "adoration-of-the-magi",
@@ -1093,7 +1224,8 @@
     "fr_title": "L'Adoration des mages",
     "en_title": "Adoration of the Magi",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Zanobi-Altar.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Zanobi-Altar.jpg",
+    "musee": "Galleria degli Uffizi, Florence"
   },
   {
     "original_name": "sacred-and-profane-love",
@@ -1101,7 +1233,8 @@
     "fr_title": "Amour sacré et Amour profane",
     "en_title": "Sacred and Profane Love",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Tiziano%20-%20Amor%20Sacro%20y%20Amor%20Profano%20(Galer%C3%ADa%20Borghese%2C%20Roma%2C%201514)FXD.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Tiziano%20-%20Amor%20Sacro%20y%20Amor%20Profano%20(Galer%C3%ADa%20Borghese%2C%20Roma%2C%201514)FXD.jpg",
+    "musee": "Galerie Borghèse, Rome"
   },
   {
     "original_name": "arnolfini-portrait",
@@ -1109,7 +1242,8 @@
     "fr_title": "Les Époux Arnolfini",
     "en_title": "Arnolfini Portrait",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Van%20Eyck%20-%20Arnolfini%20Portrait.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Van%20Eyck%20-%20Arnolfini%20Portrait.jpg",
+    "musee": "National Gallery, Londres"
   },
   {
     "original_name": "ship-of-fools",
@@ -1117,7 +1251,8 @@
     "fr_title": "La Nef des fous",
     "en_title": "Ship of Fools",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Jheronimus%20Bosch%20011.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Jheronimus%20Bosch%20011.jpg",
+    "musee": "Musée du Louvre, Paris"
   },
   {
     "original_name": "the-hunters-in-the-snow",
@@ -1125,7 +1260,8 @@
     "fr_title": "Chasseurs dans la neige",
     "en_title": "The Hunters in the Snow",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Pieter%20Bruegel%20the%20Elder%20-%20Hunters%20in%20the%20Snow%20(Winter)%20-%20Google%20Art%20Project.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Pieter%20Bruegel%20the%20Elder%20-%20Hunters%20in%20the%20Snow%20(Winter)%20-%20Google%20Art%20Project.jpg",
+    "musee": "Kunsthistorisches Museum, Vienne"
   },
   {
     "original_name": "the-tower-of-babel",
@@ -1133,7 +1269,8 @@
     "fr_title": "La Tour de Babel",
     "en_title": "The Tower of Babel",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Pieter%20Bruegel%20the%20Elder%20-%20The%20Tower%20of%20Babel%20(Vienna)%20-%20Google%20Art%20Project%20-%20edited.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Pieter%20Bruegel%20the%20Elder%20-%20The%20Tower%20of%20Babel%20(Vienna)%20-%20Google%20Art%20Project%20-%20edited.jpg",
+    "musee": "Kunsthistorisches Museum, Vienne"
   },
   {
     "original_name": "wanderer-above-the-sea-of-fog",
@@ -1141,7 +1278,8 @@
     "fr_title": "Le Voyageur contemplant une mer de nuages",
     "en_title": "Wanderer above the Sea of Fog",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Friedrich%2C%20Caspar%20David%20-%20Wanderer%20%C3%BCber%20dem%20Nebelmeer.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Friedrich%2C%20Caspar%20David%20-%20Wanderer%20%C3%BCber%20dem%20Nebelmeer.jpg",
+    "musee": "Kunsthalle, Hambourg"
   },
   {
     "original_name": "la-maja-desnuda",
@@ -1149,7 +1287,8 @@
     "fr_title": "La Maja nue",
     "en_title": "La maja desnuda",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Maja%20desnuda%20(museo%20del%20Prado).jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Maja%20desnuda%20(museo%20del%20Prado).jpg",
+    "musee": "Musée du Prado, Madrid"
   },
   {
     "original_name": "saturn-devouring-his-son",
@@ -1157,7 +1296,8 @@
     "fr_title": "Saturne dévorant un de ses enfants",
     "en_title": "Saturn Devouring His Son",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Francisco%20de%20Goya%2C%20Saturno%20devorando%20a%20su%20hijo%20(1819-1823).jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Francisco%20de%20Goya%2C%20Saturno%20devorando%20a%20su%20hijo%20(1819-1823).jpg",
+    "musee": "Musée du Prado, Madrid"
   },
   {
     "original_name": "the-coronation-of-napoleon",
@@ -1165,7 +1305,8 @@
     "fr_title": "Le Sacre de Napoléon",
     "en_title": "The Coronation of Napoleon",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Le%20Sacre%20de%20Napol%C3%A9on%20-%20Jacques-Louis%20David%20-%20Mus%C3%A9e%20du%20Louvre%20Peintures%20INV%203699%20%3B%20MR%201437.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Le%20Sacre%20de%20Napol%C3%A9on%20-%20Jacques-Louis%20David%20-%20Mus%C3%A9e%20du%20Louvre%20Peintures%20INV%203699%20%3B%20MR%201437.jpg",
+    "musee": "Musée du Louvre, Paris"
   },
   {
     "original_name": "the-turkish-bath",
@@ -1173,7 +1314,8 @@
     "fr_title": "Le Bain turc",
     "en_title": "The Turkish Bath",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Le%20Bain%20Turc%2C%20by%20Jean%20Auguste%20Dominique%20Ingres%2C%20from%20C2RMFFXD.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Le%20Bain%20Turc%2C%20by%20Jean%20Auguste%20Dominique%20Ingres%2C%20from%20C2RMFFXD.jpg",
+    "musee": "Musée du Louvre, Paris"
   },
   {
     "original_name": "the-nightmare",
@@ -1181,7 +1323,8 @@
     "fr_title": "Le Cauchemar",
     "en_title": "The Nightmare",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/John%20Henry%20Fuseli%20-%20The%20Nightmare.JPG"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/John%20Henry%20Fuseli%20-%20The%20Nightmare.JPG",
+    "musee": "Detroit Institute of Arts, Détroit"
   },
   {
     "original_name": "the-raft-of-the-medusa",
@@ -1189,7 +1332,8 @@
     "fr_title": "Le Radeau de la Méduse",
     "en_title": "The Raft of the Medusa",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/JEAN%20LOUIS%20TH%C3%89ODORE%20G%C3%89RICAULT%20-%20La%20Balsa%20de%20la%20Medusa%20(Museo%20del%20Louvre%2C%201818-19).jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/JEAN%20LOUIS%20TH%C3%89ODORE%20G%C3%89RICAULT%20-%20La%20Balsa%20de%20la%20Medusa%20(Museo%20del%20Louvre%2C%201818-19).jpg",
+    "musee": "Musée du Louvre, Paris"
   },
   {
     "original_name": "fine-wind-clear-morning",
@@ -1197,7 +1341,8 @@
     "fr_title": "Le Fuji par temps clair",
     "en_title": "Fine Wind, Clear Morning",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Katsushika%20Hokusai%20-%20Fine%20Wind%2C%20Clear%20Morning%20(Gaif%C5%AB%20kaisei)%20-%20Google%20Art%20Project.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Katsushika%20Hokusai%20-%20Fine%20Wind%2C%20Clear%20Morning%20(Gaif%C5%AB%20kaisei)%20-%20Google%20Art%20Project.jpg",
+    "musee": "Musée national de Tokyo, Tokyo"
   },
   {
     "original_name": "the-great-wave-off-kanagawa",
@@ -1205,7 +1350,8 @@
     "fr_title": "La Grande Vague de Kanagawa",
     "en_title": "The Great Wave off Kanagawa",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Katsushika%20Hokusai%20-%20The%20Great%20Wave%20off%20the%20Coast%20of%20Kanagawa%20LCCN2008660568.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Katsushika%20Hokusai%20-%20The%20Great%20Wave%20off%20the%20Coast%20of%20Kanagawa%20LCCN2008660568.jpg",
+    "musee": "Metropolitan Museum of Art, New York"
   },
   {
     "original_name": "the-dream-of-the-fisherman-s-wife",
@@ -1213,7 +1359,8 @@
     "fr_title": "Le Rêve de la femme du pêcheur",
     "en_title": "The Dream of the Fisherman's Wife",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Tako%20to%20ama%20retouched.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Tako%20to%20ama%20retouched.jpg",
+    "musee": "Museum of Fine Arts, Boston"
   },
   {
     "original_name": "virgin-of-the-rocks",
@@ -1221,7 +1368,8 @@
     "fr_title": "La Vierge aux rochers",
     "en_title": "Virgin of the Rocks",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Leonardo%20Da%20Vinci%20-%20Vergine%20delle%20Rocce%20(Louvre).jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Leonardo%20Da%20Vinci%20-%20Vergine%20delle%20Rocce%20(Louvre).jpg",
+    "musee": "National Gallery, Londres"
   },
   {
     "original_name": "le-bassin-aux-nympheas",
@@ -1229,7 +1377,8 @@
     "fr_title": "Le Bassin aux nymphéas",
     "en_title": "Le Bassin Aux Nymphéas",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Le%20bassin%20aux%20nymph%C3%A9as%20-%20Claude%20Monet.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Le%20bassin%20aux%20nymph%C3%A9as%20-%20Claude%20Monet.jpg",
+    "musee": "Musée d'Orsay, Paris"
   },
   {
     "original_name": "the-sower-iii-version-1",
@@ -1237,7 +1386,8 @@
     "fr_title": "Le semeur au soleil couchant",
     "en_title": "The Sower III (version 1)",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Vincent%20van%20Gogh%20-%20Le%20Semeur%20au%20soleil%20couchant%20-%2049%20-%20Foundation%20E.G.%20B%C3%BChrle%20Collection.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Vincent%20van%20Gogh%20-%20Le%20Semeur%20au%20soleil%20couchant%20-%2049%20-%20Foundation%20E.G.%20B%C3%BChrle%20Collection.jpg",
+    "musee": "Musée Kröller-Müller, Otterlo"
   },
   {
     "original_name": "bathers-les-grandes-baigneuses",
@@ -1253,7 +1403,8 @@
     "fr_title": "Les Casseurs de pierres",
     "en_title": "The Stone Breakers",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustave%20Courbet%20018.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Gustave%20Courbet%20018.jpg",
+    "musee": "Œuvre détruite"
   },
   {
     "original_name": "young-hare",
@@ -1261,7 +1412,8 @@
     "fr_title": "Le Lièvre",
     "en_title": "Young Hare",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Albrecht%20D%C3%BCrer%20-%20Hare%2C%201502%20-%20Google%20Art%20Project.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Albrecht%20D%C3%BCrer%20-%20Hare%2C%201502%20-%20Google%20Art%20Project.jpg",
+    "musee": "Albertina, Vienne"
   },
   {
     "original_name": "the-third-of-may-1808",
@@ -1269,7 +1421,8 @@
     "fr_title": "Tres de mayo",
     "en_title": "The Third of May 1808",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/El%20Tres%20de%20Mayo%2C%20by%20Francisco%20de%20Goya%2C%20from%20Prado%20in%20Google%20Earth.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/El%20Tres%20de%20Mayo%2C%20by%20Francisco%20de%20Goya%2C%20from%20Prado%20in%20Google%20Earth.jpg",
+    "musee": "Musée du Prado, Madrid"
   },
   {
     "original_name": "three-beauties-of-the-present-day",
@@ -1277,7 +1430,8 @@
     "fr_title": "Trois beautés de notre temps",
     "en_title": "Three Beauties of the Present Day",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Kitagawa%20Utamaro%20-%20Toji%20san%20bijin%20(Three%20Beauties%20of%20the%20Present%20Day)From%20Bijin-ga%20(Pictures%20of%20Beautiful%20Women)%2C%20published%20by%20Tsutaya%20Juzaburo%20-%20Google%20Art%20Project.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Kitagawa%20Utamaro%20-%20Toji%20san%20bijin%20(Three%20Beauties%20of%20the%20Present%20Day)From%20Bijin-ga%20(Pictures%20of%20Beautiful%20Women)%2C%20published%20by%20Tsutaya%20Juzaburo%20-%20Google%20Art%20Project.jpg",
+    "musee": "Metropolitan Museum of Art, New York"
   },
   {
     "original_name": "sudden-shower-over-shin-ohashi-bridge-and-atake",
@@ -1285,7 +1439,8 @@
     "fr_title": "Sudden Shower over Shin-Ōhashi bridge and Atake",
     "en_title": "Sudden Shower over Shin-Ōhashi Bridge and Atake",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Utagawa%20Hiroshige%20-%20Evening%20Shower%20at%20Atake%20and%20the%20Great%20Bridge.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Utagawa%20Hiroshige%20-%20Evening%20Shower%20at%20Atake%20and%20the%20Great%20Bridge.jpg",
+    "musee": "Metropolitan Museum of Art, New York"
   },
   {
     "original_name": "marilyn-diptych",
@@ -1293,7 +1448,8 @@
     "fr_title": "Marilyn Diptych",
     "en_title": "Marilyn Diptych",
     "image_verified": true,
-    "image_url": "https://en.wikipedia.org/wiki/Special:FilePath/Marilyndiptych.jpg"
+    "image_url": "https://en.wikipedia.org/wiki/Special:FilePath/Marilyndiptych.jpg",
+    "musee": "Tate Modern, Londres"
   },
   {
     "original_name": "eight-elvises",
@@ -1301,7 +1457,8 @@
     "fr_title": "Eight Elvises",
     "en_title": "Eight Elvises",
     "image_verified": true,
-    "image_url": "https://en.wikipedia.org/wiki/Special:FilePath/Eight%20Elvises.jpg"
+    "image_url": "https://en.wikipedia.org/wiki/Special:FilePath/Eight%20Elvises.jpg",
+    "musee": "Collection privée"
   },
   {
     "original_name": "gold-marilyn-monroe",
@@ -1309,7 +1466,8 @@
     "fr_title": "Gold Marilyn Monroe",
     "en_title": "Gold Marilyn Monroe",
     "image_verified": true,
-    "image_url": "https://en.wikipedia.org/wiki/Special:FilePath/Warhol%20-%20Gold%20Marilyn%20Monroe%20(1962).jpg"
+    "image_url": "https://en.wikipedia.org/wiki/Special:FilePath/Warhol%20-%20Gold%20Marilyn%20Monroe%20(1962).jpg",
+    "musee": "Museum of Modern Art (MoMA), New York"
   },
   {
     "original_name": "campbells-soup-cans",
@@ -1317,7 +1475,8 @@
     "fr_title": "Campbell's Soup Cans",
     "en_title": "Campbell's Soup Cans",
     "image_verified": true,
-    "image_url": "https://en.wikipedia.org/wiki/Special:FilePath/20070624%20Campbell's%20Soup%20Cans%20-%20Milwaukee%20Art%20Museum.JPG"
+    "image_url": "https://en.wikipedia.org/wiki/Special:FilePath/20070624%20Campbell's%20Soup%20Cans%20-%20Milwaukee%20Art%20Museum.JPG",
+    "musee": "Museum of Modern Art (MoMA), New York"
   },
   {
     "original_name": "a-bigger-splash",
@@ -1325,7 +1484,8 @@
     "fr_title": "A Bigger Splash",
     "en_title": "A Bigger Splash",
     "image_verified": true,
-    "image_url": "https://en.wikipedia.org/wiki/Special:FilePath/Hockney,%20A%20Bigger%20Splash.jpg"
+    "image_url": "https://en.wikipedia.org/wiki/Special:FilePath/Hockney,%20A%20Bigger%20Splash.jpg",
+    "musee": "Tate Britain, Londres"
   },
   {
     "original_name": "mr-and-mrs-clark-and-percy",
@@ -1333,7 +1493,8 @@
     "fr_title": "Mr and Mrs Clark and Percy",
     "en_title": "Mr and Mrs Clark and Percy",
     "image_verified": true,
-    "image_url": "https://en.wikipedia.org/wiki/Special:FilePath/Hockney.clark-percy.jpg"
+    "image_url": "https://en.wikipedia.org/wiki/Special:FilePath/Hockney.clark-percy.jpg",
+    "musee": "Tate Britain, Londres"
   },
   {
     "original_name": "portrait-of-an-artist-pool-with-two-figures",
@@ -1341,7 +1502,8 @@
     "fr_title": "Portrait of an Artist (Pool with Two Figures)",
     "en_title": "Portrait of an Artist (Pool with Two Figures)",
     "image_verified": true,
-    "image_url": "https://en.wikipedia.org/wiki/Special:FilePath/Hockney_Pool_Figures.jpg"
+    "image_url": "https://en.wikipedia.org/wiki/Special:FilePath/Hockney_Pool_Figures.jpg",
+    "musee": "Collection privée"
   },
   {
     "original_name": "hopeless",
@@ -1349,7 +1511,8 @@
     "fr_title": "Hopeless",
     "en_title": "Hopeless",
     "image_verified": true,
-    "image_url": "https://en.wikipedia.org/wiki/Special:FilePath/Hopeless_(Lichtenstein).jpg"
+    "image_url": "https://en.wikipedia.org/wiki/Special:FilePath/Hopeless_(Lichtenstein).jpg",
+    "musee": "Kunstmuseum, Bâle"
   },
   {
     "original_name": "look-mickey",
@@ -1357,7 +1520,8 @@
     "fr_title": "Look Mickey",
     "en_title": "Look Mickey",
     "image_verified": true,
-    "image_url": "https://en.wikipedia.org/wiki/Special:FilePath/Look_Mickey.jpg"
+    "image_url": "https://en.wikipedia.org/wiki/Special:FilePath/Look_Mickey.jpg",
+    "musee": "National Gallery of Art, Washington"
   },
   {
     "original_name": "whaam",
@@ -1365,7 +1529,8 @@
     "fr_title": "Whaam!",
     "en_title": "Whaam!",
     "image_verified": true,
-    "image_url": "https://en.wikipedia.org/wiki/Special:FilePath/Roy_Lichtenstein_Whaam.jpg"
+    "image_url": "https://en.wikipedia.org/wiki/Special:FilePath/Roy_Lichtenstein_Whaam.jpg",
+    "musee": "Tate Modern, Londres"
   },
   {
     "original_name": "girl-with-balloon",
@@ -1373,7 +1538,8 @@
     "fr_title": "Girl with Balloon",
     "en_title": "Girl with Balloon",
     "image_verified": true,
-    "image_url": "https://en.wikipedia.org/wiki/Special:FilePath/Girl_with_balloon.jpg"
+    "image_url": "https://en.wikipedia.org/wiki/Special:FilePath/Girl_with_balloon.jpg",
+    "musee": "Localisation variable / Street Art"
   },
   {
     "original_name": "love-is-in-the-air-flower-thrower",
@@ -1381,7 +1547,8 @@
     "fr_title": "L'Amour est dans l'air (Le Lanceur de fleurs)",
     "en_title": "Love is in the Air (Flower Thrower)",
     "image_verified": false,
-    "image_url": ""
+    "image_url": "",
+    "musee": "Localisation variable / Street Art"
   },
   {
     "original_name": "le-secret-de-la-grande-pyramide",
@@ -1389,7 +1556,8 @@
     "fr_title": "Le Secret de la Grande Pyramide",
     "en_title": "The Secret of the Great Pyramid",
     "image_verified": false,
-    "image_url": ""
+    "image_url": "",
+    "musee": "Œuvre détruite"
   },
   {
     "original_name": "women-are-heroes",
@@ -1397,7 +1565,8 @@
     "fr_title": "Women Are Heroes",
     "en_title": "Women Are Heroes",
     "image_verified": false,
-    "image_url": ""
+    "image_url": "",
+    "musee": "Localisation variable / Street Art"
   },
   {
     "original_name": "boy-and-dog-in-a-johnnypump",
@@ -1405,7 +1574,8 @@
     "fr_title": "Boy and Dog in a Johnnypump",
     "en_title": "Boy and Dog in a Johnnypump",
     "image_verified": true,
-    "image_url": "https://en.wikipedia.org/wiki/Special:FilePath/Boy-and-Dog-in-Johnnypump-1982.jpg"
+    "image_url": "https://en.wikipedia.org/wiki/Special:FilePath/Boy-and-Dog-in-Johnnypump-1982.jpg",
+    "musee": "The Brant Foundation, Greenwich"
   },
   {
     "original_name": "irony-of-negro-policeman",
@@ -1413,7 +1583,8 @@
     "fr_title": "Irony of Negro Policeman",
     "en_title": "Irony of Negro Policeman",
     "image_verified": true,
-    "image_url": "https://en.wikipedia.org/wiki/Special:FilePath/Basquiat-irony-of-negro-policeman-1981.jpg"
+    "image_url": "https://en.wikipedia.org/wiki/Special:FilePath/Basquiat-irony-of-negro-policeman-1981.jpg",
+    "musee": "The Brant Foundation, Greenwich"
   },
   {
     "original_name": "untitled-skull",
@@ -1421,7 +1592,8 @@
     "fr_title": "Sans titre (Crâne)",
     "en_title": "Untitled (Skull)",
     "image_verified": true,
-    "image_url": "https://en.wikipedia.org/wiki/Special:FilePath/Untitled-Head-Jean-Michel_Basquiat-1981.jpg"
+    "image_url": "https://en.wikipedia.org/wiki/Special:FilePath/Untitled-Head-Jean-Michel_Basquiat-1981.jpg",
+    "musee": "The Broad, Los Angeles"
   },
   {
     "original_name": "companion",
@@ -1429,7 +1601,8 @@
     "fr_title": "Companion",
     "en_title": "Companion",
     "image_verified": false,
-    "image_url": ""
+    "image_url": "",
+    "musee": "Localisation variable / Street Art"
   },
   {
     "original_name": "crack-is-wack",
@@ -1437,7 +1610,8 @@
     "fr_title": "Crack is Wack",
     "en_title": "Crack is Wack",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Crack_is_wack_-_Keith_Haring.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Crack_is_wack_-_Keith_Haring.jpg",
+    "musee": "Crack is Wack Playground, New York"
   },
   {
     "original_name": "tuttomondo",
@@ -1445,7 +1619,8 @@
     "fr_title": "Tuttomondo",
     "en_title": "Tuttomondo",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Tuttomondo_-_Keith_Haring_1.jpg"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/Tuttomondo_-_Keith_Haring_1.jpg",
+    "musee": "Église Sant'Antonio Abate, Pise"
   },
   {
     "original_name": "radiant-baby",
@@ -1461,7 +1636,8 @@
     "fr_title": "Affiche Hope (Barack Obama)",
     "en_title": "Hope Poster (Barack Obama)",
     "image_verified": true,
-    "image_url": "https://en.wikipedia.org/wiki/Special:FilePath/Barack_Obama_Hope_poster.jpg"
+    "image_url": "https://en.wikipedia.org/wiki/Special:FilePath/Barack_Obama_Hope_poster.jpg",
+    "musee": "National Portrait Gallery, Washington"
   },
   {
     "original_name": "marianne",
@@ -1469,7 +1645,8 @@
     "fr_title": "Marianne",
     "en_title": "Marianne",
     "image_verified": true,
-    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/MariannedeTheodoreDoriot.JPG"
+    "image_url": "https://commons.wikimedia.org/wiki/Special:FilePath/MariannedeTheodoreDoriot.JPG",
+    "musee": "Mur public, Paris"
   },
   {
     "original_name": "le-penseur",
@@ -1477,7 +1654,8 @@
     "fr_title": "Le Penseur",
     "en_title": "The Thinker",
     "image_verified": true,
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Le_Penseur_by_Rodin_%28Kunsthalle_Bielefeld%29_2014-04-10.JPG/960px-Le_Penseur_by_Rodin_%28Kunsthalle_Bielefeld%29_2014-04-10.JPG"
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Le_Penseur_by_Rodin_%28Kunsthalle_Bielefeld%29_2014-04-10.JPG/960px-Le_Penseur_by_Rodin_%28Kunsthalle_Bielefeld%29_2014-04-10.JPG",
+    "musee": "Musée Rodin, Paris"
   },
   {
     "original_name": "le-baiser-rodin",
@@ -1485,7 +1663,8 @@
     "fr_title": "Le Baiser",
     "en_title": "The Kiss",
     "image_verified": true,
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Rodin_-_Le_Baiser_06.jpg/960px-Rodin_-_Le_Baiser_06.jpg"
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Rodin_-_Le_Baiser_06.jpg/960px-Rodin_-_Le_Baiser_06.jpg",
+    "musee": "Musée Rodin, Paris"
   },
   {
     "original_name": "les-bourgeois-de-calais",
@@ -1493,7 +1672,8 @@
     "fr_title": "Les Bourgeois de Calais",
     "en_title": "The Burghers of Calais",
     "image_verified": true,
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Statue_bourgeois_calais_rodin.jpg/960px-Statue_bourgeois_calais_rodin.jpg"
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Statue_bourgeois_calais_rodin.jpg/960px-Statue_bourgeois_calais_rodin.jpg",
+    "musee": "Musée Rodin, Paris"
   },
   {
     "original_name": "maman",
@@ -1501,7 +1681,8 @@
     "fr_title": "Maman",
     "en_title": "Maman",
     "image_verified": true,
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Giant_spider_strikes_again%21.jpg/960px-Giant_spider_strikes_again%21.jpg"
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Giant_spider_strikes_again%21.jpg/960px-Giant_spider_strikes_again%21.jpg",
+    "musee": "Tate Modern, Londres"
   },
   {
     "original_name": "autoportrait-bugatti-verte",
@@ -1509,7 +1690,8 @@
     "fr_title": "Autoportrait dans la Bugatti verte",
     "en_title": "Self-Portrait in the Green Bugatti",
     "image_verified": true,
-    "image_url": "https://upload.wikimedia.org/wikipedia/en/c/c7/Tamara_de_Lempicka%2C_Autoportrait_%28Tamara_in_a_Green_Bugatti%29.jpeg"
+    "image_url": "https://upload.wikimedia.org/wikipedia/en/c/c7/Tamara_de_Lempicka%2C_Autoportrait_%28Tamara_in_a_Green_Bugatti%29.jpeg",
+    "musee": "Collection privée"
   },
   {
     "original_name": "carre-noir-sur-fond-blanc",
@@ -1517,7 +1699,8 @@
     "fr_title": "Carré noir sur fond blanc",
     "en_title": "Black Square",
     "image_verified": true,
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Kazimir_Malevich%2C_1915%2C_Black_Suprematic_Square%2C_oil_on_linen_canvas%2C_79.5_x_79.5_cm%2C_Tretyakov_Gallery%2C_Moscow.jpg/1280px-Kazimir_Malevich%2C_1915%2C_Black_Suprematic_Square%2C_oil_on_linen_canvas%2C_79.5_x_79.5_cm%2C_Tretyakov_Gallery%2C_Moscow.jpg"
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Kazimir_Malevich%2C_1915%2C_Black_Suprematic_Square%2C_oil_on_linen_canvas%2C_79.5_x_79.5_cm%2C_Tretyakov_Gallery%2C_Moscow.jpg/1280px-Kazimir_Malevich%2C_1915%2C_Black_Suprematic_Square%2C_oil_on_linen_canvas%2C_79.5_x_79.5_cm%2C_Tretyakov_Gallery%2C_Moscow.jpg",
+    "musee": "Galerie Tretiakov, Moscou"
   },
   {
     "original_name": "jimson-weed-white-flower-no-1",
@@ -1525,7 +1708,8 @@
     "fr_title": "Jimson Weed/White Flower No. 1",
     "en_title": "Jimson Weed/White Flower No. 1",
     "image_verified": true,
-    "image_url": "https://upload.wikimedia.org/wikipedia/en/0/07/Jimson_Weed_by_Georgia_O%27Keeffe.jpg"
+    "image_url": "https://upload.wikimedia.org/wikipedia/en/0/07/Jimson_Weed_by_Georgia_O%27Keeffe.jpg",
+    "musee": "Crystal Bridges Museum of American Art, Bentonville"
   },
   {
     "original_name": "flag-jasper-johns",
@@ -1533,7 +1717,8 @@
     "fr_title": "Flag",
     "en_title": "Flag",
     "image_verified": true,
-    "image_url": "https://upload.wikimedia.org/wikipedia/en/6/6b/Jasper_Johns%27s_%27Flag%27%2C_Encaustic%2C_oil_and_collage_on_fabric_mounted_on_plywood%2C1954-55.jpg"
+    "image_url": "https://upload.wikimedia.org/wikipedia/en/6/6b/Jasper_Johns%27s_%27Flag%27%2C_Encaustic%2C_oil_and_collage_on_fabric_mounted_on_plywood%2C1954-55.jpg",
+    "musee": "Museum of Modern Art (MoMA), New York"
   },
   {
     "original_name": "spoonbridge-and-cherry",
@@ -1541,7 +1726,8 @@
     "fr_title": "Spoonbridge and Cherry",
     "en_title": "Spoonbridge and Cherry",
     "image_verified": true,
-    "image_url": "https://upload.wikimedia.org/wikipedia/en/2/21/Spoonbridge_and_Cherry%2C_May_2008.jpg"
+    "image_url": "https://upload.wikimedia.org/wikipedia/en/2/21/Spoonbridge_and_Cherry%2C_May_2008.jpg",
+    "musee": "Minneapolis Sculpture Garden, Minneapolis"
   },
   {
     "original_name": "victoire-de-samothrace",
@@ -1549,7 +1735,8 @@
     "fr_title": "La Victoire de Samothrace",
     "en_title": "Winged Victory of Samothrace",
     "image_verified": true,
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Victoire_de_Samothrace_-_Musee_du_Louvre_-_20190812.jpg/960px-Victoire_de_Samothrace_-_Musee_du_Louvre_-_20190812.jpg"
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Victoire_de_Samothrace_-_Musee_du_Louvre_-_20190812.jpg/960px-Victoire_de_Samothrace_-_Musee_du_Louvre_-_20190812.jpg",
+    "musee": "Musée du Louvre, Paris"
   },
   {
     "original_name": "venus-de-milo",
@@ -1557,7 +1744,8 @@
     "fr_title": "La Vénus de Milo",
     "en_title": "Venus de Milo",
     "image_verified": true,
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Front_views_of_the_Venus_de_Milo.jpg/960px-Front_views_of_the_Venus_de_Milo.jpg"
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Front_views_of_the_Venus_de_Milo.jpg/960px-Front_views_of_the_Venus_de_Milo.jpg",
+    "musee": "Musée du Louvre, Paris"
   },
   {
     "original_name": "buste-de-nefertiti",
@@ -1565,7 +1753,8 @@
     "fr_title": "Le Buste de Néfertiti",
     "en_title": "Nefertiti Bust",
     "image_verified": true,
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Nofretete_Neues_Museum.jpg/960px-Nofretete_Neues_Museum.jpg"
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Nofretete_Neues_Museum.jpg/960px-Nofretete_Neues_Museum.jpg",
+    "musee": "Neues Museum, Berlin"
   },
   {
     "original_name": "appel-de-saint-matthieu",
@@ -1573,7 +1762,8 @@
     "fr_title": "L'Appel de saint Matthieu",
     "en_title": "The Calling of St Matthew",
     "image_verified": true,
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Caravaggio_%E2%80%94_The_Calling_of_Saint_Matthew.jpg/1280px-Caravaggio_%E2%80%94_The_Calling_of_Saint_Matthew.jpg"
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Caravaggio_%E2%80%94_The_Calling_of_Saint_Matthew.jpg/1280px-Caravaggio_%E2%80%94_The_Calling_of_Saint_Matthew.jpg",
+    "musee": "Église Saint-Louis-des-Français, Rome"
   },
   {
     "original_name": "massacre-des-innocents-rubens",
@@ -1581,7 +1771,8 @@
     "fr_title": "Le Massacre des Innocents",
     "en_title": "Massacre of the Innocents",
     "image_verified": true,
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Rubens_-_Massacre_of_the_Innocents_-_Art_Gallery_of_Ontario_2.jpg/960px-Rubens_-_Massacre_of_the_Innocents_-_Art_Gallery_of_Ontario_2.jpg"
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Rubens_-_Massacre_of_the_Innocents_-_Art_Gallery_of_Ontario_2.jpg/960px-Rubens_-_Massacre_of_the_Innocents_-_Art_Gallery_of_Ontario_2.jpg",
+    "musee": "Art Gallery of Ontario, Toronto"
   },
   {
     "original_name": "extase-de-sainte-therese",
@@ -1589,7 +1780,8 @@
     "fr_title": "L'Extase de sainte Thérèse",
     "en_title": "Ecstasy of Saint Teresa",
     "image_verified": true,
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Ecstasy_of_St._Teresa_HDR.jpg/960px-Ecstasy_of_St._Teresa_HDR.jpg"
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Ecstasy_of_St._Teresa_HDR.jpg/960px-Ecstasy_of_St._Teresa_HDR.jpg",
+    "musee": "Église Santa Maria della Vittoria, Rome"
   },
   {
     "original_name": "le-jugement-dernier-michel-ange",
@@ -1597,7 +1789,8 @@
     "fr_title": "Le Jugement dernier",
     "en_title": "The Last Judgment",
     "image_verified": true,
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Last_Judgement_%28Michelangelo%29.jpg/960px-Last_Judgement_%28Michelangelo%29.jpg"
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Last_Judgement_%28Michelangelo%29.jpg/960px-Last_Judgement_%28Michelangelo%29.jpg",
+    "musee": "Chapelle Sixtine, Vatican"
   },
   {
     "original_name": "la-ronde-de-nuit",
@@ -1605,7 +1798,8 @@
     "fr_title": "La Ronde de nuit",
     "en_title": "The Night Watch",
     "image_verified": true,
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/La_ronda_de_noche%2C_por_Rembrandt_van_Rijn.jpg/960px-La_ronda_de_noche%2C_por_Rembrandt_van_Rijn.jpg"
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/La_ronda_de_noche%2C_por_Rembrandt_van_Rijn.jpg/960px-La_ronda_de_noche%2C_por_Rembrandt_van_Rijn.jpg",
+    "musee": "Rijksmuseum, Amsterdam"
   },
   {
     "original_name": "impression-soleil-levant",
@@ -1613,7 +1807,8 @@
     "fr_title": "Impression, soleil levant",
     "en_title": "Impression, Sunrise",
     "image_verified": true,
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Monet_-_Impression%2C_Sunrise.jpg/960px-Monet_-_Impression%2C_Sunrise.jpg"
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Monet_-_Impression%2C_Sunrise.jpg/960px-Monet_-_Impression%2C_Sunrise.jpg",
+    "musee": "Musée Marmottan Monet, Paris"
   },
   {
     "original_name": "autoportrait-oreille-bandee",
@@ -1621,7 +1816,8 @@
     "fr_title": "Autoportrait à l'oreille bandée",
     "en_title": "Self-Portrait with Bandaged Ear",
     "image_verified": true,
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Vincent_van_Gogh_-_Self-portrait_with_bandaged_ear_%281889%2C_Courtauld_Institute%29.jpg/960px-Vincent_van_Gogh_-_Self-portrait_with_bandaged_ear_%281889%2C_Courtauld_Institute%29.jpg"
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Vincent_van_Gogh_-_Self-portrait_with_bandaged_ear_%281889%2C_Courtauld_Institute%29.jpg/960px-Vincent_van_Gogh_-_Self-portrait_with_bandaged_ear_%281889%2C_Courtauld_Institute%29.jpg",
+    "musee": "Courtauld Gallery, Londres"
   },
   {
     "original_name": "champ-de-ble-aux-corbeaux",
@@ -1629,7 +1825,8 @@
     "fr_title": "Champ de blé aux corbeaux",
     "en_title": "Wheatfield with Crows",
     "image_verified": true,
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Korenveld_met_kraaien_-_s0149V1962_-_Van_Gogh_Museum.jpg/960px-Korenveld_met_kraaien_-_s0149V1962_-_Van_Gogh_Museum.jpg"
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Korenveld_met_kraaien_-_s0149V1962_-_Van_Gogh_Museum.jpg/960px-Korenveld_met_kraaien_-_s0149V1962_-_Van_Gogh_Museum.jpg",
+    "musee": "Musée Van Gogh, Amsterdam"
   },
   {
     "original_name": "le-cri",
@@ -1637,7 +1834,8 @@
     "fr_title": "Le Cri",
     "en_title": "The Scream",
     "image_verified": true,
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Edvard_Munch_-_The_Scream.jpg/960px-Edvard_Munch_-_The_Scream.jpg"
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Edvard_Munch_-_The_Scream.jpg/960px-Edvard_Munch_-_The_Scream.jpg",
+    "musee": "Musée national, Oslo"
   },
   {
     "original_name": "nu-descendant-un-escalier-n2",
@@ -1645,7 +1843,8 @@
     "fr_title": "Nu descendant un escalier (N°2)",
     "en_title": "Nude Descending a Staircase, No. 2",
     "image_verified": true,
-    "image_url": "https://upload.wikimedia.org/wikipedia/en/thumb/c/c0/Duchamp_-_Nude_Descending_a_Staircase.jpg/960px-Duchamp_-_Nude_Descending_a_Staircase.jpg"
+    "image_url": "https://upload.wikimedia.org/wikipedia/en/thumb/c/c0/Duchamp_-_Nude_Descending_a_Staircase.jpg/960px-Duchamp_-_Nude_Descending_a_Staircase.jpg",
+    "musee": "Philadelphia Museum of Art, Philadelphie"
   },
   {
     "original_name": "les-demoiselles-davignon",
@@ -1653,7 +1852,8 @@
     "fr_title": "Les Demoiselles d'Avignon",
     "en_title": "Les Demoiselles d'Avignon",
     "image_verified": true,
-    "image_url": "https://upload.wikimedia.org/wikipedia/en/thumb/4/4c/Les_Demoiselles_d%27Avignon.jpg/960px-Les_Demoiselles_d%27Avignon.jpg"
+    "image_url": "https://upload.wikimedia.org/wikipedia/en/thumb/4/4c/Les_Demoiselles_d%27Avignon.jpg/960px-Les_Demoiselles_d%27Avignon.jpg",
+    "musee": "Museum of Modern Art (MoMA), New York"
   },
   {
     "original_name": "la-persistance-de-la-memoire",
@@ -1661,7 +1861,8 @@
     "fr_title": "La Persistance de la mémoire",
     "en_title": "The Persistence of Memory",
     "image_verified": true,
-    "image_url": "https://upload.wikimedia.org/wikipedia/en/d/dd/The_Persistence_of_Memory.jpg"
+    "image_url": "https://upload.wikimedia.org/wikipedia/en/d/dd/The_Persistence_of_Memory.jpg",
+    "musee": "Museum of Modern Art (MoMA), New York"
   },
   {
     "original_name": "le-fils-de-lhomme",
@@ -1669,7 +1870,8 @@
     "fr_title": "Le Fils de l'homme",
     "en_title": "The Son of Man",
     "image_verified": true,
-    "image_url": "https://upload.wikimedia.org/wikipedia/en/e/e5/Magritte_TheSonOfMan.jpg"
+    "image_url": "https://upload.wikimedia.org/wikipedia/en/e/e5/Magritte_TheSonOfMan.jpg",
+    "musee": "Collection privée"
   },
   {
     "original_name": "moonrise-hernandez-new-mexico",
@@ -1709,7 +1911,8 @@
     "fr_title": "Autoportrait à la fourrure",
     "en_title": "Self-Portrait, Munich",
     "image_verified": true,
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/D%C3%BCrer_Alte_Pinakothek.jpg/960px-D%C3%BCrer_Alte_Pinakothek.jpg"
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/D%C3%BCrer_Alte_Pinakothek.jpg/960px-D%C3%BCrer_Alte_Pinakothek.jpg",
+    "musee": "Alte Pinakothek, Munich"
   },
   {
     "original_name": "intervention-des-sabines",
@@ -1717,7 +1920,8 @@
     "fr_title": "L'Intervention des Sabines",
     "en_title": "The Intervention of the Sabine Women",
     "image_verified": true,
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/The_Intervention_of_the_Sabine_Women_-_David_%28Louvre_INV_3691%29.jpg/960px-The_Intervention_of_the_Sabine_Women_-_David_%28Louvre_INV_3691%29.jpg"
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/The_Intervention_of_the_Sabine_Women_-_David_%28Louvre_INV_3691%29.jpg/960px-The_Intervention_of_the_Sabine_Women_-_David_%28Louvre_INV_3691%29.jpg",
+    "musee": "Musée du Louvre, Paris"
   },
   {
     "original_name": "haleurs-de-la-volga",
@@ -1725,7 +1929,8 @@
     "fr_title": "Les Haleurs de la Volga",
     "en_title": "Barge Haulers on the Volga",
     "image_verified": true,
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Ilia_Efimovich_Repin_%281844-1930%29_-_Volga_Boatmen_%281870-1873%29.jpg/960px-Ilia_Efimovich_Repin_%281844-1930%29_-_Volga_Boatmen_%281870-1873%29.jpg"
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Ilia_Efimovich_Repin_%281844-1930%29_-_Volga_Boatmen_%281870-1873%29.jpg/960px-Ilia_Efimovich_Repin_%281844-1930%29_-_Volga_Boatmen_%281870-1873%29.jpg",
+    "musee": "Musée Russe, Saint-Pétersbourg"
   },
   {
     "original_name": "enterrement-a-ornans",
@@ -1733,7 +1938,8 @@
     "fr_title": "Un enterrement à Ornans",
     "en_title": "A Burial at Ornans",
     "image_verified": true,
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Gustave_Courbet_-_A_Burial_at_Ornans_-_Google_Art_Project_2.jpg/960px-Gustave_Courbet_-_A_Burial_at_Ornans_-_Google_Art_Project_2.jpg"
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Gustave_Courbet_-_A_Burial_at_Ornans_-_Google_Art_Project_2.jpg/960px-Gustave_Courbet_-_A_Burial_at_Ornans_-_Google_Art_Project_2.jpg",
+    "musee": "Musée d'Orsay, Paris"
   },
   {
     "original_name": "absinthe-degas",
@@ -1749,7 +1955,8 @@
     "fr_title": "Les Grandes Baigneuses",
     "en_title": "The Bathers",
     "image_verified": true,
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Paul_C%C3%A9zanne%2C_French_-_The_Large_Bathers_-_Google_Art_Project.jpg/960px-Paul_C%C3%A9zanne%2C_French_-_The_Large_Bathers_-_Google_Art_Project.jpg"
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Paul_C%C3%A9zanne%2C_French_-_The_Large_Bathers_-_Google_Art_Project.jpg/960px-Paul_C%C3%A9zanne%2C_French_-_The_Large_Bathers_-_Google_Art_Project.jpg",
+    "musee": "Philadelphia Museum of Art, Philadelphie"
   },
   {
     "original_name": "dou-venons-nous",
@@ -1757,7 +1964,8 @@
     "fr_title": "D'où venons-nous ? Que sommes-nous ? Où allons-nous ?",
     "en_title": "Where Do We Come From? What Are We? Where Are We Going?",
     "image_verified": true,
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Gauguin_-_Where_Do_We_Come_From%3F_What_Are_We%3F_Where_Are_We_Going%3F_%281897-98%29.jpg/960px-Gauguin_-_Where_Do_We_Come_From%3F_What_Are_We%3F_Where_Are_We_Going%3F_%281897-98%29.jpg"
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Gauguin_-_Where_Do_We_Come_From%3F_What_Are_We%3F_Where_Are_We_Going%3F_%281897-98%29.jpg/960px-Gauguin_-_Where_Do_We_Come_From%3F_What_Are_We%3F_Where_Are_We_Going%3F_%281897-98%29.jpg",
+    "musee": "Museum of Fine Arts, Boston"
   },
   {
     "original_name": "mystery-melancholy-street",
@@ -1765,7 +1973,8 @@
     "fr_title": "Mystère et mélancolie d'une rue",
     "en_title": "Mystery and Melancholy of a Street",
     "image_verified": true,
-    "image_url": "https://upload.wikimedia.org/wikipedia/en/5/5b/Giorgio_de_Chirico_-_Mystery_and_Melancholy_of_a_Street_%281914%29.jpg"
+    "image_url": "https://upload.wikimedia.org/wikipedia/en/5/5b/Giorgio_de_Chirico_-_Mystery_and_Melancholy_of_a_Street_%281914%29.jpg",
+    "musee": "Collection privée"
   },
   {
     "original_name": "the-elephant-celebes",
@@ -1773,7 +1982,8 @@
     "fr_title": "L'Éléphant Célèbes",
     "en_title": "The Elephant Celebes",
     "image_verified": true,
-    "image_url": "https://upload.wikimedia.org/wikipedia/en/thumb/2/2b/The_Elephant_Celebes.jpg/960px-The_Elephant_Celebes.jpg"
+    "image_url": "https://upload.wikimedia.org/wikipedia/en/thumb/2/2b/The_Elephant_Celebes.jpg/960px-The_Elephant_Celebes.jpg",
+    "musee": "Tate Modern, Londres"
   },
   {
     "original_name": "empire-of-lights",
@@ -1781,7 +1991,8 @@
     "fr_title": "L'Empire des lumières",
     "en_title": "The Empire of Lights",
     "image_verified": true,
-    "image_url": "https://upload.wikimedia.org/wikipedia/en/8/8f/The_Empire_of_Light_Belgium.jpg"
+    "image_url": "https://upload.wikimedia.org/wikipedia/en/8/8f/The_Empire_of_Light_Belgium.jpg",
+    "musee": "Musées royaux des Beaux-Arts de Belgique, Bruxelles"
   },
   {
     "original_name": "mama-papa-is-wounded",
@@ -1789,7 +2000,8 @@
     "fr_title": "Maman, Papa est blessé !",
     "en_title": "Mama, Papa is Wounded!",
     "image_verified": true,
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Mama%2C_Papa_is_Wounded%21.jpg/960px-Mama%2C_Papa_is_Wounded%21.jpg"
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Mama%2C_Papa_is_Wounded%21.jpg/960px-Mama%2C_Papa_is_Wounded%21.jpg",
+    "musee": "Museum of Modern Art (MoMA), New York"
   },
   {
     "original_name": "ingres-violin",
@@ -1797,7 +2009,8 @@
     "fr_title": "Le Violon d'Ingres",
     "en_title": "Ingres's Violin",
     "image_verified": true,
-    "image_url": "https://upload.wikimedia.org/wikipedia/en/thumb/9/93/Le_Violon_d%27Ingres.png/960px-Le_Violon_d%27Ingres.png"
+    "image_url": "https://upload.wikimedia.org/wikipedia/en/thumb/9/93/Le_Violon_d%27Ingres.png/960px-Le_Violon_d%27Ingres.png",
+    "musee": "Musée national d'Art moderne, Paris"
   },
   {
     "original_name": "l-h-o-o-q",
@@ -1805,7 +2018,8 @@
     "fr_title": "L.H.O.O.Q.",
     "en_title": "L.H.O.O.Q.",
     "image_verified": true,
-    "image_url": "https://upload.wikimedia.org/wikipedia/en/thumb/7/74/Marcel_Duchamp%2C_1919%2C_L.H.O.O.Q.jpg/960px-Marcel_Duchamp%2C_1919%2C_L.H.O.O.Q.jpg"
+    "image_url": "https://upload.wikimedia.org/wikipedia/en/thumb/7/74/Marcel_Duchamp%2C_1919%2C_L.H.O.O.Q.jpg/960px-Marcel_Duchamp%2C_1919%2C_L.H.O.O.Q.jpg",
+    "musee": "Musée national d'Art moderne, Paris"
   },
   {
     "original_name": "blue-nude-ii",
@@ -1813,7 +2027,8 @@
     "fr_title": "Nu bleu II",
     "en_title": "Blue Nude II",
     "image_verified": true,
-    "image_url": "https://upload.wikimedia.org/wikipedia/en/7/78/Blue_Nudes_Henri_Matisse.jpg"
+    "image_url": "https://upload.wikimedia.org/wikipedia/en/7/78/Blue_Nudes_Henri_Matisse.jpg",
+    "musee": "Musée national d'Art moderne, Paris"
   },
   {
     "original_name": "bride-of-the-wind",
@@ -1821,7 +2036,8 @@
     "fr_title": "La Fiancée du vent",
     "en_title": "The Bride of the Wind",
     "image_verified": true,
-    "image_url": "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/%27Bride_of_the_Wind%27%2C_oil_on_canvas_painting_by_Oskar_Kokoschka%2C_a_self-portrait_expressing_his_unrequited_love_for_Alma_Mahler_%28widow_of_composer_Gustav_Mahler%29%2C_1913.jpg/960px-thumbnail.jpg"
+    "image_url": "https://upload.wikimedia.org/wikipedia/en/thumb/8/8c/%27Bride_of_the_Wind%27%2C_oil_on_canvas_painting_by_Oskar_Kokoschka%2C_a_self-portrait_expressing_his_unrequited_love_for_Alma_Mahler_%28widow_of_composer_Gustav_Mahler%29%2C_1913.jpg/960px-thumbnail.jpg",
+    "musee": "Kunstmuseum, Bâle"
   },
   {
     "original_name": "just-what-is-it-that-makes-todays-homes-so-different",
@@ -1829,6 +2045,7 @@
     "fr_title": "Qu'est-ce qui rend exactement les maisons d'aujourd'hui si différentes, si séduisantes ?",
     "en_title": "Just what is it that makes today's homes so different, so appealing?",
     "image_verified": true,
-    "image_url": "https://upload.wikimedia.org/wikipedia/en/f/ff/Hamilton-appealing2.jpg"
+    "image_url": "https://upload.wikimedia.org/wikipedia/en/f/ff/Hamilton-appealing2.jpg",
+    "musee": "Kunsthalle, Tübingen"
   }
 ]

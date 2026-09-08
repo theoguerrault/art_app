@@ -554,6 +554,7 @@ model artworks {
   aspect_ratio          Float                   @default(1.33)
   image_verified        Boolean                 @default(false)
   is_active             Boolean                 @default(true)
+  musee                 String?                 @db.VarChar(250)
   created_at            DateTime                @default(now()) @db.Timestamptz(6)
   artwork_translations  artwork_translations[]
   movements             movements               @relation(fields: [movement_id], references: [id], onUpdate: NoAction)

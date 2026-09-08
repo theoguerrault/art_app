@@ -1,13 +1,3 @@
-
-export interface MCQ {
-	question: string;
-	options: string[];
-	correctIndex: number;
-	explanation: string;
-}
-
-export type QCMSynthese = MCQ;
-
 export interface Movement {
 	id: number;
 	slug: string;

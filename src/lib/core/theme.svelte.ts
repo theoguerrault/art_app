@@ -3,7 +3,7 @@
 export type ThemeMode = 'light' | 'dark' | 'system';
 
 class ThemeStore {
-	current = $state<ThemeMode>('light');
+	current = $state<ThemeMode>('dark');
 
 	constructor() {
 		if (typeof window !== 'undefined') {
@@ -11,8 +11,8 @@ class ThemeStore {
 			if (saved === 'light' || saved === 'dark' || saved === 'system') {
 				this.current = saved;
 			} else {
-				// Default to light mode as required by product specifications
-				this.current = 'light';
+				// Default to dark gallery mode
+				this.current = 'dark';
 			}
 			this.apply(this.current);
 

@@ -36,8 +36,8 @@ Dark mode is the primary theme of the application, evoking a dark gallery or mus
 - Artwork cards and recommendation containers use rounded corners (`border-radius: 1rem` to `1.5rem`) to frame artwork previews cleanly.
 
 ### 3.3 Typography & Hierarchy
-- **Editorial Headings:** Artwork titles and primary section headers use high-contrast serif typography in sentence case or uppercase with subtle letter spacing (`letter-spacing: 0.05em`).
-- **Interface & Body Text:** Labels, metadata, and body text use a clean, geometric sans-serif font for maximum legibility at small sizes.
+- **Single Universal Sans-Serif:** The entire application and admin interface use a single geometric sans-serif typeface (`Geist` / `Inter`) across all headings, titles, body copy, metadata, and buttons for maximum modern visual consistency and legibility.
+- **Heading Weight & Tracking:** Headings use bold to extra-bold weights (`font-weight: 700` to `800`) with tight line heights (`line-height: 1.15` to `1.2`) and subtle letter spacing where appropriate.
 
 ---
 
@@ -49,3 +49,9 @@ Dark mode is the primary theme of the application, evoking a dark gallery or mus
 
 ### 4.2 Grid Consistency & Alignment
 - Movement overviews and artwork catalogs use a strict multi-column responsive grid layout with consistent gap spacing.
+
+### 4.3 Cold-Boot Splash Screen (`app.html` & `SplashScreen.svelte`)
+- **Instant Paint (0ms FOUC Prevention):** Critical splash screen HTML & CSS is pre-inlined in `app.html` to guarantee instant paint on cold boot before any page components render.
+- **Minimalist Logo Presentation:** Displays exclusively the centered app logo icon badge (`96px`) over a dark `#121212` canvas with ambient magenta glow (`#FA47FF`).
+- **Cold Boot Only:** Shown strictly once per session during cold startup (1.5 seconds duration); never shown during in-app navigation.
+- **Smooth Dissolve:** Dissolves via a hardware-accelerated 400ms cross-fade once initial assets and cache warmup complete.

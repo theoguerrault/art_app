@@ -6,62 +6,64 @@
 
 <div class="admin-view">
   <header class="admin-header sticky-header">
-    <h1 class="page-title">Administration des Artists</h1>
+    <h1 class="page-title">Administration des Artistes</h1>
     
     <form class="search-bar" action="/admin/artists" method="GET" data-sveltekit-keepfocus data-sveltekit-replacestate>
       <span class="search-icon" aria-hidden="true">
-        <MagnifyingGlass size={20} weight="bold" />
+        <MagnifyingGlass size={18} weight="bold" />
       </span>
       <input 
         type="search" 
         name="q"
         value={data.pagination?.q || ''} 
-        placeholder="Rechercher un artist par nom..."
-        aria-label="Rechercher un artist"
+        placeholder="Rechercher un artiste..."
+        aria-label="Rechercher un artiste"
       />
       <input type="hidden" name="page" value="1" />
     </form>
   </header>
 
-  <div class="art-grid">
+  <div class="items-grid">
     {#each data.artists as artist (artist.id)}
-      <a data-sveltekit-preload-data="hover" href={`/admin/artists/${artist.id}`} class="art-card">
-        <div class="art-status-wrapper">
-          <div class="art-status">
-            {#if artist.artist_translations[0]}
-              {#if artist.artist_translations[0].verification_status === 'VERIFIED'}
-                <div class="badge verified" title="Contenu validé">
-                  <CheckCircle size={16} weight="fill" />
-                  <span>Validé</span>
-                </div>
-              {:else if artist.artist_translations[0].verification_status === 'PENDING'}
-                <div class="badge pending" title="En attente de vérification">
-                  <Clock size={16} weight="fill" />
-                  <span>En attente</span>
-                </div>
-              {:else}
-                <div class="badge unknown">
-                  <span>{artist.artist_translations[0].verification_status}</span>
-                </div>
-              {/if}
+      {@const translation = artist.artist_translations?.[0]}
+      {@const status = translation?.verification_status?.toUpperCase()}
+      <a data-sveltekit-preload-data="hover" href={`/admin/artists/${artist.id}`} class="item-card">
+        <div class="card-status-bar">
+          {#if translation}
+            {#if status === 'VERIFIED'}
+              <span class="status-pill verified">
+                <CheckCircle size={13} weight="fill" />
+                Validé
+              </span>
+            {:else if status === 'PENDING' || status === 'PENDING_VALIDATION'}
+              <span class="status-pill pending">
+                <Clock size={13} weight="fill" />
+                En attente
+              </span>
             {:else}
-              <div class="badge empty" title="Sans contenu">
-                <span>Vide</span>
-              </div>
+              <span class="status-pill unknown">
+                {translation.verification_status}
+              </span>
             {/if}
-          </div>
+          {:else}
+            <span class="status-pill empty">
+              Vide
+            </span>
+          {/if}
         </div>
 
-        <div class="art-info">
-          <h3 class="art-title">{(artist.artist_translations?.[0]?.name || '')}</h3>
+        <div class="card-body">
+          <h2 class="card-title">{(translation?.name || artist.slug || '')}</h2>
           
-          {#if !artist.artist_translations[0] || artist.artist_translations[0].verification_status !== 'VERIFIED'}
-            <div class="action-verify">
-              <PenNib size={14} weight="bold" /> Vérifier le contenu
+          {#if !translation || status !== 'VERIFIED'}
+            <div class="action-link verify">
+              <PenNib size={14} weight="bold" />
+              <span>Vérifier le contenu</span>
             </div>
           {:else}
-            <div class="edit-action">
-              <CheckCircle size={14} weight="bold" /> Éditer le contenu
+            <div class="action-link edit">
+              <CheckCircle size={14} weight="bold" />
+              <span>Éditer le contenu</span>
             </div>
           {/if}
         </div>
@@ -82,8 +84,8 @@
   .admin-view {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
-    padding-bottom: 2rem;
+    gap: 1.25rem;
+    padding-bottom: 3rem;
   }
 
   .sticky-header {
@@ -99,11 +101,14 @@
   }
 
   .page-title {
-    font-size: 2rem;
+    font-family: var(--font-body);
+    font-size: 1.5rem;
     font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
     color: var(--color-text-primary);
-    margin-bottom: 1rem;
-    padding: 0;
+    margin: 0 0 1rem 0;
+    line-height: 1.2;
   }
 
   .search-bar {
@@ -115,7 +120,7 @@
 
   .search-icon {
     position: absolute;
-    left: 1rem;
+    left: 0.85rem;
     display: flex;
     align-items: center;
     pointer-events: none;
@@ -124,14 +129,13 @@
 
   .search-bar input {
     width: 100%;
-    padding: 0.85rem 1rem 0.85rem 2.8rem;
-    border-radius: 12px;
-    border: none;
+    padding: 0.75rem 1rem 0.75rem 2.5rem;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border);
     background-color: var(--color-surface);
     color: var(--color-text-primary);
-    font-size: 1rem;
-    box-shadow: inset 0 0 0 1px var(--color-border);
-    transition: box-shadow 0.2s ease, background-color 0.2s ease;
+    font-size: 0.95rem;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
     -webkit-appearance: none;
     appearance: none;
   }
@@ -139,121 +143,117 @@
   .search-bar input:focus {
     outline: none;
     background-color: var(--color-bg);
-    box-shadow: inset 0 0 0 2px var(--color-primary);
+    border-color: var(--color-primary);
   }
 
-  .art-card {
+  .search-bar input::placeholder {
+    color: var(--color-text-muted);
+  }
+
+  .items-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .item-card {
     display: flex;
     flex-direction: column;
     background-color: var(--color-surface);
-    border-radius: 16px;
+    border-radius: var(--radius-lg);
     overflow: hidden;
     text-decoration: none;
     color: inherit;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03), 0 1px 3px rgba(0, 0, 0, 0.02);
-    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s ease;
     border: 1px solid var(--color-border-subtle);
-    height: 100%;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
   }
 
-  .art-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.06), 0 4px 8px rgba(0, 0, 0, 0.04);
-    border-color: var(--color-border);
+  .item-card:active {
+    opacity: 0.7;
   }
 
-  .art-status-wrapper {
-    padding: 1rem;
+  .card-status-bar {
+    padding: 0.75rem 1rem;
     border-bottom: 1px solid var(--color-border-subtle);
-    background-color: color-mix(in oklch, var(--color-surface) 95%, black);
-  }
-
-  .art-status {
+    background-color: color-mix(in srgb, var(--color-surface) 60%, black);
     display: flex;
-    gap: 0.5rem;
+    align-items: center;
   }
 
-  .badge {
+  .status-pill {
     display: inline-flex;
     align-items: center;
-    gap: 0.35rem;
-    padding: 0.35rem 0.65rem;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.02em;
+    gap: 0.3rem;
+    padding: 0.25rem 0.65rem;
+    border-radius: var(--radius-pill);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
   }
 
-  .badge.verified {
+  .status-pill.verified {
     background-color: color-mix(in oklch, var(--color-success) 15%, transparent);
     color: var(--color-success);
     border: 1px solid color-mix(in oklch, var(--color-success) 30%, transparent);
   }
 
-  .badge.pending {
+  .status-pill.pending {
     background-color: color-mix(in oklch, var(--color-warning) 15%, transparent);
     color: var(--color-warning);
     border: 1px solid color-mix(in oklch, var(--color-warning) 30%, transparent);
   }
 
-  .badge.empty {
-    background-color: color-mix(in oklch, var(--color-text-muted) 10%, transparent);
+  .status-pill.empty {
+    background-color: color-mix(in oklch, var(--color-error) 15%, transparent);
+    color: var(--color-error);
+    border: 1px solid color-mix(in oklch, var(--color-error) 30%, transparent);
+  }
+
+  .status-pill.unknown {
+    background-color: color-mix(in oklch, var(--color-text-muted) 15%, transparent);
     color: var(--color-text-muted);
-    border: 1px solid color-mix(in oklch, var(--color-text-muted) 20%, transparent);
   }
 
-  .badge.unknown {
-    background-color: color-mix(in oklch, var(--color-primary) 10%, transparent);
-    color: var(--color-primary);
-  }
-
-  .art-info {
-    padding: 1.25rem;
+  .card-body {
+    padding: 1rem;
     display: flex;
     flex-direction: column;
-    flex: 1;
+    gap: 0.5rem;
   }
 
-  .art-title {
-    font-family: 'Instrument Serif', serif;
-    font-size: 1.5rem;
-    font-weight: 400;
-    margin: 0 0 0.5rem 0;
+  .card-title {
+    font-family: var(--font-body);
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin: 0;
     color: var(--color-text-primary);
-    line-height: 1.1;
   }
 
-  .action-verify, .edit-action {
+  .action-link {
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
-    font-size: 0.85rem;
+    font-size: 0.82rem;
     font-weight: 600;
-    margin-top: auto;
-    padding-top: 1rem;
+    margin-top: 0.25rem;
   }
 
-  .action-verify {
+  .action-link.verify {
     color: var(--color-primary);
   }
-  
-  .edit-action {
-    color: var(--color-text-muted);
-  }
 
-  .art-card:hover .action-verify {
-    text-decoration: underline;
+  .action-link.edit {
+    color: var(--color-text-muted);
   }
 
   .empty-search {
-    grid-column: 1 / -1;
     text-align: center;
-    padding: 4rem 2rem;
+    padding: 3rem 1rem;
     color: var(--color-text-muted);
     background-color: var(--color-surface);
-    border-radius: 16px;
+    border-radius: var(--radius-lg);
     border: 1px dashed var(--color-border);
-    font-size: 1.1rem;
+    font-size: 0.95rem;
   }
 </style>

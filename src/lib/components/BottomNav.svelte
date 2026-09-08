@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import { PaintBrush, Books, Gear, ShieldStar } from 'phosphor-svelte';
+	import { PaintBrush, Books, Gear } from 'phosphor-svelte';
 
 	interface TabItem {
 		href: string;
@@ -12,7 +12,6 @@
 	const tabs: TabItem[] = [
 		{ href: '/', label: 'Aujourd\'hui', icon: PaintBrush },
 		{ href: '/catalogue', label: 'Catalogue', icon: Books },
-		{ href: '/admin/artworks', label: 'Admin', icon: ShieldStar },
 		{ href: '/settings', label: 'Paramètres', icon: Gear }
 	];
 
@@ -88,6 +87,8 @@
 					class:active
 					aria-current={active ? 'page' : undefined}
 					aria-label={tab.label}
+					data-sveltekit-preload-data="hover"
+					data-sveltekit-preload-code="eager"
 				>
 					<!-- Active background pill -->
 					{#if active}
@@ -126,6 +127,8 @@
 		padding: 0.35rem 0.5rem;
 		border-radius: 2.5rem;
 		z-index: 1000;
+		view-transition-name: bottom-nav;
+		contain: layout style;
 		transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
 
 		/* ── Liquid glass background (Gris anthracite) ── */

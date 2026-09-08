@@ -123,6 +123,7 @@ export async function GET(_event: RequestEvent) {
         image_url_thumb: optimizedArtwork.image_url_thumb,
         image_url_full: optimizedArtwork.image_url_full,
         aspect_ratio: selectedArtwork.aspect_ratio,
+        musee: selectedArtwork.musee || null,
         artists: {
           name: artistTranslation?.name || 'Inconnu',
           dates: selectedArtwork.artists?.dates || null
